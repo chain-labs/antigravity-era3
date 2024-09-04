@@ -1,37 +1,55 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
+// Define the Timer type to represent the countdown timer state
 type Timer = {
   seconds: number;
   minutes: number;
   hours: number;
   days: number;
-  getTime: number;
+  remainingTime: number;
   isEnded: boolean;
 };
 
-let time: number = 0;
-function setTime(callback: (prev: number) => number) {
-  time = callback(time);
-}
+// Custom hook to manage a countdown timer
+export default function useCountdownTimer(
+  initialTimeInSeconds: number,
+): [Timer, (newInitialTime: number) => void] {
+  // State to store the initial time given for the countdown
+  const [initialTime, setInitialTime] = useState<number>(initialTimeInSeconds);
+  // State to store the remaining time
+  const [remainingTime, setRemainingTime] = useState<number>(initialTime);
 
-export default function useCountdownTimer(initialTime: number): Timer {
   useEffect(() => {
-    setTime(() => initialTime);
+    // Calculate the current time in milliseconds
+    const currentTime = new Date().getTime();
+    // Set the remaining time based on the initial time
+    setRemainingTime(() => currentTime - initialTime);
+
+    // Set up an interval to update the remaining time every second
     const timer = setInterval(() => {
-      setTime((prev: number) => prev - 1);
+      setRemainingTime((prevTime: number) => {
+        if (prevTime <= 0) {
+          return 0; // Stop the timer when it reaches zero
+        }
+        return prevTime - 1; // Decrease the remaining time by one second
+      });
     }, 1000);
 
+    // Clean up the interval when the component is unmounted or initialTime changes
     return () => clearInterval(timer);
-  }, []);
+  }, [initialTime]);
 
-  return {
-    seconds: time % 60,
-    minutes: Math.floor((time / 60) % 60),
-    hours: Math.floor((time / 3600) % 24),
-    days: Math.floor(time / 86400),
-    getTime: time,
-    isEnded: time <= 0,
-  };
+  return [
+    {
+      seconds: remainingTime % 60,
+      minutes: Math.floor((remainingTime / 60) % 60),
+      hours: Math.floor((remainingTime / 3600) % 24),
+      days: Math.floor(remainingTime / 86400),
+      remainingTime: remainingTime,
+      isEnded: remainingTime <= 0,
+    },
+    setInitialTime,
+  ];
 }
