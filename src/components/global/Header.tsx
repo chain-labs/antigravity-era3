@@ -11,6 +11,7 @@ import {
   PiWalletDuotone,
   PiXCircleDuotone,
 } from "react-icons/pi";
+import Button from "../html/Button";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -53,6 +54,15 @@ export default function Header() {
               Gradients.whiteGradientText,
               "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
             )}
+            href="/evil-address"
+          >
+            Evil
+          </Link>
+          <Link
+            className={cn(
+              Gradients.whiteGradientText,
+              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
+            )}
             href="/lottery"
           >
             Lottery
@@ -78,18 +88,10 @@ export default function Header() {
         </div>
 
         <div>
-          <button
-            className={cn(
-              "px-[16px] py-[12px]",
-              "flex justify-center items-center gap-[8px]",
-              "bg-brblue rounded-[4px]",
-              "uppercase text-agwhite tracking-widest text-[16px] font-extrabold",
-              "[&_svg]:text-[24px]",
-            )}
-          >
+          <Button>
             <PiWalletDuotone />
             <span>Connect wallet</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -150,6 +152,15 @@ export default function Header() {
                 "w-full h-[1px] rounded-full",
               )}
             ></div>
+            <Link
+              className={cn(
+                Gradients.whiteGradientText,
+                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+              )}
+              href="/evil-address"
+            >
+              EVIL
+            </Link>
             <Link
               className={cn(
                 Gradients.whiteGradientText,
