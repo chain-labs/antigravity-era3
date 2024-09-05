@@ -39,7 +39,6 @@ const useJackpotContract = () => {
 
   useEffect(() => {
     const id = getRainbowKitChainsFromPage(path, TEST_NETWORK)[0].id;
-    console.log({ contract: contracts[id] });
     setContract(contracts[id]);
   }, [path]);
 
