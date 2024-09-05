@@ -34,13 +34,11 @@ const RainbowKit = ({ children }: React.PropsWithChildren) => {
 export default RainbowKit;
 
 // use this function to modify list of eligible chains for specific pages.
-const getRainbowKitChainsFromPage = (page: string, test: boolean) => {
+export const getRainbowKitChainsFromPage = (page: string, test: boolean) => {
   console.log({ page, test });
   switch (page) {
     // add cases here for each custom page chains list
-    case "/lottery":
-      return test ? [sepolia] : [pulsechain];
     default:
-      return test ? [pulsechainV4] : [pulsechain];
+      return test ? [sepolia] : [pulsechain];
   }
 };
