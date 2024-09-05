@@ -21,7 +21,7 @@ export default function Timer() {
         "text-agwhite uppercase font-sans tracking-widest text-[16px] font-extrabold",
       )}
     >
-      <div>Time LEft to Mint in Journey 1</div>
+      <div>Time Left to Mint in Journey {time.currentJourney}</div>
       <div className="grid grid-flow-col gap-[8px]">
         <NumberAndLabel number={time.countdown.days} label="Days" />
         <div className="h-full w-[1px] bg-agwhite"></div>
