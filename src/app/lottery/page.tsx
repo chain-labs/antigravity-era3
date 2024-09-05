@@ -1,3 +1,5 @@
+"use client";
+
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
