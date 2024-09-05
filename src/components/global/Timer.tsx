@@ -2,11 +2,12 @@
 
 import useTimer from "@/hooks/useTimer";
 import { cn } from "@/lib/tailwindUtils";
+import RollingCounter from "../animation/RollingCounter";
 
 function NumberAndLabel({ number, label }: { number: number; label: string }) {
   return (
     <div className="flex flex-col items-center gap-[4px] px-[8px]">
-      <div className="text-[40px]">{number}</div>
+      <RollingCounter num={number} className="text-[40px] leading-[40px]" />
       <div>{label}</div>
     </div>
   );
