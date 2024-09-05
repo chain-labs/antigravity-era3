@@ -5,12 +5,7 @@ import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
-import {
-  PiAxeDuotone,
-  PiGavelDuotone,
-  PiTrophyDuotone,
-  PiWrenchDuotone,
-} from "react-icons/pi";
+import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 
 export default function LotteryPage() {
   const data = {
@@ -93,7 +88,7 @@ export default function LotteryPage() {
               </div>
             </div>
             <Button type="submit">
-              <PiAxeDuotone /> <PiGavelDuotone /> <PiWrenchDuotone /> Prune
+              <PiWrenchDuotone /> Prune
             </Button>
           </form>
           <div
