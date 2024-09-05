@@ -22,10 +22,10 @@ export default function useCountdownTimer(
   const [remainingTime, setRemainingTime] = useState<number>(initialTime);
 
   useEffect(() => {
-    // Calculate the current time in milliseconds
-    const currentTime = new Date().getTime();
+    // Calculate the current time in seconds
+    const currentTime = Math.floor(new Date().getTime() / 1000);
     // Set the remaining time based on the initial time
-    setRemainingTime(() => currentTime - initialTime);
+    setRemainingTime(() => initialTime - currentTime);
 
     // Set up an interval to update the remaining time every second
     const timer = setInterval(() => {
