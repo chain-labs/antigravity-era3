@@ -9,6 +9,8 @@ export class Gradients {
   static tableBlue = "bg-gradient-to-b from-[#0A1133] to-[#142266]";
 
   static lightBlue = "bg-gradient-to-b from-[#B4EBF8] to-[#789DFA]";
+
+  static darkBlue = "bg-gradient-to-tr from-[#15004C] to-[#3C00DC]";
 }
 
 export class Shapes {
