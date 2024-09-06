@@ -19,7 +19,7 @@ export default function Header() {
     <header
       className={cn(
         Gradients.redToBlue,
-        "relative rounded-[8px] p-[2px] mx-[16px] mt-[16px] lg:mt-[32px]",
+        "relative rounded-[8px] p-[2px] mx-[16px] mt-[16px] lg:mt-[32px] w-full max-w-[1000px]",
       )}
     >
       {/* Desktop view */}

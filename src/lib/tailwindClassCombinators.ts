@@ -5,4 +5,15 @@ export class Gradients {
   static whiteToGrey = "bg-gradient-to-b from-agwhite to-[#999999]";
 
   static redToBlue = "bg-gradient-to-tr from-brred to-brblue";
+
+  static tableBlue = "bg-gradient-to-b from-[#0A1133] to-[#142266]";
+
+  static lightBlue = "bg-gradient-to-b from-[#B4EBF8] to-[#789DFA]";
+}
+
+export class Shapes {
+  static pill =
+    "rounded-full py-[4px] px-[8px] flex justify-center items-center gap-[4px] select-none";
+
+  static dataCard = "rounded-[6px] px-[12px] py-[16px]";
 }
