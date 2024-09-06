@@ -9,6 +9,8 @@ export const IMAGEKIT_LOGOS = {
 
 export const IMAGEKIT_ICONS = {
   FUEL_CELL: `${IMAGEKIT_ICONS_URL}/fuel-cell.png`,
+  PILL_DARK_X: `${IMAGEKIT_ICONS_URL}/pill-dark-x.png`,
+  PILL_DARK_X_CLAIMED: `${IMAGEKIT_ICONS_URL}/pill-dark-x-claimed.png`,
 };
 
 export const IMAGEKIT_BACKGROUNDS = {
