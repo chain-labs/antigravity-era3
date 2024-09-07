@@ -39,4 +39,12 @@ body {
     -webkit-appearance: none;
     margin: 0;
   }
+
+  div:has(> table) {
+    scroll-snap-type: y mandatory;
+  }
+
+  tr {
+    scroll-snap-align: start;
+  }
 }
