@@ -5,10 +5,11 @@ import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
 import Table from "@/components/html/Table";
 import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
-import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
+import { Backdrop, Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import {
+  PiCube,
   PiDropboxLogoDuotone,
   PiTrophyDuotone,
   PiWrenchDuotone,
@@ -37,13 +38,7 @@ export default function UnwrapPage() {
         Fuel cell Id
       </>,
       <>
-        <Image
-          src={IMAGEKIT_ICONS.FUEL_CELL}
-          alt="Fuel Cell"
-          width={24}
-          height={24}
-          className="min-w-[24px] min-h-[24px]"
-        />
+        <PiCube />
         Journey ID
       </>,
       <>
@@ -89,10 +84,11 @@ export default function UnwrapPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.MINING_PAGE_ERA_3})`,
+        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.UNWRAPPING_1})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-cover"
+      className="relative flex justify-center items-center min-h-screen bg-[50%_30%] bg-opacity-15 z-0 "
     >
+      <div className={cn(Backdrop.darkOverlay)}></div>
       <div
         className={cn(
           "flex flex-col items-center justify-center gap-[50px]",
@@ -103,8 +99,8 @@ export default function UnwrapPage() {
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agwhite/30 backdrop-blur-lg",
-            "text-agblack",
+            "bg-agblack/30 backdrop-blur-lg",
+            "text-agwhite",
           )}
         >
           <h1
@@ -113,7 +109,7 @@ export default function UnwrapPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Unwrap
+            Unwrapping
           </h1>
           <p className="text-[14px] leading-[14px]">
             Next Lottery ID: {data.nextLotteryId}
@@ -175,7 +171,7 @@ export default function UnwrapPage() {
                   <button
                     type="button"
                     onClick={() => setTableReveal(true)}
-                    className="bg-none underline text-agblack font-sans font-semibold"
+                    className="bg-none underline text-agwhite font-sans font-semibold px-[16px] py-[4px] rounded-[6px] bg-agblack/50 backdrop-blur-lg"
                   >
                     View Selected Fuel Cells
                   </button>
@@ -185,7 +181,7 @@ export default function UnwrapPage() {
                 className={cn(
                   "flex flex-col justify-start items-start gap-[8px]",
                   "p-[8px] rounded-[6px]",
-                  "bg-agblack/30 backdrop-blur-lg",
+                  "bg-agblack/50 backdrop-blur-lg",
                   "font-extrabold",
                 )}
               >
@@ -204,9 +200,9 @@ export default function UnwrapPage() {
                 onClick={() => setTableReveal(false)}
                 className={cn(
                   "absolute top-0 right-0 translate-x-full -translate-y-full",
-                  "border-[1px] border-agpurple bg-agwhite/50 backdrop-blur-xl",
-                  "text-agblack font-black",
-                  "p-[8px] bg-none rounded-[6px]",
+                  "border-[1px] border-agpurple bg-agblack/50 backdrop-blur-xl",
+                  "text-agwhite font-black text-[24px]",
+                  "p-[4px] bg-none rounded-[6px]",
                 )}
               >
                 <IoClose />
