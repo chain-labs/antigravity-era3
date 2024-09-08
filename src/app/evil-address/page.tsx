@@ -101,9 +101,9 @@ export default function EvilAddressPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.MINING_PAGE_ERA_3})`,
+        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.EVIL_ADDRESS_1})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-cover"
+      className="flex justify-center items-center min-h-screen bg-[70%_50%] [background-size:120%] bg-no-repeat"
     >
       <div
         className={cn(

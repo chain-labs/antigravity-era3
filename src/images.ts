@@ -13,4 +13,6 @@ export const IMAGEKIT_ICONS = {
 
 export const IMAGEKIT_BACKGROUNDS = {
   MINING_PAGE_ERA_3: `${IMAGEKIT}/mining-page-era-3.png?updatedAt=1722848751526`,
+  EVIL_ADDRESS_1: `${IMAGEKIT}/evil-address-1.png`,
+  EVIL_ADDRESS_2: `${IMAGEKIT}/evil-address-2.png`,
 };
