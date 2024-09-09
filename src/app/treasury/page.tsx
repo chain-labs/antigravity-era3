@@ -18,7 +18,7 @@ export default function TreasuryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.MINING_PAGE_ERA_3})`,
+        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.TREASURY_2})`,
       }}
       className="flex justify-center items-center min-h-screen bg-cover"
     >
@@ -32,8 +32,8 @@ export default function TreasuryPage() {
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agwhite/30 backdrop-blur-lg",
-            "text-agblack",
+            "bg-agblack/30 backdrop-blur-lg",
+            "text-agwhite",
           )}
         >
           <h1
@@ -145,7 +145,7 @@ export default function TreasuryPage() {
                   className="w-[24px] h-[24px] mix-blend-multiply rounded-full"
                 />
                 <span className="text-agblack font-semibold font-general-sans">
-                  FUEL CELLS
+                  Fuel Cells
                 </span>
               </p>
             </div>
