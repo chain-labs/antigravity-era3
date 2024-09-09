@@ -18,9 +18,9 @@ export default function LotteryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.MINING_PAGE_ERA_3})`,
+        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.LOTTERY_2})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-cover"
+      className="flex justify-center items-center min-h-screen [background-size:120%] bg-[80%_50%]"
     >
       <div
         className={cn(
@@ -32,8 +32,8 @@ export default function LotteryPage() {
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agwhite/30 backdrop-blur-lg",
-            "text-agblack",
+            "bg-agblack/30 backdrop-blur-lg",
+            "text-agwhite",
           )}
         >
           <h1
@@ -105,6 +105,7 @@ export default function LotteryPage() {
           </div>
         </div>
       </div>
+      
     </div>
   );
 }
