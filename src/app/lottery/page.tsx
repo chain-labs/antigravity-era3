@@ -11,6 +11,7 @@ import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 
 export default function LotteryPage() {
   const data = {
+    fuelcells: 122223,
     nextLotteryId: 2,
     currentJourneyId: 1,
     fuelCellsWon: 123,
@@ -69,7 +70,9 @@ export default function LotteryPage() {
                 "w-full",
               )}
             >
-              <Input className="bg-none" />
+              <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
+                {data.fuelcells.toLocaleString("en-US")}
+              </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
                 <p className={cn(Gradients.lightBlue, Shapes.pill)}>
                   <Image
@@ -105,7 +108,6 @@ export default function LotteryPage() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }
