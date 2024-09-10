@@ -8,7 +8,7 @@ import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
 
-function PruneAndRollOver() {
+function PruneAndRollOver({ data }: { data: number }) {
   return (
     <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
@@ -40,7 +40,9 @@ function PruneAndRollOver() {
             "flex justify-between items-center",
           )}
         >
-          <Input className="bg-none" />
+          <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
+            {data.toLocaleString("en-US")}
+          </p>
           <Button type="submit">
             <PiWrenchDuotone /> Prune
           </Button>
@@ -50,7 +52,7 @@ function PruneAndRollOver() {
   );
 }
 
-function MintFromEvilAddress() {
+function MintFromEvilAddress({ data }: { data: number }) {
   return (
     <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
@@ -82,7 +84,9 @@ function MintFromEvilAddress() {
             "flex justify-between items-center",
           )}
         >
-          <Input className="bg-none" />
+          <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
+            {data.toLocaleString("en-US")}
+          </p>
           <Button type="submit">
             <PiCubeDuotone /> Mint
           </Button>
@@ -97,6 +101,8 @@ export default function EvilAddressPage() {
     nextLotteryId: 2,
     currentJourneyId: 1,
     fuelCellsWon: 123,
+    pruneAndRollover: 1000,
+    mintFromEvilAddress: 500,
   };
   return (
     <div
@@ -135,8 +141,8 @@ export default function EvilAddressPage() {
           </p>
         </div>
         <div className="flex flex-col justify-center items-center gap-[24px]">
-          <PruneAndRollOver />
-          <MintFromEvilAddress />
+          <PruneAndRollOver data={data.pruneAndRollover} />
+          <MintFromEvilAddress data={data.mintFromEvilAddress} />
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
