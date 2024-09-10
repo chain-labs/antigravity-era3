@@ -56,7 +56,7 @@ export default function LotteryPage() {
             <br /> Prune your winnings!
           </h1>
           <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {currentLottery + 1}
+            Next Lottery ID: {(currentLottery % 3) + 1}
           </p>
           <p className="text-[14px] leading-[14px]">
             Current Journey ID: {currentJourney}
