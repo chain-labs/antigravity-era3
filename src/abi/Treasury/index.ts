@@ -1,4 +1,4 @@
-import { pulsechain, pulsechainV4, sepolia } from "viem/chains";
+import { baseSepolia, pulsechain, pulsechainV4, sepolia } from "viem/chains";
 import { CONTRACTS } from "../config";
 import abi from "./abi.json";
 import { useEffect, useState } from "react";
@@ -26,6 +26,10 @@ const contracts: Record<
   },
   [pulsechain.id]: {
     address: CONTRACTS[pulsechain.id].treasury,
+    abi,
+  },
+  [baseSepolia.id]: {
+    address: CONTRACTS[baseSepolia.id].treasury,
     abi,
   },
 };
