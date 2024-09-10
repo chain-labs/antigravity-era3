@@ -21,11 +21,12 @@ export default function LotteryPage() {
       style={{
         backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.LOTTERY_2})`,
       }}
-      className="flex justify-center items-center min-h-screen [background-size:120%] bg-[80%_50%]"
+      className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
     >
+      <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
         className={cn(
-          "flex flex-col items-center justify-center gap-[50px]",
+          "flex flex-col items-center justify-center gap-[50px] z-[1]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
         )}
       >
@@ -43,7 +44,7 @@ export default function LotteryPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Prune Lottery
+            Prune Winnings
           </h1>
           <p className="text-[14px] leading-[14px]">
             Next Lottery ID: {data.nextLotteryId}

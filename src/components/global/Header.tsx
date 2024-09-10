@@ -54,15 +54,6 @@ export default function Header() {
               Gradients.whiteGradientText,
               "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
             )}
-            href="/evil-address"
-          >
-            Evil
-          </Link>
-          <Link
-            className={cn(
-              Gradients.whiteGradientText,
-              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-            )}
             href="/lottery"
           >
             Lottery
@@ -75,6 +66,15 @@ export default function Header() {
             href="/treasury"
           >
             Treasury
+          </Link>
+          <Link
+            className={cn(
+              Gradients.whiteGradientText,
+              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
+            )}
+            href="/evil-address"
+          >
+            Evil
           </Link>
           <Link
             className={cn(
@@ -157,15 +157,6 @@ export default function Header() {
                 Gradients.whiteGradientText,
                 "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
               )}
-              href="/evil-address"
-            >
-              EVIL
-            </Link>
-            <Link
-              className={cn(
-                Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
-              )}
               href="/lottery"
             >
               Lottery
@@ -178,6 +169,15 @@ export default function Header() {
               href="/treasury"
             >
               Treasury
+            </Link>
+            <Link
+              className={cn(
+                Gradients.whiteGradientText,
+                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+              )}
+              href="/evil-address"
+            >
+              EVIL
             </Link>
             <Link
               className={cn(
