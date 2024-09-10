@@ -4,7 +4,7 @@ import { TEST_NETWORK } from "@/constants/global";
 import { PROJECT_ID } from "@/constants/rainbowkit";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { pulsechain, pulsechainV4, sepolia } from "viem/chains";
+import { baseSepolia, pulsechain, pulsechainV4, sepolia } from "viem/chains";
 import { WagmiProvider } from "wagmi";
 import React from "react";
 import { usePathname } from "next/navigation";
@@ -35,10 +35,9 @@ export default RainbowKit;
 
 // use this function to modify list of eligible chains for specific pages.
 export const getRainbowKitChainsFromPage = (page: string, test: boolean) => {
-  console.log({ page, test });
   switch (page) {
     // add cases here for each custom page chains list
     default:
-      return test ? [sepolia] : [pulsechain];
+      return test ? [baseSepolia] : [pulsechain];
   }
 };
