@@ -43,7 +43,7 @@ export default function LotteryPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Prune Lottery
+            Prune Winnings
           </h1>
           <p className="text-[14px] leading-[14px]">
             Next Lottery ID: {data.nextLotteryId}
