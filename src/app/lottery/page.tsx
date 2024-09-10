@@ -21,7 +21,7 @@ export default function LotteryPage() {
       style={{
         backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.LOTTERY_2})`,
       }}
-      className="flex justify-center items-center min-h-screen [background-size:120%] bg-[80%_50%]"
+      className="flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center"
     >
       <div
         className={cn(
