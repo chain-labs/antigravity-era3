@@ -3,10 +3,12 @@
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
+import useLottery from "@/hooks/core/useLottery";
 import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
+import { useEffect } from "react";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 
 export default function LotteryPage() {
@@ -16,6 +18,12 @@ export default function LotteryPage() {
     currentJourneyId: 1,
     fuelCellsWon: 123,
   };
+
+  const { currentJourney, currentLottery, nextLotteryTimestamp } = useLottery();
+  useEffect(() => {
+    console.log({ nextLotteryTimestamp });
+  }, [nextLotteryTimestamp]);
+
   return (
     <div
       style={{
@@ -48,10 +56,10 @@ export default function LotteryPage() {
             <br /> Prune your winnings!
           </h1>
           <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {data.nextLotteryId}
+            Next Lottery ID: {currentLottery + 1}
           </p>
           <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {data.currentJourneyId}
+            Current Journey ID: {currentJourney}
           </p>
         </div>
 
@@ -106,7 +114,7 @@ export default function LotteryPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer label="Next Lottery in" timestamp={nextLotteryTimestamp} />
           </div>
         </div>
       </div>
