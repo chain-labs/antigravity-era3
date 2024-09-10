@@ -109,7 +109,7 @@ export default function UnwrapPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Unwrapping
+            Unwrap
           </h1>
           <p className="text-[14px] leading-[14px]">
             Next Lottery ID: {data.nextLotteryId}
