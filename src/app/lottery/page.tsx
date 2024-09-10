@@ -11,6 +11,7 @@ import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 
 export default function LotteryPage() {
   const data = {
+    fuelcells: 122223,
     nextLotteryId: 2,
     currentJourneyId: 1,
     fuelCellsWon: 123,
@@ -18,9 +19,9 @@ export default function LotteryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.MINING_PAGE_ERA_3})`,
+        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.LOTTERY_2})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-cover"
+      className="flex justify-center items-center min-h-screen [background-size:120%] bg-[80%_50%]"
     >
       <div
         className={cn(
@@ -32,8 +33,8 @@ export default function LotteryPage() {
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agwhite/30 backdrop-blur-lg",
-            "text-agblack",
+            "bg-agblack/30 backdrop-blur-lg",
+            "text-agwhite",
           )}
         >
           <h1
@@ -69,7 +70,9 @@ export default function LotteryPage() {
                 "w-full",
               )}
             >
-              <Input className="bg-none" />
+              <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
+                {data.fuelcells.toLocaleString("en-US")}
+              </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
                 <p className={cn(Gradients.lightBlue, Shapes.pill)}>
                   <Image
