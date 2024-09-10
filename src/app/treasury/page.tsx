@@ -20,7 +20,7 @@ export default function TreasuryPage() {
       style={{
         backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.TREASURY_2})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-cover"
+      className="flex justify-center items-center min-h-screen [background-size:120%] bg-[80%_50%]"
     >
       <div
         className={cn(
@@ -42,7 +42,7 @@ export default function TreasuryPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Treasury Information
+            Treasury Info
           </h1>
           <p className="text-[14px] leading-[14px]">
             Next Lottery ID: {data.nextLotteryId}
