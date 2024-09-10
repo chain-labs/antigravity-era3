@@ -16,7 +16,7 @@ export default function template({
         opacity: 1,
       }}
     >
-      <div className="fixed top-0 left-0 w-full flex justify-center items-center">
+      <div className="fixed top-0 left-0 w-full flex justify-center items-center z-50">
         <Header />
       </div>
       {children}
