@@ -7,13 +7,20 @@ const axiosInstance = axios.create({
 
 const axiosProxyInstance = axios.create({});
 
-export const fetcher = async <T>(url: string, proxy?: boolean): Promise<T> => {
-  if (proxy) {
-    const { data } = await axiosProxyInstance.get<T>(url);
-    return data;
+export const fetcher = async <T>(
+  url: string,
+  options?: { proxy?: boolean; body?: string },
+): Promise<T> => {
+  if (options?.proxy) {
+    const { data: result } = await axiosProxyInstance.get<T>(url, {
+      data: options?.body,
+    });
+    return result;
   }
-  const { data } = await axiosInstance.get<T>(url);
-  return data;
+  const { data: result } = await axiosInstance.get<T>(url, {
+    data: options?.body,
+  });
+  return result;
 };
 
 export const mutate = async <T>(

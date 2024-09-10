@@ -23,9 +23,10 @@ export const useGQLMutate = <T>(
   query: string,
   chainId: number,
   variables: any,
+  options?: { url?: string },
 ) => {
   return useMutation<T>({
     mutationKey: tags,
-    mutationFn: () => gqlMutate(query, variables, chainId),
+    mutationFn: () => gqlMutate(query, variables, chainId, options?.url),
   });
 };

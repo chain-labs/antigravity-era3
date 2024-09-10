@@ -18,15 +18,17 @@ export const useRestFetch = <T>(
     proxy = false,
     select,
     enabled = true,
+    data,
   }: {
     proxy?: boolean;
     select?: (arg0: any) => any;
     enabled?: boolean;
+    data?: string;
   },
 ): UseQueryResult<T, Error> => {
   const result = useQuery<T, Error>({
     queryKey: [...tags],
-    queryFn: () => fetcher<T>(endpoint, proxy),
+    queryFn: () => fetcher<T>(endpoint, { proxy, body: data }),
     enabled: enabled,
   });
   return result;
