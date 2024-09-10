@@ -14,10 +14,12 @@ import {
 import Button from "../html/Button";
 import { useAccount } from "wagmi";
 import HeaderUserconnectedSection from "./HeaderUserconnectedSection";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const account = useAccount();
+  const { openConnectModal } = useConnectModal();
   return (
     <header
       className={cn(
@@ -96,7 +98,7 @@ export default function Header() {
             <HeaderUserconnectedSection />
           </>
         ) : (
-          <Button>
+          <Button onClick={openConnectModal}>
             <PiWalletDuotone />
             <span>Connect wallet</span>
           </Button>
@@ -145,18 +147,10 @@ export default function Header() {
             {account.isConnected ? (
               <HeaderUserconnectedSection />
             ) : (
-              <button
-                className={cn(
-                  "px-[16px] py-[12px]",
-                  "flex justify-center items-center gap-[8px]",
-                  "bg-brblue rounded-[4px]",
-                  "uppercase text-agwhite tracking-widest text-[16px] font-extrabold",
-                  "[&_svg]:text-[24px]",
-                )}
-              >
+              <Button onClick={openConnectModal}>
                 <PiWalletDuotone />
                 <span>Connect wallet</span>
-              </button>
+              </Button>
             )}
             <div
               className={cn(
