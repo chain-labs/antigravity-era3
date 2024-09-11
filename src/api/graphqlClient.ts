@@ -1,11 +1,9 @@
 import { SUBGRAPH_URL } from "@/constants";
 import { gql, request } from "graphql-request";
-import { base, baseSepolia, pulsechain, sepolia } from "viem/chains";
 
 export const gqlFetcher = async <T>(
   query: string,
   variables: Record<string, any>,
-  chainId: number,
   url?: string,
 ): Promise<T> => {
   //   const document = gql(query);

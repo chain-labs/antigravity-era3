@@ -1,19 +1,38 @@
 import useJackpotContract from "@/abi/Jackpot";
 import useJPMContract from "@/abi/JourneyPhaseManager";
-import { useEffect, useMemo } from "react";
-import { useAccount, useReadContract, useReadContracts } from "wagmi";
+import { useEffect, useMemo, useState } from "react";
+import {
+  useAccount,
+  useReadContract,
+  useReadContracts,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { useGQLFetch } from "../api/useGraphQLClient";
 import { gql } from "graphql-request";
 import { getRainbowKitChainsFromPage } from "@/components/RainbowKit";
 import { TEST_NETWORK } from "@/constants/global";
 import { useRestFetch } from "../api/useRestClient";
+import axios from "axios";
+import { API_ENDPOINT } from "@/constants";
+import { createMerkleTreeForLottery } from "@/utils/merkletree";
+import MerkleTree from "merkletreejs";
+import { gqlFetcher } from "@/api/graphqlClient";
+import { encodePacked, keccak256 } from "viem";
+import toast from "react-hot-toast";
 
 const useLottery = (): {
   currentLottery: number;
   currentJourney: number;
   nextLotteryTimestamp: number;
+  lotteryPayout: string;
+  fuelCellsWon: number;
+  batchPrune: () => void;
+  createMerkleTrees: () => Promise<Record<string, MerkleTree>>;
 } => {
   const account = useAccount();
+  const [pruneLoading, setPruneLoading] = useState(false);
+  const [prePrune, setPrePrune] = useState(false);
 
   // define contract instances here
   const JPMContract = useJPMContract();
@@ -90,49 +109,197 @@ const useLottery = (): {
           }
         }
       `,
-      getRainbowKitChainsFromPage("/lottery", TEST_NETWORK)[0].id,
       {},
     );
 
-  useEffect(() => {
-    if (latestLotteryFetched) {
-      const lotteryResults = latestLotteryResultData?.lotteryResults?.[0];
-      console.log({
-        journeyId: lotteryResults?.journeyId,
-        lotteryId: lotteryResults?.lotteryId,
-        latestLotteryResultData,
-      });
-    }
-  }, [latestLotteryFetched, latestLotteryResultData]);
+  const { data: lotteryPayouts, isFetched: lotteryPayoutsFetched } =
+    useGQLFetch<{
+      lotteryResults: {
+        journeyId: string;
+        lotteryId: string;
+        payoutPerFuelCell: string;
+      }[];
+    }>(
+      ["lottery payouts"],
+      gql`
+        query GetLotteryPayouts {
+          lotteryResults {
+            journeyId
+            lotteryId
+            payoutPerFuelCell
+          }
+        }
+      `,
+      {},
+    );
 
-  const { data: lotteryWinners, isFetched: lotteryWinnersFetched } =
-    useRestFetch(["all winners of lottery"], "/api/lottery-results", {});
+  // const { data: lotteryWinners, isFetched: lotteryWinnersFetched } =
+  //   useRestFetch(["all winners of lottery"], "/api/lottery-results", {});
 
   const {
     data: userWinnings,
     isFetched: userWinningsFetched,
     error: userWinningsError,
-  } = useRestFetch(
-    ["User Winnings in current lottery"],
-    "/api/lottery-result",
+  } = useRestFetch<
     {
-      data: JSON.stringify({
-        walletAddress: account.address,
-        journeyId: latestLotteryResultData?.lotteryResults?.[0]?.journeyId,
-        lotteryId: latestLotteryResultData?.lotteryResults?.[0]?.lotteryId,
-      }),
-      enabled: latestLotteryFetched,
+      isPruned: boolean;
+      journeyId: number;
+      lotteryId: number;
+      tokenId: number;
+      walletAddress: string;
+    }[]
+  >(
+    ["User Winnings in current lottery"],
+    `/api/lottery-result?walletAddress=${account.address}`,
+    {
+      enabled: !!account.address,
     },
   );
 
-  useEffect(() => {
+  const lotteriesWon = useMemo(() => {
     if (userWinningsFetched) {
-      console.log({ userWinnings });
+      const uniqueLotteries = [
+        ...new Set(
+          userWinnings?.map((item) => `${item.journeyId}_${item.lotteryId}`),
+        ),
+      ].map((pair) => ({
+        ...pair.split("_").reduce(
+          (acc, curr, index) => ({
+            ...acc,
+            [index === 0 ? "journeyId" : "lotteryId"]: Number(curr),
+          }),
+          {},
+        ),
+        count: userWinnings?.filter(
+          (item) =>
+            item.journeyId === Number(pair.split("_")[0]) &&
+            item.lotteryId === Number(pair.split("_")[1]),
+        ).length,
+      })) as { journeyId: number; lotteryId: number; count: number }[];
+
+      return uniqueLotteries;
     }
-    if (userWinningsError) {
-      console.log({ userWinningsError });
+    return [];
+  }, [userWinnings, userWinningsFetched]);
+
+  const totalWinnings = useMemo(() => {
+    if (lotteryPayouts && lotteriesWon) {
+      const payouts = lotteryPayouts.lotteryResults;
+      let sum = BigInt(0);
+
+      lotteriesWon.map((lottery) => {
+        const { lotteryId, journeyId, count } = lottery;
+        const payoutItem = payouts.find(
+          (item) =>
+            Number(item.journeyId) === journeyId &&
+            Number(item.lotteryId) === lotteryId,
+        );
+        if (payoutItem) {
+          const payout = BigInt(payoutItem.payoutPerFuelCell);
+          sum += BigInt(count) * payout;
+        }
+      });
+      return sum.toString();
     }
-  }, [userWinnings, userWinningsFetched, userWinningsError]);
+
+    return "0";
+  }, [lotteriesWon, lotteryPayouts]);
+
+  const createMerkleTrees = async (): Promise<Record<string, MerkleTree>> => {
+    try {
+      const responses = await Promise.all(
+        lotteriesWon.map((lottery) =>
+          axios.get(
+            `${API_ENDPOINT}/api/all-lottery-results?journeyId=${lottery.journeyId}&lotteryId=${lottery.lotteryId}`,
+          ),
+        ),
+      );
+
+      // create merkle trees for all the responses
+      let lotteryTrees = {};
+      responses.forEach((entry) => {
+        lotteryTrees = {
+          ...lotteryTrees,
+          [`${entry.data?.[0].journeyId}_${entry.data?.[0]?.lotteryId}`]:
+            createMerkleTreeForLottery(entry.data),
+        };
+      });
+      return lotteryTrees;
+
+      // setLotteryTrees(lotteryTrees);
+    } catch (err) {
+      console.log({ err });
+      return {};
+    }
+  };
+
+  const {
+    writeContract: batchPruneWinnings,
+    error: batchPruneError,
+    data: batchPruneHash,
+  } = useWriteContract();
+
+  const { data: batchPruneReceipt } = useWaitForTransactionReceipt({
+    hash: batchPruneHash,
+  });
+
+  useEffect(() => {
+    if (batchPruneError) {
+      console.log({ batchPruneError });
+      setPrePrune(false);
+      setPruneLoading(false);
+      toast.error("Could not prune you winnings. Try Again");
+    }
+  }, [batchPruneError]);
+
+  useEffect(() => {
+    if (batchPruneReceipt) {
+      setPrePrune(false);
+      setPruneLoading(false);
+      toast.success("Winnings pruned successfully");
+    }
+  }, [batchPruneReceipt]);
+
+  const batchPrune = async () => {
+    setPruneLoading(true);
+    setPrePrune(true);
+    const trees = await createMerkleTrees();
+
+    const proofs =
+      userWinnings?.map((win) => {
+        const { lotteryId, tokenId, journeyId } = win;
+        const merkleTree = trees[`${journeyId}_${lotteryId}`];
+
+        const leaf = keccak256(
+          encodePacked(
+            ["uint256", "uint16", "uint16"],
+            [BigInt(tokenId), journeyId, lotteryId],
+          ),
+        );
+
+        const proof = merkleTree.getHexProof(leaf);
+        return [{ journeyId, lotteryId, proofs: proof }];
+      }) ?? [];
+
+    const tokenIds = userWinnings?.map(({ tokenId }) => tokenId) ?? [];
+
+    console.log({ trees, userWinnings, proofs, tokenIds });
+
+    setPrePrune(false);
+    console.log({
+      address: JackpotContract.address as `0x${string}`,
+      abi: JackpotContract.abi,
+      functionName: "batchPruneWinning",
+      args: [proofs, tokenIds],
+    });
+    batchPruneWinnings({
+      address: JackpotContract.address as `0x${string}`,
+      abi: JackpotContract.abi,
+      functionName: "batchPruneWinning",
+      args: [proofs, tokenIds],
+      gas: BigInt(27000000),
+    });
+  };
 
   return {
     currentJourney: Number(
@@ -142,6 +309,10 @@ const useLottery = (): {
     currentLottery: Number(
       latestLotteryResultData?.lotteryResults?.[0]?.lotteryId ?? 1,
     ),
+    lotteryPayout: totalWinnings,
+    fuelCellsWon: userWinnings?.length ?? 0,
+    batchPrune,
+    createMerkleTrees,
   };
 };
 

@@ -10,6 +10,7 @@ import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import { useEffect } from "react";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
+import { formatUnits } from "viem";
 
 export default function LotteryPage() {
   const data = {
@@ -19,10 +20,23 @@ export default function LotteryPage() {
     fuelCellsWon: 123,
   };
 
-  const { currentJourney, currentLottery, nextLotteryTimestamp } = useLottery();
+  const {
+    currentJourney,
+    currentLottery,
+    nextLotteryTimestamp,
+    lotteryPayout,
+    fuelCellsWon,
+    batchPrune,
+  } = useLottery();
+
   useEffect(() => {
     console.log({ nextLotteryTimestamp });
   }, [nextLotteryTimestamp]);
+
+  const handlePruneWinnings = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    batchPrune();
+  };
 
   return (
     <div
@@ -80,28 +94,30 @@ export default function LotteryPage() {
               )}
             >
               <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
-                {data.fuelcells.toLocaleString("en-US")}
+                {Number(formatUnits(BigInt(lotteryPayout), 18)).toLocaleString(
+                  "en-US",
+                )}
               </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
                 <p className={cn(Gradients.lightBlue, Shapes.pill)}>
                   <Image
                     src={IMAGEKIT_ICONS.FUEL_CELL}
-                    alt="Fuel Cell"
+                    alt="Dark"
                     width={24}
                     height={24}
                     className="w-[24px] h-[24px] mix-blend-multiply"
                   />
                   <span className="text-agblack font-semibold font-general-sans">
-                    Fuel Cells
+                    Dark
                   </span>
                 </p>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
-                  <span>{data.fuelCellsWon} Fuel cells won</span>
+                  <span>{fuelCellsWon} Fuel cells won</span>
                 </div>
               </div>
             </div>
-            <Button type="submit">
+            <Button onClick={handlePruneWinnings}>
               <PiWrenchDuotone /> Prune
             </Button>
           </form>
