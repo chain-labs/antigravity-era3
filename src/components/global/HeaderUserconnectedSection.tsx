@@ -31,7 +31,6 @@ export default function HeaderUserconnectedSection() {
               </div>
             );
           } else if (chain) {
-            console.log("chain", chain);
             return (
               <>
                 {/* desktop */}

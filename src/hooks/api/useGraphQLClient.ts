@@ -4,7 +4,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 export const useGQLFetch = <T>(
   tags: string[],
   query: string,
-  chainId: number,
   variables: Record<string, any>,
   options?: {
     enabled?: boolean;
@@ -13,7 +12,7 @@ export const useGQLFetch = <T>(
 ) => {
   return useQuery<T>({
     queryKey: tags,
-    queryFn: () => gqlFetcher(query, variables, chainId, options?.url),
+    queryFn: () => gqlFetcher(query, variables, options?.url),
     enabled: options?.enabled,
   });
 };
