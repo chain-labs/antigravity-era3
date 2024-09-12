@@ -21,4 +21,6 @@ export const IMAGEKIT_BACKGROUNDS = {
   TREASURY_2: `${IMAGEKIT}/treasury-2.png?updatedAt=1725978135441`,
   UNWRAPPING_1: `${IMAGEKIT}/unwrapping-1.png`,
   UNWRAPPING_2: `${IMAGEKIT}/unwrapping-2.png`,
+  EVIL_ADDRESS_1: `${IMAGEKIT}/evil-address-1.png`,
+  EVIL_ADDRESS_2: `${IMAGEKIT}/evil-address-2.png`,
 };
