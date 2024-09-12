@@ -17,6 +17,7 @@ import {
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { notFound } from "next/navigation";
 
 export default function UnwrapPage() {
   const data = {
@@ -24,6 +25,9 @@ export default function UnwrapPage() {
     currentJourneyId: 1,
     fuelCellsWon: 123,
   };
+  if (process.env.NEXT_UNWRAP_AVAILABLE !== "true") {
+    return notFound();
+  }
 
   const tableData = {
     header: [
