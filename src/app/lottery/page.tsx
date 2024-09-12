@@ -7,6 +7,7 @@ import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 
 export default function LotteryPage() {
@@ -16,6 +17,9 @@ export default function LotteryPage() {
     currentJourneyId: 1,
     fuelCellsWon: 123,
   };
+  if (process.env.NEXT_UNWRAP_AVAILABLE !== "true") {
+    return notFound();
+  }
   return (
     <div
       style={{
