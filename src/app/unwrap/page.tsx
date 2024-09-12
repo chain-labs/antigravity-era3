@@ -25,9 +25,6 @@ export default function UnwrapPage() {
     currentJourneyId: 1,
     fuelCellsWon: 123,
   };
-  if (process.env.NEXT_UNWRAP_AVAILABLE !== "true") {
-    return notFound();
-  }
 
   const tableData = {
     header: [
@@ -84,6 +81,10 @@ export default function UnwrapPage() {
   };
 
   const [tableReveal, setTableReveal] = useState(false);
+
+  if (process.env.NEXT_UNWRAP_AVAILABLE !== "true") {
+    return notFound();
+  }
 
   return (
     <div
