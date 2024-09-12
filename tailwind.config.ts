@@ -24,6 +24,7 @@ const config: Config = {
       bgblue: "#3C00DC54",
       agorange: "#FF5001",
       successgreen: "#00B031",
+      agpurple: "#8275A5",
     },
   },
   plugins: [],

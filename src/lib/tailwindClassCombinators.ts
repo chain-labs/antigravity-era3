@@ -19,3 +19,11 @@ export class Shapes {
 
   static dataCard = "rounded-[6px] px-[12px] py-[16px]";
 }
+
+export class Backdrop {
+  static blur =
+    "absolute inset-0 w-full h-full rounded-[inherit] blur-lg z-[1] ";
+
+  static darkOverlay =
+    "absolute inset-0 w-full h-full bg-gradient-to-b from-agblack via-agblack/0 to-agblack";
+}
