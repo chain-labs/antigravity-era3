@@ -7,7 +7,12 @@ import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
-import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
+import Link from "next/link";
+import {
+  PiCubeDuotone,
+  PiTrophyDuotone,
+  PiWrenchDuotone,
+} from "react-icons/pi";
 
 export default function TreasuryPage() {
   const data = {
@@ -43,13 +48,10 @@ export default function TreasuryPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Treasury Info
+            Treasury
           </h1>
           <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {data.nextLotteryId}
-          </p>
-          <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {data.currentJourneyId}
+            Next Journey: {data.nextLotteryId}
           </p>
         </div>
 
@@ -71,37 +73,7 @@ export default function TreasuryPage() {
                 "flex justify-between items-center",
               )}
             >
-              <div className="flex flex-col justify-start items-start gap-[8px]">
-                <small className="uppercase font-semibold">
-                  TOTAL TREASURY BALANCE
-                </small>
-                <p className="text-[32px]">100</p>
-              </div>
-              <p className={cn(Gradients.lightBlue, Shapes.pill)}>
-                <Image
-                  src={IMAGEKIT_ICONS.PILL_DARK_X_CLAIMED}
-                  alt="Unclaimed Dark X"
-                  width={24}
-                  height={24}
-                  className="w-[24px] h-[24px] rounded-full"
-                />
-                <span className="text-agblack font-semibold font-general-sans">
-                  DARK
-                </span>
-              </p>
-            </div>
-            <div
-              className={cn(
-                Gradients.tableBlue,
-                Shapes.dataCard,
-                "border-[1px] border-agyellow",
-                "grid grid-flow-col gap-[8px]",
-                "font-extrabold",
-                "w-full",
-                "flex justify-between items-center",
-              )}
-            >
-              <div className="flex flex-col justify-start items-start gap-[8px]">
+              <div className="flex flex-col justify-start items-start">
                 <small className="uppercase font-semibold">
                   TOTAL YIELD DISTRIBUTED
                 </small>
@@ -131,7 +103,7 @@ export default function TreasuryPage() {
                 "flex justify-between items-center",
               )}
             >
-              <div className="flex flex-col justify-start items-start gap-[8px]">
+              <div className="flex flex-col justify-start items-start">
                 <small className="uppercase font-semibold">
                   TOTAL ACTIVE FUEL CELLS
                 </small>
@@ -151,6 +123,11 @@ export default function TreasuryPage() {
               </p>
             </div>
           </div>
+          <Link href="https://test.agproject.io/minting" target="_blank">
+            <Button>
+              <PiCubeDuotone /> Mint Now
+            </Button>
+          </Link>
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
