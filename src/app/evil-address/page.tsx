@@ -6,6 +6,7 @@ import Input from "@/components/html/Input";
 import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
+import { notFound } from "next/navigation";
 import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
 
 function PruneAndRollOver({ data }: { data: number }) {
@@ -104,6 +105,9 @@ export default function EvilAddressPage() {
     pruneAndRollover: 1000,
     mintFromEvilAddress: 500,
   };
+  if (process.env.NEXT_UNWRAP_AVAILABLE !== "true") {
+    return notFound();
+  }
   return (
     <div
       style={{
