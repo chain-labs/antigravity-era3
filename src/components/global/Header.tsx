@@ -8,6 +8,9 @@ import Link from "next/link";
 import { useState } from "react";
 import {
   PiListDuotone,
+  PiRocketDuotone,
+  PiRocketLaunchDuotone,
+  PiTreasureChestDuotone,
   PiWalletDuotone,
   PiXCircleDuotone,
 } from "react-icons/pi";
@@ -20,148 +23,85 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const account = useAccount();
   const { openConnectModal } = useConnectModal();
+
+  const data = {
+    treasurydark: 500000,
+    journey: 1,
+    userdark: 23432443,
+  };
+
   return (
     <header
       className={cn(
-        Gradients.redToBlue,
-        "relative rounded-[8px] p-[2px] mx-[16px] mt-[16px] lg:mt-[32px] w-full max-w-[1000px]",
+        "flex flex-col justify-center items-center",
+        "mx-[16px] mt-[16px]",
+        "w-full max-w-[1000px]",
       )}
     >
-      {/* Desktop view */}
       <div
         className={cn(
-          "hidden lg:flex justify-between items-center",
-          "bg-agblack rounded-[inherit]",
-          "px-[16px] py-[8px]",
+          "hidden lg:grid",
+          Gradients.redToBlue,
+          "relative rounded-t-[8px] p-[2px] pb-0 mx-[16px] mt-[16px] lg:mt-[32px]",
+          "text-agwhite/[0.66] font-sans uppercase font-extrabold text-[16px] tracking-widest",
+          "[&_svg]:text-[24px]",
         )}
       >
-        <div className="flex justify-center items-center">
-          <Image
-            src={IMAGEKIT_LOGOS.LOGO}
-            alt="Antigravity"
-            height={24}
-            width={24}
-            className="w-[42px] h-[42px]"
-          />
-          <h1
-            className={cn(
-              Gradients.whiteGradientText,
-              "text-[14px] leading-[14px] font-extrabold font-sans uppercase",
-            )}
-          >
-            Antigravity
-          </h1>
-        </div>
-
-        <div className="flex justify-center items-center gap-[16px]">
-          <Link
-            className={cn(
-              Gradients.whiteGradientText,
-              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-            )}
-            href="/lottery"
-          >
-            Lottery
-          </Link>
-          <Link
-            className={cn(
-              Gradients.whiteGradientText,
-              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-            )}
-            href="/treasury"
-          >
-            Treasury
-          </Link>
-          <Link
-            className={cn(
-              Gradients.whiteGradientText,
-              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-            )}
-            href="/evil-address"
-          >
-            Evil
-          </Link>
-          <Link
-            className={cn(
-              Gradients.whiteGradientText,
-              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-            )}
-            href="/unwrap"
-          >
-            Unwrap
-          </Link>
-        </div>
-
-        {account.isConnected ? (
-          <>
-            <div className="w-[2px] h-[2.5rem] bg-gradient-to-b from-white via-[#999999] to-[#999999] rounded-full" />
-            <HeaderUserconnectedSection />
-          </>
-        ) : (
-          <Button onClick={openConnectModal}>
+        <div className="grid grid-flow-col gap-[16px] px-[16px] py-[8px] bg-agblack rounded-[inherit]">
+          <div className="flex justify-center items-center gap-[8px]">
+            <PiTreasureChestDuotone />
+            <p>Treasury $DARK:</p>
+            <p>{data.treasurydark.toLocaleString("en-US")}</p>
+          </div>
+          <div className="flex justify-center items-center gap-[8px]">
+            <PiRocketLaunchDuotone />
+            <p>Journey:</p>
+            <p>{data.treasurydark.toLocaleString("en-US")}</p>
+          </div>
+          <div className="flex justify-center items-center gap-[8px]">
             <PiWalletDuotone />
-            <span>Connect wallet</span>
-          </Button>
-        )}
-      </div>
-
-      {/* Mobile view */}
-      <div className="flex lg:hidden justify-between items-center bg-agblack px-[16px] py-[8px] rounded-[inherit]">
-        <div className="flex justify-center items-center">
-          <Image
-            src={IMAGEKIT_LOGOS.LOGO}
-            alt="Antigravity"
-            height={24}
-            width={24}
-            className="w-[42px] h-[42px]"
-          />
-          <h1
-            className={cn(
-              Gradients.whiteGradientText,
-              "text-[14px] leading-[14px] font-extrabold font-sans uppercase",
-            )}
-          >
-            Antigravity
-          </h1>
+            <p>User $DARK:</p>
+            <p>{data.treasurydark.toLocaleString("en-US")}</p>
+          </div>
         </div>
-
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-agwhite text-[24px]"
-        >
-          {mobileMenuOpen ? <PiXCircleDuotone /> : <PiListDuotone />}
-        </button>
       </div>
-
-      {mobileMenuOpen && (
+      <div
+        className={cn(
+          Gradients.redToBlue,
+          "relative rounded-[8px] p-[2px] w-full",
+        )}
+      >
+        {/* Desktop view */}
         <div
           className={cn(
-            Gradients.redToBlue,
-            "absolute top-full mt-[16px]",
-            "w-[calc(100%-4px)]",
-            "p-[2px] rounded-[8px]",
-            "block lg:hidden",
+            "hidden lg:flex justify-between items-center",
+            "bg-agblack rounded-[inherit]",
+            "px-[16px] py-[8px]",
           )}
         >
-          <div className="flex flex-col justify-center items-center gap-[32px] bg-agblack p-[32px] rounded-[inherit]">
-            {account.isConnected ? (
-              <HeaderUserconnectedSection />
-            ) : (
-              <Button onClick={openConnectModal}>
-                <PiWalletDuotone />
-                <span>Connect wallet</span>
-              </Button>
-            )}
-            <div
+          <Link href="/lottery" className="flex justify-center items-center">
+            <Image
+              src={IMAGEKIT_LOGOS.LOGO}
+              alt="Antigravity"
+              height={24}
+              width={24}
+              className="w-[42px] h-[42px]"
+            />
+            <h1
               className={cn(
-                Gradients.whiteToGrey,
-                "w-full h-[1px] rounded-full",
+                Gradients.whiteGradientText,
+                "text-[14px] leading-[14px] font-extrabold font-sans uppercase",
               )}
-            ></div>
+            >
+              Antigravity
+            </h1>
+          </Link>
+
+          <div className="flex justify-center items-center gap-[16px]">
             <Link
               className={cn(
                 Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
               )}
               href="/lottery"
             >
@@ -170,33 +110,166 @@ export default function Header() {
             <Link
               className={cn(
                 Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
               )}
               href="/treasury"
             >
               Treasury
             </Link>
+            {process.env.NEXT_EVIL_ADDRESS_AVAILABLE === "true" && (
+              <Link
+                className={cn(
+                  Gradients.whiteGradientText,
+                  "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
+                )}
+                href="/evil-address"
+              >
+                Evil
+              </Link>
+            )}
+            {process.env.NEXT_UNWRAP_AVAILABLE === "true" && (
+              <Link
+                className={cn(
+                  Gradients.whiteGradientText,
+                  "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
+                )}
+                href="/unwrap"
+              >
+                Unwrap
+              </Link>
+            )}
             <Link
               className={cn(
                 Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
               )}
-              href="/evil-address"
+              href="https://test.agproject.io"
+              target="_blank"
             >
-              EVIL
-            </Link>
-            <Link
-              className={cn(
-                Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
-              )}
-              href="/unwrap"
-            >
-              Unwrap
+              test.agrpoject.io
             </Link>
           </div>
+
+          {account.isConnected ? (
+            <>
+              <div className="w-[2px] h-[2.5rem] bg-gradient-to-b from-white via-[#999999] to-[#999999] rounded-full" />
+              <HeaderUserconnectedSection />
+            </>
+          ) : (
+            <Button onClick={openConnectModal}>
+              <PiWalletDuotone />
+              <span>Connect wallet</span>
+            </Button>
+          )}
         </div>
-      )}
+
+        {/* Mobile view */}
+        <div className="flex lg:hidden justify-between items-center bg-agblack px-[16px] py-[8px] rounded-[inherit]">
+          <Link href="/lottery" className="flex justify-center items-center">
+            <Image
+              src={IMAGEKIT_LOGOS.LOGO}
+              alt="Antigravity"
+              height={24}
+              width={24}
+              className="w-[42px] h-[42px]"
+            />
+            <h1
+              className={cn(
+                Gradients.whiteGradientText,
+                "text-[14px] leading-[14px] font-extrabold font-sans uppercase",
+              )}
+            >
+              Antigravity
+            </h1>
+          </Link>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-agwhite text-[24px]"
+          >
+            {mobileMenuOpen ? <PiXCircleDuotone /> : <PiListDuotone />}
+          </button>
+        </div>
+
+        {mobileMenuOpen && (
+          <div
+            className={cn(
+              Gradients.redToBlue,
+              "absolute top-full mt-[16px]",
+              "w-[calc(100%-4px)]",
+              "p-[2px] rounded-[8px]",
+              "block lg:hidden",
+            )}
+          >
+            <div className="flex flex-col justify-center items-center gap-[32px] bg-agblack p-[32px] rounded-[inherit]">
+              {account.isConnected ? (
+                <HeaderUserconnectedSection />
+              ) : (
+                <Button onClick={openConnectModal}>
+                  <PiWalletDuotone />
+                  <span>Connect wallet</span>
+                </Button>
+              )}
+              <div
+                className={cn(
+                  Gradients.whiteToGrey,
+                  "w-full h-[1px] rounded-full",
+                )}
+              ></div>
+              <Link
+                className={cn(
+                  Gradients.whiteGradientText,
+                  "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+                )}
+                href="/lottery"
+              >
+                Lottery
+              </Link>
+              <Link
+                className={cn(
+                  Gradients.whiteGradientText,
+                  "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+                )}
+                href="/treasury"
+              >
+                Treasury
+              </Link>
+              {process.env.NEXT_EVIL_ADDRESS_AVAILABLE === "true" && (
+                <Link
+                  className={cn(
+                    Gradients.whiteGradientText,
+                    "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+                  )}
+                  href="/evil-address"
+                >
+                  EVIL
+                </Link>
+              )}
+              {process.env.NEXT_UNWRAP_AVAILABLE === "true" && (
+                <Link
+                  className={cn(
+                    Gradients.whiteGradientText,
+                    "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+                  )}
+                  href="/unwrap"
+                >
+                  Unwrap
+                </Link>
+              )}
+              <Link
+                className={cn(
+                  Gradients.whiteGradientText,
+                  "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+                )}
+                href="https://test.agproject.io"
+                target="_blank"
+              >
+                test.agrpoject.io
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
     </header>
   );
 }
