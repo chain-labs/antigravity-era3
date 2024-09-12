@@ -3,23 +3,22 @@ import useJPMContract from "@/abi/JourneyPhaseManager";
 import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
-  useReadContract,
+  useConfig,
   useReadContracts,
-  useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
 import { useGQLFetch } from "../api/useGraphQLClient";
 import { gql } from "graphql-request";
-import { getRainbowKitChainsFromPage } from "@/components/RainbowKit";
-import { TEST_NETWORK } from "@/constants/global";
 import { useRestFetch } from "../api/useRestClient";
 import axios from "axios";
 import { API_ENDPOINT } from "@/constants";
 import { createMerkleTreeForLottery } from "@/utils/merkletree";
 import MerkleTree from "merkletreejs";
-import { gqlFetcher } from "@/api/graphqlClient";
 import { encodePacked, keccak256 } from "viem";
 import toast from "react-hot-toast";
+import { waitForTransactionReceipt } from "@wagmi/core";
+
+const PRUNE_BATCH_SIZE = 2;
 
 const useLottery = (): {
   currentLottery: number;
@@ -28,11 +27,14 @@ const useLottery = (): {
   lotteryPayout: string;
   fuelCellsWon: number;
   batchPrune: () => void;
+  pruneLoading: boolean;
+  pruneBatch: { from: number; to: number; total: number };
   createMerkleTrees: () => Promise<Record<string, MerkleTree>>;
 } => {
   const account = useAccount();
   const [pruneLoading, setPruneLoading] = useState(false);
   const [prePrune, setPrePrune] = useState(false);
+  const [pruneBatch, setPruneBatch] = useState({ from: 0, to: 50, total: 50 });
 
   // define contract instances here
   const JPMContract = useJPMContract();
@@ -234,14 +236,14 @@ const useLottery = (): {
   };
 
   const {
-    writeContract: batchPruneWinnings,
+    writeContractAsync: batchPruneWinnings,
     error: batchPruneError,
     data: batchPruneHash,
   } = useWriteContract();
 
-  const { data: batchPruneReceipt } = useWaitForTransactionReceipt({
-    hash: batchPruneHash,
-  });
+  // const { data: batchPruneReceipt } = useWaitForTransactionReceipt({
+  //   hash: batchPruneHash,
+  // });
 
   useEffect(() => {
     if (batchPruneError) {
@@ -253,19 +255,22 @@ const useLottery = (): {
   }, [batchPruneError]);
 
   useEffect(() => {
-    if (batchPruneReceipt) {
-      setPrePrune(false);
-      setPruneLoading(false);
-      toast.success("Winnings pruned successfully");
+    if (batchPruneHash) {
+      // setPrePrune(false);
+      // setPruneLoading(false);
+      // toast.success("Winnings pruned successfully");
+      console.log({ batchPruneHash });
     }
-  }, [batchPruneReceipt]);
+  }, [batchPruneHash]);
+
+  const config = useConfig();
 
   const batchPrune = async () => {
     setPruneLoading(true);
     setPrePrune(true);
     const trees = await createMerkleTrees();
 
-    const proofs =
+    let proofs =
       userWinnings?.map((win) => {
         const { lotteryId, tokenId, journeyId } = win;
         const merkleTree = trees[`${journeyId}_${lotteryId}`];
@@ -283,22 +288,32 @@ const useLottery = (): {
 
     const tokenIds = userWinnings?.map(({ tokenId }) => tokenId) ?? [];
 
-    console.log({ trees, userWinnings, proofs, tokenIds });
+    const chunkSize = PRUNE_BATCH_SIZE;
+    const START_INDEX = 6;
+    for (let i = START_INDEX; i < proofs.length; i += chunkSize) {
+      const proofsChunk = proofs.slice(i, i + chunkSize);
+      const tokenIdsChunk = tokenIds.slice(i, i + chunkSize);
+      setPruneBatch({
+        from: i + 1,
+        to: i + chunkSize,
+        total: proofs.length,
+      });
 
-    setPrePrune(false);
-    console.log({
-      address: JackpotContract.address as `0x${string}`,
-      abi: JackpotContract.abi,
-      functionName: "batchPruneWinning",
-      args: [proofs, tokenIds],
-    });
-    batchPruneWinnings({
-      address: JackpotContract.address as `0x${string}`,
-      abi: JackpotContract.abi,
-      functionName: "batchPruneWinning",
-      args: [proofs, tokenIds],
-      gas: BigInt(27000000),
-    });
+      const tx = await batchPruneWinnings({
+        address: JackpotContract.address as `0x${string}`,
+        abi: JackpotContract.abi,
+        functionName: "batchPruneWinning",
+        args: [proofsChunk, tokenIdsChunk],
+        gas: BigInt(25000000),
+      });
+
+      const receipt = await waitForTransactionReceipt(config, {
+        hash: tx,
+        confirmations: 5,
+      });
+      console.log({ receipt });
+    }
+    setPruneLoading(false);
   };
 
   return {
@@ -311,6 +326,8 @@ const useLottery = (): {
     ),
     lotteryPayout: totalWinnings,
     fuelCellsWon: userWinnings?.length ?? 0,
+    pruneLoading,
+    pruneBatch,
     batchPrune,
     createMerkleTrees,
   };

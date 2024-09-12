@@ -26,6 +26,8 @@ export default function LotteryPage() {
     nextLotteryTimestamp,
     lotteryPayout,
     fuelCellsWon,
+    pruneBatch,
+    pruneLoading,
     batchPrune,
   } = useLottery();
 
@@ -117,8 +119,11 @@ export default function LotteryPage() {
                 </div>
               </div>
             </div>
-            <Button onClick={handlePruneWinnings}>
-              <PiWrenchDuotone /> Prune
+            <Button onClick={handlePruneWinnings} disabled={pruneLoading}>
+              <PiWrenchDuotone />{" "}
+              {pruneLoading
+                ? `${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`
+                : "Prune"}
             </Button>
           </form>
           <div
