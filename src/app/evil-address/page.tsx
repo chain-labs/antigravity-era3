@@ -105,7 +105,7 @@ export default function EvilAddressPage() {
     pruneAndRollover: 1000,
     mintFromEvilAddress: 500,
   };
-  if (process.env.NEXT_UNWRAP_AVAILABLE !== "true") {
+  if (process.env.NEXT_EVIL_ADDRESS_AVAILABLE !== "true") {
     return notFound();
   }
   return (
