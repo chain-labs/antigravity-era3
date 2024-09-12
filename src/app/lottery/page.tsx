@@ -44,7 +44,8 @@ export default function LotteryPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Prune Winnings
+            Congratulations!
+            <br /> Prune your winnings!
           </h1>
           <p className="text-[14px] leading-[14px]">
             Next Lottery ID: {data.nextLotteryId}
@@ -89,7 +90,7 @@ export default function LotteryPage() {
                 </p>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
-                  <span>{data.fuelCellsWon} Fuel cells won</span>
+                  <span>{data.fuelCellsWon} Dark Matter tokens won</span>
                 </div>
               </div>
             </div>
