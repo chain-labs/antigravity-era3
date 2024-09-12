@@ -116,7 +116,7 @@ export default function LotteryPage() {
                 </p>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
-                  <span>{data.fuelCellsWon} Fuel Cells won</span>
+                  <span>{fuelCellsWon} Fuel cells won</span>
                 </div>
               </div>
             </div>
