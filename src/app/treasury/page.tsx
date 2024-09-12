@@ -136,7 +136,7 @@ export default function TreasuryPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer timestamp="mintEndTimestamp" />
           </div>
         </div>
       </div>

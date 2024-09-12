@@ -190,7 +190,7 @@ export default function UnwrapPage() {
                   "font-extrabold",
                 )}
               >
-                <Timer />
+                <Timer timestamp="nextJourneyTimestamp" />
               </div>
             </motion.div>
 

@@ -155,7 +155,7 @@ export default function EvilAddressPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer timestamp="nextJourneyTimestamp" />
           </div>
         </div>
       </div>
