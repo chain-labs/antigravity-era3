@@ -12,9 +12,14 @@ import {
   PiXCircleDuotone,
 } from "react-icons/pi";
 import Button from "../html/Button";
+import { useAccount } from "wagmi";
+import HeaderUserconnectedSection from "./HeaderUserconnectedSection";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const account = useAccount();
+  const { openConnectModal } = useConnectModal();
   return (
     <header
       className={cn(
@@ -54,15 +59,6 @@ export default function Header() {
               Gradients.whiteGradientText,
               "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
             )}
-            href="/evil-address"
-          >
-            Evil
-          </Link>
-          <Link
-            className={cn(
-              Gradients.whiteGradientText,
-              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-            )}
             href="/lottery"
           >
             Lottery
@@ -81,18 +77,32 @@ export default function Header() {
               Gradients.whiteGradientText,
               "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
             )}
+            href="/evil-address"
+          >
+            Evil
+          </Link>
+          <Link
+            className={cn(
+              Gradients.whiteGradientText,
+              "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
+            )}
             href="/unwrap"
           >
             Unwrap
           </Link>
         </div>
 
-        <div>
-          <Button>
+        {account.isConnected ? (
+          <>
+            <div className="w-[2px] h-[2.5rem] bg-gradient-to-b from-white via-[#999999] to-[#999999] rounded-full" />
+            <HeaderUserconnectedSection />
+          </>
+        ) : (
+          <Button onClick={openConnectModal}>
             <PiWalletDuotone />
             <span>Connect wallet</span>
           </Button>
-        </div>
+        )}
       </div>
 
       {/* Mobile view */}
@@ -134,33 +144,20 @@ export default function Header() {
           )}
         >
           <div className="flex flex-col justify-center items-center gap-[32px] bg-agblack p-[32px] rounded-[inherit]">
-            <button
-              className={cn(
-                "px-[16px] py-[12px]",
-                "flex justify-center items-center gap-[8px]",
-                "bg-brblue rounded-[4px]",
-                "uppercase text-agwhite tracking-widest text-[16px] font-extrabold",
-                "[&_svg]:text-[24px]",
-              )}
-            >
-              <PiWalletDuotone />
-              <span>Connect wallet</span>
-            </button>
+            {account.isConnected ? (
+              <HeaderUserconnectedSection />
+            ) : (
+              <Button onClick={openConnectModal}>
+                <PiWalletDuotone />
+                <span>Connect wallet</span>
+              </Button>
+            )}
             <div
               className={cn(
                 Gradients.whiteToGrey,
                 "w-full h-[1px] rounded-full",
               )}
             ></div>
-            <Link
-              className={cn(
-                Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
-              )}
-              href="/evil-address"
-            >
-              EVIL
-            </Link>
             <Link
               className={cn(
                 Gradients.whiteGradientText,
@@ -178,6 +175,15 @@ export default function Header() {
               href="/treasury"
             >
               Treasury
+            </Link>
+            <Link
+              className={cn(
+                Gradients.whiteGradientText,
+                "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
+              )}
+              href="/evil-address"
+            >
+              EVIL
             </Link>
             <Link
               className={cn(

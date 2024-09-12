@@ -11,6 +11,7 @@ import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 
 export default function LotteryPage() {
   const data = {
+    fuelcells: 122223,
     nextLotteryId: 2,
     currentJourneyId: 1,
     fuelCellsWon: 123,
@@ -18,13 +19,14 @@ export default function LotteryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.MINING_PAGE_ERA_3})`,
+        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.LOTTERY_2})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-cover"
+      className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
     >
+      <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
         className={cn(
-          "flex flex-col items-center justify-center gap-[50px]",
+          "flex flex-col items-center justify-center gap-[50px] z-[1]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
         )}
       >
@@ -32,8 +34,8 @@ export default function LotteryPage() {
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agwhite/30 backdrop-blur-lg",
-            "text-agblack",
+            "bg-agblack/30 backdrop-blur-lg",
+            "text-agwhite",
           )}
         >
           <h1
@@ -42,7 +44,7 @@ export default function LotteryPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Prune Lottery
+            Prune Winnings
           </h1>
           <p className="text-[14px] leading-[14px]">
             Next Lottery ID: {data.nextLotteryId}
@@ -69,7 +71,9 @@ export default function LotteryPage() {
                 "w-full",
               )}
             >
-              <Input className="bg-none" />
+              <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
+                {data.fuelcells.toLocaleString("en-US")}
+              </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
                 <p className={cn(Gradients.lightBlue, Shapes.pill)}>
                   <Image

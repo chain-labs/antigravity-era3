@@ -18,13 +18,14 @@ export default function TreasuryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.MINING_PAGE_ERA_3})`,
+        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.TREASURY_2})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-cover"
+      className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
     >
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
         className={cn(
-          "flex flex-col items-center justify-center gap-[50px]",
+          "flex flex-col items-center justify-center gap-[50px] z-[1]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
         )}
       >
@@ -32,8 +33,8 @@ export default function TreasuryPage() {
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agwhite/30 backdrop-blur-lg",
-            "text-agblack",
+            "bg-agblack/30 backdrop-blur-lg",
+            "text-agwhite",
           )}
         >
           <h1
@@ -42,7 +43,7 @@ export default function TreasuryPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Treasury Information
+            Treasury Info
           </h1>
           <p className="text-[14px] leading-[14px]">
             Next Lottery ID: {data.nextLotteryId}
@@ -145,7 +146,7 @@ export default function TreasuryPage() {
                   className="w-[24px] h-[24px] mix-blend-multiply rounded-full"
                 />
                 <span className="text-agblack font-semibold font-general-sans">
-                  FUEL CELLS
+                  Fuel Cells
                 </span>
               </p>
             </div>
