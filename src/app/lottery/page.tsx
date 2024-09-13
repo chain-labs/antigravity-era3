@@ -47,12 +47,6 @@ export default function LotteryPage() {
             Congratulations!
             <br /> Prune your winnings!
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {data.nextLotteryId}
-          </p>
-          <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {data.currentJourneyId}
-          </p>
         </div>
 
         <div className="flex flex-col justify-center items-center gap-[24px]">
@@ -78,14 +72,14 @@ export default function LotteryPage() {
               <div className="flex flex-col justify-end items-end gap-[8px]">
                 <p className={cn(Gradients.lightBlue, Shapes.pill)}>
                   <Image
-                    src={IMAGEKIT_ICONS.FUEL_CELL}
+                    src={IMAGEKIT_ICONS.PILL_DARK_X_CLAIMED}
                     alt="Fuel Cell"
                     width={24}
                     height={24}
-                    className="w-[24px] h-[24px] mix-blend-multiply"
+                    className="w-[24px] h-[24px] rounded-full"
                   />
                   <span className="text-agblack font-semibold font-general-sans">
-                    Dark Matter
+                    DARK Matter
                   </span>
                 </p>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
@@ -95,7 +89,7 @@ export default function LotteryPage() {
               </div>
             </div>
             <Button type="submit">
-              <PiWrenchDuotone /> Prune
+              <PiWrenchDuotone /> Prune DARK Matter
             </Button>
           </form>
           <div
