@@ -8,6 +8,8 @@ import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
+import { motion } from "framer-motion";
+import SeperateText from "@/components/animation/SeperateText";
 
 export default function LotteryPage() {
   const data = {
@@ -94,8 +96,36 @@ export default function LotteryPage() {
                 </div>
               </div>
             </div>
-            <Button type="submit">
-              <PiWrenchDuotone /> Prune
+            <Button type="submit" initial="initial" whileHover="hover">
+              <motion.div
+                variants={{
+                  initial: { scale: 1, rotate: 0 },
+                  hover: {
+                    scale: 1.1,
+                    rotate: [0, -10, -10, -10, -20, -20, -20, -30, -30, -30],
+                    transition: { duration: 1 },
+                  },
+                }}
+                className="origin-top-right"
+              >
+                <PiWrenchDuotone />
+              </motion.div>
+              <SeperateText
+                text="Prune"
+                variants={{
+                  container: {
+                    initial: {},
+                    hover: {
+                      overflow: "hidden",
+                      transition: { staggerChildren: 0.1 },
+                    },
+                  },
+                  children: {
+                    initial: { y: 0 },
+                    hover: { y: [0, 20, 0] },
+                  },
+                }}
+              />
             </Button>
           </form>
           <div

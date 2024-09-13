@@ -18,6 +18,7 @@ import Button from "../html/Button";
 import { useAccount } from "wagmi";
 import HeaderUserconnectedSection from "./HeaderUserconnectedSection";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { motion } from "framer-motion";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -156,8 +157,22 @@ export default function Header() {
               <HeaderUserconnectedSection />
             </>
           ) : (
-            <Button onClick={openConnectModal}>
-              <PiWalletDuotone />
+            <Button
+              onClick={openConnectModal}
+              initial="initial"
+              whileHover="hover"
+            >
+              <motion.div
+                variants={{
+                  initial: { rotate: 0 },
+                  hover: {
+                    rotate: [0, 10, -10, 10, 0],
+                    transition: { duration: 0.25 },
+                  },
+                }}
+              >
+                <PiWalletDuotone />
+              </motion.div>
               <span>Connect wallet</span>
             </Button>
           )}
@@ -205,8 +220,22 @@ export default function Header() {
               {account.isConnected ? (
                 <HeaderUserconnectedSection />
               ) : (
-                <Button onClick={openConnectModal}>
-                  <PiWalletDuotone />
+                <Button
+                  onClick={openConnectModal}
+                  initial="initial"
+                  whileHover="hover"
+                >
+                  <motion.div
+                    variants={{
+                      initial: { rotate: 0 },
+                      hover: {
+                        rotate: [0, 10, -10, 10, 0],
+                        transition: { duration: 0.25 },
+                      },
+                    }}
+                  >
+                    <PiWalletDuotone />
+                  </motion.div>
                   <span>Connect wallet</span>
                 </Button>
               )}
