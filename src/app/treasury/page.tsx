@@ -9,6 +9,7 @@ import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import Link from "next/link";
 import {
+  PiAlignRight,
   PiCubeDuotone,
   PiTrophyDuotone,
   PiWrenchDuotone,
@@ -123,11 +124,6 @@ export default function TreasuryPage() {
               </p>
             </div>
           </div>
-          <Link href="https://test.agproject.io/minting" target="_blank">
-            <Button>
-              <PiCubeDuotone /> Mint Now
-            </Button>
-          </Link>
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
@@ -138,6 +134,18 @@ export default function TreasuryPage() {
           >
             <Timer />
           </div>
+          <Link
+            href="https://test.agproject.io/minting"
+            target="_blank"
+            className={cn(
+              Gradients.redToBlue,
+              "relative rounded-[8px] p-[2px] w-fit",
+            )}
+          >
+            <div className="underline underline-offset-2 text-agwhite font-sans font-semibold uppercase tracking-widest px-[16px] py-[8px] rounded-[6px] bg-agblack h-">
+              Mint Now!
+            </div>
+          </Link>
         </div>
       </div>
     </div>
