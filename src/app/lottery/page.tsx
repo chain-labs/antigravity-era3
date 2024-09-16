@@ -9,7 +9,9 @@ import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
-import SeperateText from "@/components/animation/SeperateText";
+import SeperateText, {
+  HoverTextAnimation,
+} from "@/components/animation/SeperateText";
 
 export default function LotteryPage() {
   const data = {
@@ -78,7 +80,15 @@ export default function LotteryPage() {
                 {data.fuelcells.toLocaleString("en-US")}
               </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
-                <p className={cn(Gradients.lightBlue, Shapes.pill)}>
+                <motion.p
+                  initial="initial"
+                  whileHover="hover"
+                  className={cn(
+                    Gradients.lightBlue,
+                    Shapes.pill,
+                    "text-agblack font-semibold font-general-sans",
+                  )}
+                >
                   <Image
                     src={IMAGEKIT_ICONS.FUEL_CELL}
                     alt="Fuel Cell"
@@ -86,10 +96,8 @@ export default function LotteryPage() {
                     height={24}
                     className="w-[24px] h-[24px] mix-blend-multiply"
                   />
-                  <span className="text-agblack font-semibold font-general-sans">
-                    Dark Matter
-                  </span>
-                </p>
+                  <HoverTextAnimation.Fading text="Fuel Cells" />
+                </motion.p>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
                   <span>{data.fuelCellsWon} Fuel Cells won</span>
@@ -99,10 +107,9 @@ export default function LotteryPage() {
             <Button type="submit" initial="initial" whileHover="hover">
               <motion.div
                 variants={{
-                  initial: { scale: 1, rotate: 0 },
+                  initial: { rotate: 0 },
                   hover: {
-                    scale: 1.1,
-                    rotate: [0, -10, -10, -10, -20, -20, -20, -30, -30, -30],
+                    rotate: [0, -10, -10, -10, -20, -20, -20, -30, -30, -30, 0],
                     transition: { duration: 1 },
                   },
                 }}
@@ -110,22 +117,7 @@ export default function LotteryPage() {
               >
                 <PiWrenchDuotone />
               </motion.div>
-              <SeperateText
-                text="Prune"
-                variants={{
-                  container: {
-                    initial: {},
-                    hover: {
-                      overflow: "hidden",
-                      transition: { staggerChildren: 0.1 },
-                    },
-                  },
-                  children: {
-                    initial: { y: 0 },
-                    hover: { y: [0, 20, 0] },
-                  },
-                }}
-              />
+              <HoverTextAnimation.RollingIn text="Prune" />
             </Button>
           </form>
           <div

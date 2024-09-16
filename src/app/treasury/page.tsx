@@ -13,6 +13,8 @@ import {
   PiTrophyDuotone,
   PiWrenchDuotone,
 } from "react-icons/pi";
+import { motion } from "framer-motion";
+import { HoverTextAnimation } from "@/components/animation/SeperateText";
 
 export default function TreasuryPage() {
   const data = {
@@ -79,7 +81,15 @@ export default function TreasuryPage() {
                 </small>
                 <p className="text-[32px]">100</p>
               </div>
-              <p className={cn(Gradients.lightBlue, Shapes.pill)}>
+              <motion.p
+                initial="initial"
+                whileHover="hover"
+                className={cn(
+                  Gradients.lightBlue,
+                  Shapes.pill,
+                  "text-agblack font-semibold font-general-sans",
+                )}
+              >
                 <Image
                   src={IMAGEKIT_ICONS.PILL_DARK_X_CLAIMED}
                   alt="Unclaimed Dark X"
@@ -87,10 +97,8 @@ export default function TreasuryPage() {
                   height={24}
                   className="w-[24px] h-[24px] rounded-full"
                 />
-                <span className="text-agblack font-semibold font-general-sans">
-                  DARK
-                </span>
-              </p>
+                <HoverTextAnimation.Fading text="Dark" />
+              </motion.p>
             </div>
             <div
               className={cn(
@@ -109,7 +117,15 @@ export default function TreasuryPage() {
                 </small>
                 <p className="text-[32px]">100</p>
               </div>
-              <p className={cn(Gradients.lightBlue, Shapes.pill)}>
+              <motion.p
+                initial="initial"
+                whileHover="hover"
+                className={cn(
+                  Gradients.lightBlue,
+                  Shapes.pill,
+                  "text-agblack font-semibold font-general-sans",
+                )}
+              >
                 <Image
                   src={IMAGEKIT_ICONS.FUEL_CELL}
                   alt="Fuel Cell"
@@ -117,10 +133,8 @@ export default function TreasuryPage() {
                   height={24}
                   className="w-[24px] h-[24px] mix-blend-multiply rounded-full"
                 />
-                <span className="text-agblack font-semibold font-general-sans">
-                  Fuel Cells
-                </span>
-              </p>
+                <HoverTextAnimation.Fading text="Fuel Cells" />
+              </motion.p>
             </div>
           </div>
           <Link href="https://test.agproject.io/minting" target="_blank">
