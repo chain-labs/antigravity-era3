@@ -20,6 +20,10 @@ import HeaderUserconnectedSection from "./HeaderUserconnectedSection";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
 import { HoverTextAnimation } from "../animation/SeperateText";
+import {
+  EVIL_ADDRESS_AVAILABLE,
+  UNWRAP_AVAILABLE,
+} from "@/constants";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -176,7 +180,7 @@ export default function Header() {
                 <HoverTextAnimation.Fading text="Treasury" />
               </motion.p>
             </Link>
-            {process.env.NEXT_EVIL_ADDRESS_AVAILABLE === "true" && (
+            {EVIL_ADDRESS_AVAILABLE && (
               <Link href="/evil-address">
                 <motion.p
                   initial="initial"
@@ -189,7 +193,7 @@ export default function Header() {
                 </motion.p>
               </Link>
             )}
-            {process.env.NEXT_UNWRAP_AVAILABLE === "true" && (
+            {UNWRAP_AVAILABLE && (
               <Link href="/unwrap">
                 <motion.p
                   initial="initial"
@@ -327,7 +331,7 @@ export default function Header() {
               >
                 Treasury
               </Link>
-              {process.env.NEXT_EVIL_ADDRESS_AVAILABLE === "true" && (
+              {EVIL_ADDRESS_AVAILABLE && (
                 <Link
                   className={cn(
                     Gradients.whiteGradientText,
@@ -338,7 +342,7 @@ export default function Header() {
                   EVIL
                 </Link>
               )}
-              {process.env.NEXT_UNWRAP_AVAILABLE === "true" && (
+              {UNWRAP_AVAILABLE && (
                 <Link
                   className={cn(
                     Gradients.whiteGradientText,

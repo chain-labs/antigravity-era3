@@ -18,6 +18,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { notFound } from "next/navigation";
+import { UNWRAP_AVAILABLE } from "@/constants";
 
 export default function UnwrapPage() {
   const data = {
@@ -82,7 +83,7 @@ export default function UnwrapPage() {
 
   const [tableReveal, setTableReveal] = useState(false);
 
-  if (process.env.NEXT_UNWRAP_AVAILABLE !== "true") {
+  if (UNWRAP_AVAILABLE === false) {
     return notFound();
   }
 

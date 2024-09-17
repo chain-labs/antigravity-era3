@@ -30,7 +30,7 @@ export default function TreasuryPage() {
       }}
       className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
     >
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
         className={cn(
           "flex flex-col items-center justify-center gap-[50px] z-[1]",
@@ -156,9 +156,13 @@ export default function TreasuryPage() {
               "relative rounded-[8px] p-[2px] w-fit",
             )}
           >
-            <div className="underline underline-offset-2 text-agwhite font-sans font-semibold uppercase tracking-widest px-[16px] py-[8px] rounded-[6px] bg-agblack h-">
-              Mint Now!
-            </div>
+            <motion.div
+              initial="initial"
+              whileHover="hover"
+              className="underline underline-offset-2 text-agwhite font-sans font-semibold uppercase tracking-widest px-[16px] py-[8px] rounded-[6px] bg-agblack h-"
+            >
+              <HoverTextAnimation.RollingIn text="Mint Now!" />
+            </motion.div>
           </Link>
         </div>
       </div>

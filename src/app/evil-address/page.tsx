@@ -1,8 +1,10 @@
 "use client";
 
+import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
+import { EVIL_ADDRESS_AVAILABLE } from "@/constants";
 import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
@@ -88,8 +90,9 @@ function MintFromEvilAddress({ data }: { data: number }) {
           <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
             {data.toLocaleString("en-US")}
           </p>
-          <Button type="submit">
-            <PiCubeDuotone /> Mint
+          <Button initial="initial" whileHover="hover" type="submit">
+            <PiCubeDuotone />
+            <HoverTextAnimation.RollingIn text="Mint" />
           </Button>
         </div>
       </form>
@@ -105,7 +108,7 @@ export default function EvilAddressPage() {
     pruneAndRollover: 1000,
     mintFromEvilAddress: 500,
   };
-  if (process.env.NEXT_EVIL_ADDRESS_AVAILABLE !== "true") {
+  if (EVIL_ADDRESS_AVAILABLE === false) {
     return notFound();
   }
   return (
@@ -137,12 +140,6 @@ export default function EvilAddressPage() {
           >
             Evil Address
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {data.nextLotteryId}
-          </p>
-          <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {data.currentJourneyId}
-          </p>
         </div>
         <div className="flex flex-col justify-center items-center gap-[24px]">
           <PruneAndRollOver data={data.pruneAndRollover} />
