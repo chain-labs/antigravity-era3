@@ -51,12 +51,6 @@ export default function LotteryPage() {
             Congratulations!
             <br /> Prune your winnings!
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {data.nextLotteryId}
-          </p>
-          <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {data.currentJourneyId}
-          </p>
         </div>
 
         <div className="flex flex-col justify-center items-center gap-[24px]">
@@ -90,11 +84,11 @@ export default function LotteryPage() {
                   )}
                 >
                   <Image
-                    src={IMAGEKIT_ICONS.FUEL_CELL}
+                    src={IMAGEKIT_ICONS.PILL_DARK_X_CLAIMED}
                     alt="Fuel Cell"
                     width={24}
                     height={24}
-                    className="w-[24px] h-[24px] mix-blend-multiply"
+                    className="w-[24px] h-[24px] rounded-full"
                   />
                   <HoverTextAnimation.Fading text="Fuel Cells" />
                 </motion.p>
