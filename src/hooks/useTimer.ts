@@ -15,7 +15,9 @@ let cachedTimestamps: null | Record<string, any> = null;
  * Custom hook to manage timer state including countdown, journey, and phase.
  * @returns {Timer} The current state of the timer.
  */
-export default function useTimer(): Timer {
+export default function useTimer(
+  timestamp: "mintEndTimestamp" | "nextJourneyTimestamp",
+): Timer {
   // Initialize countdown timer with 0 seconds
   const [countdown, setInitialCountdown] = useCountdownTimer(0);
 
@@ -31,18 +33,21 @@ export default function useTimer(): Timer {
   useEffect(() => {
     // Fetch timestamps data if not already cached
     if (cachedTimestamps === null) {
-      fetch("https://ag-api-test.simplrhq.com/api/era-3-timestamps-multipliers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      fetch(
+        "https://ag-api-test.simplrhq.com/api/era-3-timestamps-multipliers",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      })
+      )
         .then((response) => response.json())
         .then((data) => {
           // Cache the fetched data
           cachedTimestamps = data;
           // Update countdown timer and details state with fetched data
-          setInitialCountdown(data.mintEndTimestamp);
+          setInitialCountdown(data[timestamp]);
           setDetails({
             currentJourney: data.currentJourney,
             currentPhase: data.currentPhase,

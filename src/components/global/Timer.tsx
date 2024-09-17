@@ -13,8 +13,16 @@ function NumberAndLabel({ number, label }: { number: number; label: string }) {
   );
 }
 
-export default function Timer() {
-  const time = useTimer();
+export default function Timer({
+  timestamp,
+}: {
+  timestamp: Parameters<typeof useTimer>[0];
+}) {
+  const time = useTimer("mintEndTimestamp");
+  const title = {
+    mintEndTimestamp: `time to next mint`,
+    nextJourneyTimestamp: "time till next lottery",
+  }[timestamp];
   return (
     <div
       className={cn(
@@ -22,7 +30,7 @@ export default function Timer() {
         "text-agwhite uppercase font-sans tracking-widest text-[16px] font-extrabold",
       )}
     >
-      <div>Time Left to Mint in Journey {time.currentJourney}</div>
+      <div>{title}</div>
       <div className="grid grid-flow-col gap-[8px]">
         <NumberAndLabel number={time.countdown.days} label="Days" />
         <div className="h-full w-[1px] bg-agwhite"></div>

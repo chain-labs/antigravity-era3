@@ -122,7 +122,7 @@ export default function LotteryPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer timestamp="nextJourneyTimestamp" />
           </div>
         </div>
       </div>

@@ -146,7 +146,7 @@ export default function TreasuryPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer timestamp="mintEndTimestamp" />
           </div>
           <Link
             href="https://test.agproject.io/minting"
