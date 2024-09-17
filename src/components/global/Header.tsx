@@ -165,7 +165,6 @@ export default function Header() {
                 Gradients.whiteGradientText,
                 "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
               )}
-              href="/treasury"
             >
               <Link href="/lottery">
                 <HoverTextAnimation.Fading text="Lottery" />
