@@ -36,15 +36,15 @@ export const CONTRACTS: Record<
   [baseSepolia.id]: {
     miningRig: "0x8Dea737AE483153c69934ff8a5c7E3D448c2DB4C",
     darkX: "0xdE87E198D2A5d6894a03AfCb34876601A6dd226f",
-    dark: "0x659A8AddE309cEd070f8a55795c1D626f8c9ccb8",
+    dark: "0xFd1727935f98991f9288b4C675c06B22be4B5cEc",
     wishWell: "0xC8A96A9163C2D11e2002C589a5DC7Ee4267499e2",
-    fuelCell: "0xe102F79f41C4d6AaD87D43F5adD7D5f26Ca4B156",
-    launchControlCenter: "0x61f3B9719b0182f8f4068735D0D2e19388feA9d0",
-    journeyPhaseManager: "0xB57FBFdc949e30d0628635a85207b9dD225d5482",
-    evilAddress: "0xEAB9A6eac2DcEAf73B2A78d20E32aC85aa1789F2",
-    treasury: "0x6417097DA6D25d716946F793349eF4b456afed51",
-    jackpot: "0x4c9596e62E8C03D995a56Fa2b7bd07BBf3D2f1fE",
-    darkFaucet: "0x2260e58C707E57d21b43B3b74ffD47054A34ACf7",
+    fuelCell: "0x1A530A9803B8faFA34491D70Fa7EE49C220e29Dc",
+    launchControlCenter: "0x79dEB64969Edf4DDb03c7F4eB6BEFB5F7bfA8092",
+    journeyPhaseManager: "0xf16834786221C51678cB386cf77a57ac7fcb3441",
+    evilAddress: "0xc8fbd57E614525Bec28ED512398c38261A3796c5",
+    treasury: "0x602Af48Fff12e4e3d6ffd6CDE7f2d1144091d251",
+    jackpot: "0x0C0D814F948e3Fdf1cd4FF5dB160de9fBF78C593",
+    darkFaucet: "0xC92616FBeB666cEE61cf1e1AB72b4a32593f67C0",
   },
   [pulsechainV4.id]: {
     miningRig: "0x020d3Ca9605bb17CC17Ea0DB2bFfed3fA0869fCF",
@@ -66,3 +66,17 @@ export const CONTRACTS: Record<
     wishWell: "0x332211A407489F497cD58bac7Db3F10Da5da47Ff",
   },
 };
+
+MiningRig: 0x8dea737ae483153c69934ff8a5c7e3d448c2db4c;
+DarkX: 0xde87e198d2a5d6894a03afcb34876601a6dd226f;
+Antigravity: 0xe2150da9bce4b63f89ebf61cd3f89eb7f3fb3f05;
+DarkClaims: null;
+Dark: 0xfd1727935f98991f9288b4c675c06b22be4b5cec;
+WishWell: 0xc8a96a9163c2d11e2002c589a5dc7ee4267499e2;
+FuelCell: 0x1a530a9803b8fafa34491d70fa7ee49c220e29dc;
+LaunchControlCenter: 0x79deb64969edf4ddb03c7f4eb6befb5f7bfa8092;
+JourneyPhaseManager: 0xf16834786221c51678cb386cf77a57ac7fcb3441;
+EvilAddress: 0xc8fbd57e614525bec28ed512398c38261a3796c5;
+Treasury: 0x602af48fff12e4e3d6ffd6cde7f2d1144091d251;
+Jackpot: 0x0c0d814f948e3fdf1cd4ff5db160de9fbf78c593;
+DarkFaucet: 0xc92616fbeb666cee61cf1e1ab72b4a32593f67c0;

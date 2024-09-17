@@ -23,7 +23,6 @@ export default function Timer({
   timestamp: number;
 }) {
   const time = useCountdownTimer(timestamp);
-
   useEffect(() => {
     time[1](timestamp);
   }, [timestamp, time]);

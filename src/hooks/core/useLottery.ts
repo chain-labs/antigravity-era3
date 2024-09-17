@@ -9,7 +9,7 @@ import {
 } from "wagmi";
 import { useGQLFetch } from "../api/useGraphQLClient";
 import { gql } from "graphql-request";
-import { useRestFetch } from "../api/useRestClient";
+import { useRestFetch, useRestPost } from "../api/useRestClient";
 import axios from "axios";
 import { API_ENDPOINT } from "@/constants";
 import { createMerkleTreeForLottery } from "@/utils/merkletree";
@@ -142,27 +142,35 @@ const useLottery = (): {
     data: userWinnings,
     isFetched: userWinningsFetched,
     error: userWinningsError,
-  } = useRestFetch<
-    {
+  } = useRestFetch<{
+    lotteryResult: {
       isPruned: boolean;
       journeyId: number;
       lotteryId: number;
       tokenId: number;
       walletAddress: string;
-    }[]
-  >(
+    }[];
+    uniqueCombinationTokens: {
+      journeyId: number;
+      lotteryId: number;
+      tokenId: number;
+    }[];
+  }>(
     ["User Winnings in current lottery"],
     `/api/lottery-result?walletAddress=${account.address}`,
     {
-      enabled: !!account.address,
+      enabled: account.isConnected,
     },
   );
 
   const lotteriesWon = useMemo(() => {
     if (userWinningsFetched) {
+      console.log({ userWinnings });
       const uniqueLotteries = [
         ...new Set(
-          userWinnings?.map((item) => `${item.journeyId}_${item.lotteryId}`),
+          userWinnings?.lotteryResult?.map(
+            (item) => `${item.journeyId}_${item.lotteryId}`,
+          ),
         ),
       ].map((pair) => ({
         ...pair.split("_").reduce(
@@ -172,7 +180,7 @@ const useLottery = (): {
           }),
           {},
         ),
-        count: userWinnings?.filter(
+        count: userWinnings?.lotteryResult?.filter(
           (item) =>
             item.journeyId === Number(pair.split("_")[0]) &&
             item.lotteryId === Number(pair.split("_")[1]),
@@ -226,9 +234,32 @@ const useLottery = (): {
             createMerkleTreeForLottery(entry.data),
         };
       });
-      return lotteryTrees;
 
-      // setLotteryTrees(lotteryTrees);
+      // alternative approach to match above lotteryTrees
+      let lotteryTrees2 = {};
+
+      lotteriesWon.forEach((lottery) => {
+        const list =
+          userWinnings?.uniqueCombinationTokens.filter(
+            (item) =>
+              item.lotteryId === lottery.lotteryId &&
+              item.journeyId === lottery.journeyId,
+          ) ?? [];
+        lotteryTrees2 = {
+          ...lotteryTrees2,
+          [`${lottery.journeyId}_${lottery.lotteryId}`]:
+            createMerkleTreeForLottery(list),
+        };
+      });
+
+      // lotteriesWon.forEach((lottery) => {});
+
+      console.log({
+        lotteryTrees,
+        lotteryTrees2,
+        test: lotteryTrees === lotteryTrees2,
+      });
+      return lotteryTrees2;
     } catch (err) {
       console.log({ err });
       return {};
@@ -265,13 +296,15 @@ const useLottery = (): {
 
   const config = useConfig();
 
+  const { mutateAsync: syncPrune } = useRestPost(["sync prune"], "/api/prune");
+
   const batchPrune = async () => {
     setPruneLoading(true);
     setPrePrune(true);
     const trees = await createMerkleTrees();
 
     let proofs =
-      userWinnings?.map((win) => {
+      userWinnings?.lotteryResult?.map((win) => {
         const { lotteryId, tokenId, journeyId } = win;
         const merkleTree = trees[`${journeyId}_${lotteryId}`];
 
@@ -286,13 +319,15 @@ const useLottery = (): {
         return [{ journeyId, lotteryId, proofs: proof }];
       }) ?? [];
 
-    const tokenIds = userWinnings?.map(({ tokenId }) => tokenId) ?? [];
+    const tokenIds =
+      userWinnings?.lotteryResult?.map(({ tokenId }) => tokenId) ?? [];
 
     const chunkSize = PRUNE_BATCH_SIZE;
-    const START_INDEX = 6;
+    const START_INDEX = 0;
     for (let i = START_INDEX; i < proofs.length; i += chunkSize) {
       const proofsChunk = proofs.slice(i, i + chunkSize);
       const tokenIdsChunk = tokenIds.slice(i, i + chunkSize);
+      console.log({ proofsChunk, tokenIdsChunk });
       setPruneBatch({
         from: i + 1,
         to: i + chunkSize,
@@ -313,6 +348,7 @@ const useLottery = (): {
       });
       console.log({ receipt });
     }
+    await syncPrune({ walletAddress: account.address });
     setPruneLoading(false);
   };
 
@@ -325,7 +361,7 @@ const useLottery = (): {
       latestLotteryResultData?.lotteryResults?.[0]?.lotteryId ?? 1,
     ),
     lotteryPayout: totalWinnings,
-    fuelCellsWon: userWinnings?.length ?? 0,
+    fuelCellsWon: userWinnings?.lotteryResult?.length ?? 0,
     pruneLoading,
     pruneBatch,
     batchPrune,

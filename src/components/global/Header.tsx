@@ -116,7 +116,7 @@ export default function Header() {
             >
               Treasury
             </Link>
-            {process.env.NEXT_EVIL_ADDRESS_AVAILABLE === "true" && (
+            {process.env.NEXT_PUBLIC_EVIL_ADDRESS_AVAILABLE === "true" && (
               <Link
                 className={cn(
                   Gradients.whiteGradientText,
@@ -127,7 +127,7 @@ export default function Header() {
                 Evil
               </Link>
             )}
-            {process.env.NEXT_UNWRAP_AVAILABLE === "true" && (
+            {process.env.NEXT_PUBLIC_UNWRAP_AVAILABLE === "true" && (
               <Link
                 className={cn(
                   Gradients.whiteGradientText,

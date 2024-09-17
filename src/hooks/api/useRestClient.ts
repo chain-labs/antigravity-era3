@@ -19,18 +19,30 @@ export const useRestFetch = <T>(
     select,
     enabled = true,
     data,
+    deps,
   }: {
     proxy?: boolean;
     select?: (arg0: any) => any;
     enabled?: boolean;
     data?: string;
+    deps?: any[];
   },
 ): UseQueryResult<T, Error> => {
+  const [refetch, setRefetch] = useState(true);
   const result = useQuery<T, Error>({
     queryKey: [...tags],
     queryFn: () => fetcher<T>(endpoint, { proxy, body: data }),
-    enabled: enabled,
+    enabled: enabled && refetch,
   });
+  useEffect(() => {
+    setRefetch(true);
+  }, deps);
+
+  useEffect(() => {
+    if (result.isFetched) {
+      setRefetch(false);
+    }
+  }, [result.isFetched]);
   return result;
 };
 

@@ -105,7 +105,7 @@ export default function EvilAddressPage() {
     pruneAndRollover: 1000,
     mintFromEvilAddress: 500,
   };
-  if (process.env.NEXT_EVIL_ADDRESS_AVAILABLE !== "true") {
+  if (process.env.NEXT_PUBLIC_EVIL_ADDRESS_AVAILABLE !== "true") {
     return notFound();
   }
   return (
@@ -155,7 +155,10 @@ export default function EvilAddressPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer
+              label="Time to next mint"
+              timestamp={~~(new Date().getTime() / 1000 + 15000)}
+            />
           </div>
         </div>
       </div>
