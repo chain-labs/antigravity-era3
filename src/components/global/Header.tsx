@@ -18,6 +18,13 @@ import Button from "../html/Button";
 import { useAccount } from "wagmi";
 import HeaderUserconnectedSection from "./HeaderUserconnectedSection";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { motion } from "framer-motion";
+import { HoverTextAnimation } from "../animation/SeperateText";
+import {
+  AGPROJECT_LINK,
+  EVIL_ADDRESS_AVAILABLE,
+  UNWRAP_AVAILABLE,
+} from "@/constants";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -45,23 +52,74 @@ export default function Header() {
           "relative rounded-t-[8px] p-[2px] pb-0 mx-[16px] mt-[16px] lg:mt-[32px]",
           "text-agwhite/[0.66] font-sans uppercase font-extrabold text-[16px] tracking-widest",
           "[&_svg]:text-[24px]",
+          "overflow-hidden",
         )}
       >
         <div className="grid grid-flow-col gap-[16px] px-[16px] py-[8px] bg-agblack rounded-[inherit]">
           <div className="flex justify-center items-center gap-[8px]">
-            <PiTreasureChestDuotone />
+            <motion.div
+              initial="initial"
+              whileHover="hover"
+              variants={{
+                initial: { rotate: 0 },
+                hover: {
+                  rotate: [0, 10, -10, 10, 0],
+                  transition: { duration: 0.25 },
+                },
+              }}
+            >
+              <PiTreasureChestDuotone />
+            </motion.div>
             <p>Treasury $DARK:</p>
-            <p>{data.treasurydark.toLocaleString("en-US")}</p>
+            <motion.p initial="initial" whileHover="hover">
+              <HoverTextAnimation.BounceReveal
+                text={data.treasurydark.toLocaleString("en-US")}
+              />
+            </motion.p>
           </div>
           <div className="flex justify-center items-center gap-[8px]">
-            <PiRocketLaunchDuotone />
+            <motion.div initial="initial" whileHover="hover">
+              <motion.div
+                variants={{
+                  initial: { opacity: 1, x: 0, y: 0 },
+                  hover: {
+                    opacity: [1, 0, 0, 0, 1],
+                    x: [0, "100%", "-100%", 0],
+                    y: [0, "-100%", "100%", 0],
+                    transition: { duration: 1 },
+                  },
+                }}
+              >
+                <PiRocketLaunchDuotone />
+              </motion.div>
+            </motion.div>
             <p>Journey:</p>
-            <p>{data.treasurydark.toLocaleString("en-US")}</p>
+            <motion.p initial="initial" whileHover="hover">
+              <HoverTextAnimation.BounceReveal
+                text={data.journey.toLocaleString("en-US")}
+              />
+            </motion.p>
           </div>
           <div className="flex justify-center items-center gap-[8px]">
-            <PiWalletDuotone />
+            <motion.div
+              initial="initial"
+              whileHover="hover"
+              variants={{
+                initial: { rotate: 0 },
+                hover: {
+                  rotate: [0, 10, -10, 10, 0],
+                  transition: { duration: 0.25 },
+                },
+              }}
+            >
+              <PiWalletDuotone />
+            </motion.div>
             <p>User $DARK:</p>
-            <p>{data.treasurydark.toLocaleString("en-US")}</p>
+            <motion.p initial="initial" whileHover="hover">
+              <HoverTextAnimation.BounceReveal
+                text={data.userdark.toLocaleString("en-US")}
+              />
+            </motion.p>
           </div>
         </div>
       </div>
@@ -79,86 +137,112 @@ export default function Header() {
             "px-[16px] py-[8px]",
           )}
         >
-          <Link href="/lottery" className="flex justify-center items-center">
-            <Image
-              src={IMAGEKIT_LOGOS.LOGO}
-              alt="Antigravity"
-              height={24}
-              width={24}
-              className="w-[42px] h-[42px]"
-            />
-            <h1
-              className={cn(
-                Gradients.whiteGradientText,
-                "text-[14px] leading-[14px] font-extrabold font-sans uppercase",
-              )}
-            >
-              Antigravity
-            </h1>
-          </Link>
+          <motion.p initial="initial" whileHover="hover">
+            <Link href="/lottery" className="flex justify-center items-center">
+              <Image
+                src={IMAGEKIT_LOGOS.LOGO}
+                alt="Antigravity"
+                height={24}
+                width={24}
+                className="w-[42px] h-[42px]"
+              />
+              <h1
+                className={cn(
+                  Gradients.whiteGradientText,
+                  "text-[14px] leading-[14px] font-extrabold font-sans uppercase",
+                )}
+              >
+                <HoverTextAnimation.Fading text="Antigravity" />
+              </h1>
+            </Link>
+          </motion.p>
 
           <div className="flex justify-center items-center gap-[16px]">
-            <Link
+            <motion.p
+              initial="initial"
+              whileHover="hover"
               className={cn(
-                Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
+                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
               )}
-              href="/lottery"
             >
-              Lottery
-            </Link>
-            <Link
-              className={cn(
-                Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-              )}
-              href="/treasury"
-            >
-              Treasury
-            </Link>
-            {process.env.NEXT_PUBLIC_EVIL_ADDRESS_AVAILABLE === "true" && (
-              <Link
+              <Link href="/lottery">
+                <HoverTextAnimation.Fading text="Lottery" />
+              </Link>
+            </motion.p>
+
+            <Link href="/treasury">
+              <motion.p
+                initial="initial"
+                whileHover="hover"
                 className={cn(
-                  Gradients.whiteGradientText,
-                  "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
+                  "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
                 )}
-                href="/evil-address"
               >
-                Evil
+                <HoverTextAnimation.Fading text="Treasury" />
+              </motion.p>
+            </Link>
+            {EVIL_ADDRESS_AVAILABLE && (
+              <Link href="/evil-address">
+                <motion.p
+                  initial="initial"
+                  whileHover="hover"
+                  className={cn(
+                    "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
+                  )}
+                >
+                  <HoverTextAnimation.Fading text="Evil" />
+                </motion.p>
               </Link>
             )}
-            {process.env.NEXT_PUBLIC_UNWRAP_AVAILABLE === "true" && (
-              <Link
-                className={cn(
-                  Gradients.whiteGradientText,
-                  "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-                )}
-                href="/unwrap"
-              >
-                Unwrap
+            {UNWRAP_AVAILABLE && (
+              <Link href="/unwrap">
+                <motion.p
+                  initial="initial"
+                  whileHover="hover"
+                  className={cn(
+                    "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
+                  )}
+                >
+                  <HoverTextAnimation.Fading text="Unwrap" />
+                </motion.p>
               </Link>
             )}
-            <Link
-              className={cn(
-                Gradients.whiteGradientText,
-                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
-              )}
-              href="https://test.agproject.io"
-              target="_blank"
-            >
-              test.agrpoject.io
+            <Link href={AGPROJECT_LINK} target="_blank">
+              <motion.p
+                initial="initial"
+                whileHover="hover"
+                className={cn(
+                  "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
+                )}
+              >
+                <HoverTextAnimation.Fading text="agproject.io" />
+              </motion.p>
             </Link>
           </div>
 
           {account.isConnected ? (
-            <>
+            <div className="flex justify-center items-center gap-[16px]">
               <div className="w-[2px] h-[2.5rem] bg-gradient-to-b from-white via-[#999999] to-[#999999] rounded-full" />
               <HeaderUserconnectedSection />
-            </>
+            </div>
           ) : (
-            <Button onClick={openConnectModal}>
-              <PiWalletDuotone />
-              <span>Connect wallet</span>
+            <Button
+              onClick={openConnectModal}
+              initial="initial"
+              whileHover="hover"
+            >
+              <motion.div
+                variants={{
+                  initial: { rotate: 0 },
+                  hover: {
+                    rotate: [0, 10, -10, 10, 0],
+                    transition: { duration: 0.25 },
+                  },
+                }}
+              >
+                <PiWalletDuotone />
+              </motion.div>
+              <HoverTextAnimation.RollingIn text="Connect wallet" />
             </Button>
           )}
         </div>
@@ -205,8 +289,22 @@ export default function Header() {
               {account.isConnected ? (
                 <HeaderUserconnectedSection />
               ) : (
-                <Button onClick={openConnectModal}>
-                  <PiWalletDuotone />
+                <Button
+                  onClick={openConnectModal}
+                  initial="initial"
+                  whileHover="hover"
+                >
+                  <motion.div
+                    variants={{
+                      initial: { rotate: 0 },
+                      hover: {
+                        rotate: [0, 10, -10, 10, 0],
+                        transition: { duration: 0.25 },
+                      },
+                    }}
+                  >
+                    <PiWalletDuotone />
+                  </motion.div>
                   <span>Connect wallet</span>
                 </Button>
               )}
@@ -234,7 +332,7 @@ export default function Header() {
               >
                 Treasury
               </Link>
-              {process.env.NEXT_EVIL_ADDRESS_AVAILABLE === "true" && (
+              {EVIL_ADDRESS_AVAILABLE && (
                 <Link
                   className={cn(
                     Gradients.whiteGradientText,
@@ -245,7 +343,7 @@ export default function Header() {
                   EVIL
                 </Link>
               )}
-              {process.env.NEXT_UNWRAP_AVAILABLE === "true" && (
+              {UNWRAP_AVAILABLE && (
                 <Link
                   className={cn(
                     Gradients.whiteGradientText,
@@ -261,10 +359,10 @@ export default function Header() {
                   Gradients.whiteGradientText,
                   "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
                 )}
-                href="https://test.agproject.io"
+                href={AGPROJECT_LINK}
                 target="_blank"
               >
-                test.agrpoject.io
+                agrpoject.io
               </Link>
             </div>
           </div>

@@ -15,6 +15,7 @@ const meta: Meta<typeof Button> = {
 
 export default meta;
 
+// @ts-ignore StoryObj type is not assignable to Story
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {

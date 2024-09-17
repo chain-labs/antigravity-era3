@@ -11,6 +11,10 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 import { formatUnits } from "viem";
+import { motion } from "framer-motion";
+import SeperateText, {
+  HoverTextAnimation,
+} from "@/components/animation/SeperateText";
 
 export default function LotteryPage() {
   const data = {
@@ -65,18 +69,12 @@ export default function LotteryPage() {
           <h1
             className={cn(
               Gradients.whiteGradientText,
-              "text-[64px] leading-[64px] font-sans font-extrabold",
+              "text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] font-sans font-extrabold",
             )}
           >
             Congratulations!
             <br /> Prune your winnings!
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {(currentLottery % 3) + 1}
-          </p>
-          <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {currentJourney}
-          </p>
         </div>
 
         <div className="flex flex-col justify-center items-center gap-[24px]">
@@ -102,29 +100,46 @@ export default function LotteryPage() {
                 )}
               </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
-                <p className={cn(Gradients.lightBlue, Shapes.pill)}>
+                <motion.p
+                  initial="initial"
+                  whileHover="hover"
+                  className={cn(
+                    Gradients.lightBlue,
+                    Shapes.pill,
+                    "text-agblack font-semibold font-general-sans",
+                  )}
+                >
                   <Image
-                    src={IMAGEKIT_ICONS.FUEL_CELL}
-                    alt="Dark"
+                    src={IMAGEKIT_ICONS.PILL_DARK_X_CLAIMED}
+                    alt="Fuel Cell"
                     width={24}
                     height={24}
-                    className="w-[24px] h-[24px] mix-blend-multiply"
+                    className="w-[24px] h-[24px] rounded-full"
                   />
-                  <span className="text-agblack font-semibold font-general-sans">
-                    Dark Matter
-                  </span>
-                </p>
+                  <HoverTextAnimation.Fading text="Fuel Cells" />
+                </motion.p>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
                   <span>{fuelCellsWon} Fuel cells won</span>
                 </div>
               </div>
             </div>
-            <Button onClick={handlePruneWinnings} disabled={pruneLoading}>
-              <PiWrenchDuotone />{" "}
-              {pruneLoading
+            <Button type="submit" initial="initial" whileHover="hover">
+              <motion.div
+                variants={{
+                  initial: { rotate: 0 },
+                  hover: {
+                    rotate: [0, -10, -10, -10, -20, -20, -20, -30, -30, -30, 0],
+                    transition: { duration: 1 },
+                  },
+                }}
+                className="origin-top-right"
+              >
+                <PiWrenchDuotone />
+              </motion.div>
+              <HoverTextAnimation.RollingIn text={pruneLoading
                 ? `${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`
-                : "Prune"}
+                : "Prune"} />
             </Button>
           </form>
           <div
