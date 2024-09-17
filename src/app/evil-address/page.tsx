@@ -10,12 +10,15 @@ import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import { notFound } from "next/navigation";
 import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
+import { motion } from "framer-motion";
 
 function PruneAndRollOver({ data }: { data: number }) {
   return (
     <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
-        <div
+        <motion.div
+          initial="initial"
+          whileHover="hover"
           className={cn(
             Gradients.darkBlue,
             "flex justify-center items-center",
@@ -23,52 +26,8 @@ function PruneAndRollOver({ data }: { data: number }) {
             "px-[8px] py-[4px] rounded-[6px]",
           )}
         >
-          Prune & Roll Over
-        </div>
-      </div>
-      <form
-        className={cn(
-          "flex flex-col justify-center items-center gap-[8px] ",
-          "w-full md:w-[400px]",
-        )}
-      >
-        <div
-          className={cn(
-            Gradients.tableBlue,
-            Shapes.dataCard,
-            "border-[1px] border-agyellow",
-            "grid grid-flow-col gap-[8px]",
-            "font-extrabold",
-            "w-full",
-            "flex justify-between items-center",
-          )}
-        >
-          <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
-            {data.toLocaleString("en-US")}
-          </p>
-          <Button type="submit">
-            <PiWrenchDuotone /> Prune
-          </Button>
-        </div>
-      </form>
-    </div>
-  );
-}
-
-function MintFromEvilAddress({ data }: { data: number }) {
-  return (
-    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
-      <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
-        <div
-          className={cn(
-            Gradients.darkBlue,
-            "flex justify-center items-center",
-            "font-bold text-[14px] text-agwhite font-sans text-nowrap",
-            "px-[8px] py-[4px] rounded-[6px]",
-          )}
-        >
-          Mint From Evil Address
-        </div>
+          <HoverTextAnimation.Fading text="Prune & Roll Over" />
+        </motion.div>
       </div>
       <form
         className={cn(
@@ -91,7 +50,75 @@ function MintFromEvilAddress({ data }: { data: number }) {
             {data.toLocaleString("en-US")}
           </p>
           <Button initial="initial" whileHover="hover" type="submit">
-            <PiCubeDuotone />
+            <motion.div
+              variants={{
+                initial: { rotate: 0 },
+                hover: {
+                  rotate: [0, -10, -10, -10, -20, -20, -20, -30, -30, -30, 0],
+                  transition: { duration: 1 },
+                },
+              }}
+              className="origin-top-right"
+            >
+              <PiWrenchDuotone />
+            </motion.div>
+            <HoverTextAnimation.RollingIn text="Prune" />
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function MintFromEvilAddress({ data }: { data: number }) {
+  return (
+    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
+      <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
+        <motion.div
+          initial="initial"
+          whileHover="hover"
+          className={cn(
+            Gradients.darkBlue,
+            "flex justify-center items-center",
+            "font-bold text-[14px] text-agwhite font-sans text-nowrap",
+            "px-[8px] py-[4px] rounded-[6px]",
+          )}
+        >
+          <HoverTextAnimation.Fading text="Mint From Evil Address" />
+        </motion.div>
+      </div>
+      <form
+        className={cn(
+          "flex flex-col justify-center items-center gap-[8px] ",
+          "w-full md:w-[400px]",
+        )}
+      >
+        <div
+          className={cn(
+            Gradients.tableBlue,
+            Shapes.dataCard,
+            "border-[1px] border-agyellow",
+            "grid grid-flow-col gap-[8px]",
+            "font-extrabold",
+            "w-full",
+            "flex justify-between items-center",
+          )}
+        >
+          <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
+            {data.toLocaleString("en-US")}
+          </p>
+          <Button initial="initial" whileHover="hover" type="submit">
+            <motion.div
+              variants={{
+                initial: { scale: 1 },
+                hover: {
+                  scale: 1.25,
+                  transition: { duration: 0.25 },
+                },
+              }}
+            >
+              <PiCubeDuotone />
+            </motion.div>
             <HoverTextAnimation.RollingIn text="Mint" />
           </Button>
         </div>
@@ -116,7 +143,7 @@ export default function EvilAddressPage() {
       style={{
         backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.EVIL_ADDRESS_1})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-[70%_50%] [background-size:120%] bg-no-repeat"
+      className="flex justify-center items-center min-h-screen bg-[70%_50%] bg-cover xl:[background-size:120%] bg-no-repeat"
     >
       <div
         className={cn(

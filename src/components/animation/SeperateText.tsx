@@ -16,7 +16,7 @@ export default function SeperateText({
   ...props
 }: SeperateTextProps) {
   return (
-    <motion.div {...props} variants={variants.container}>
+    <motion.div {...props} variants={variants.container} className="flex">
       <span className="sr-only">{text}</span>
       {text.split("").map((letter, index) => (
         <motion.span
@@ -67,8 +67,9 @@ export class HoverTextAnimation {
             },
           },
           children: {
-            initial: { scale: 1 },
+            initial: { scale: 1, opacity: 1 },
             hover: {
+              opacity: [0, 1],
               scale: [0, 1],
             },
           },

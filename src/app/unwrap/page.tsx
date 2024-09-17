@@ -19,6 +19,7 @@ import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { notFound } from "next/navigation";
 import { UNWRAP_AVAILABLE } from "@/constants";
+import { HoverTextAnimation } from "@/components/animation/SeperateText";
 
 export default function UnwrapPage() {
   const data = {
@@ -151,7 +152,9 @@ export default function UnwrapPage() {
                   )}
                 >
                   <Input className="bg-none" />
-                  <p
+                  <motion.p
+                    initial="initial"
+                    whileHover="hover"
                     className={cn(
                       Gradients.lightBlue,
                       Shapes.pill,
@@ -166,21 +169,34 @@ export default function UnwrapPage() {
                       className="w-[24px] h-[24px] mix-blend-multiply"
                     />
                     <span className="text-agblack font-semibold font-general-sans">
-                      Fuel&nbsp;Cells
+                      <HoverTextAnimation.Fading text="Fuel&nbsp;Cells" />
                     </span>
-                  </p>
+                  </motion.p>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-[8px]">
-                  <Button type="submit">
-                    <PiDropboxLogoDuotone /> Unwrap
+                  <Button initial="initial" whileHover="hover" type="submit">
+                    <motion.div
+                      variants={{
+                        initial: { rotate: 0 },
+                        hover: {
+                          rotate: 180,
+                          transition: { duration: 0.25 },
+                        },
+                      }}
+                    >
+                      <PiDropboxLogoDuotone />
+                    </motion.div>
+                    <HoverTextAnimation.RollingIn text="Unwrap" />
                   </Button>
-                  <button
+                  <motion.button
+                    initial="initial"
+                    whileHover="hover"
                     type="button"
                     onClick={() => setTableReveal(true)}
                     className="bg-none underline text-agwhite font-sans font-semibold px-[16px] py-[4px] rounded-[6px] bg-agblack/50 backdrop-blur-lg"
                   >
-                    View Selected Fuel Cells
-                  </button>
+                    <HoverTextAnimation.RollingIn text="View Selected Fuel Cells" />
+                  </motion.button>
                 </div>
               </form>
               <div

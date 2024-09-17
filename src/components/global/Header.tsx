@@ -95,7 +95,7 @@ export default function Header() {
             <p>Journey:</p>
             <motion.p initial="initial" whileHover="hover">
               <HoverTextAnimation.BounceReveal
-                text={data.treasurydark.toLocaleString("en-US")}
+                text={data.journey.toLocaleString("en-US")}
               />
             </motion.p>
           </div>
@@ -116,7 +116,7 @@ export default function Header() {
             <p>User $DARK:</p>
             <motion.p initial="initial" whileHover="hover">
               <HoverTextAnimation.BounceReveal
-                text={data.treasurydark.toLocaleString("en-US")}
+                text={data.userdark.toLocaleString("en-US")}
               />
             </motion.p>
           </div>
