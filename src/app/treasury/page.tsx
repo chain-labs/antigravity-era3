@@ -16,6 +16,7 @@ import {
 } from "react-icons/pi";
 import { motion } from "framer-motion";
 import { HoverTextAnimation } from "@/components/animation/SeperateText";
+import { AGPROJECT_LINK } from "@/constants";
 
 export default function TreasuryPage() {
   const data = {
@@ -146,7 +147,7 @@ export default function TreasuryPage() {
             <Timer timestamp="mintEndTimestamp" />
           </div>
           <Link
-            href="https://test.agproject.io/minting"
+            href={AGPROJECT_LINK + "/minting"}
             target="_blank"
             className={cn(
               Gradients.redToBlue,

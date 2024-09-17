@@ -21,6 +21,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
 import { HoverTextAnimation } from "../animation/SeperateText";
 import {
+  AGPROJECT_LINK,
   EVIL_ADDRESS_AVAILABLE,
   UNWRAP_AVAILABLE,
 } from "@/constants";
@@ -206,7 +207,7 @@ export default function Header() {
                 </motion.p>
               </Link>
             )}
-            <Link href="https://test.agproject.io" target="_blank">
+            <Link href={AGPROJECT_LINK} target="_blank">
               <motion.p
                 initial="initial"
                 whileHover="hover"
@@ -214,7 +215,7 @@ export default function Header() {
                   "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
                 )}
               >
-                <HoverTextAnimation.Fading text="test.agproject.io" />
+                <HoverTextAnimation.Fading text="agproject.io" />
               </motion.p>
             </Link>
           </div>
@@ -358,10 +359,10 @@ export default function Header() {
                   Gradients.whiteGradientText,
                   "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
                 )}
-                href="https://test.agproject.io"
+                href={AGPROJECT_LINK}
                 target="_blank"
               >
-                test.agrpoject.io
+                agrpoject.io
               </Link>
             </div>
           </div>
