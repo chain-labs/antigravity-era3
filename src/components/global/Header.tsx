@@ -220,10 +220,10 @@ export default function Header() {
           </div>
 
           {account.isConnected ? (
-            <>
+            <div className="flex justify-center items-center gap-[16px]">
               <div className="w-[2px] h-[2.5rem] bg-gradient-to-b from-white via-[#999999] to-[#999999] rounded-full" />
               <HeaderUserconnectedSection />
-            </>
+            </div>
           ) : (
             <Button
               onClick={openConnectModal}
