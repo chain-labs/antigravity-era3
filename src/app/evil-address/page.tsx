@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 
 function PruneAndRollOver({ data }: { data: number }) {
   return (
-    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
+    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
         <motion.div
           initial="initial"
@@ -72,7 +72,7 @@ function PruneAndRollOver({ data }: { data: number }) {
 
 function MintFromEvilAddress({ data }: { data: number }) {
   return (
-    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
+    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
         <motion.div
           initial="initial"
@@ -155,8 +155,8 @@ export default function EvilAddressPage() {
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agwhite/30 backdrop-blur-lg",
-            "text-agblack",
+            "bg-agblack/30 backdrop-blur-lg",
+            "text-agwhite",
           )}
         >
           <h1

@@ -45,7 +45,7 @@ export default function LotteryPage() {
           <h1
             className={cn(
               Gradients.whiteGradientText,
-              "text-[64px] leading-[64px] font-sans font-extrabold",
+              "text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] font-sans font-extrabold",
             )}
           >
             Congratulations!

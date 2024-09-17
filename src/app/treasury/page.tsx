@@ -53,9 +53,6 @@ export default function TreasuryPage() {
           >
             Treasury
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Journey: {data.nextLotteryId}
-          </p>
         </div>
 
         <div className="flex flex-col justify-center items-center gap-[24px]">

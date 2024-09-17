@@ -93,7 +93,7 @@ export default function UnwrapPage() {
       style={{
         backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.UNWRAPPING_1})`,
       }}
-      className="relative flex justify-center items-center min-h-screen bg-[50%_30%] bg-opacity-15 z-0 "
+      className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
     >
       <div className={cn(Backdrop.darkOverlay)}></div>
       <div
@@ -118,12 +118,6 @@ export default function UnwrapPage() {
           >
             Unwrap
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {data.nextLotteryId}
-          </p>
-          <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {data.currentJourneyId}
-          </p>
         </div>
 
         <motion.div className="group [perspective:2000px]">
@@ -151,7 +145,7 @@ export default function UnwrapPage() {
                     "flex justify-between items-center",
                   )}
                 >
-                  <Input className="bg-none" />
+                  <Input className="w-[10ch]" />
                   <motion.p
                     initial="initial"
                     whileHover="hover"

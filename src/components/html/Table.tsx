@@ -10,7 +10,7 @@ type TableProps = {
 
 export default function Table({ header, body }: TableProps) {
   return (
-    <div className="max-h-[300px] w-fit overflow-y-auto [scroll-snap-type]:[y_mandatory] rounded-[6px] mr-[8px]">
+    <div className="max-h-[300px] max-w-[80vw] w-full lg:w-fit overflow-y-auto [scroll-snap-type]:[y_mandatory] rounded-[6px] mr-[8px]">
       <table>
         <thead>
           <tr>
@@ -23,7 +23,7 @@ export default function Table({ header, body }: TableProps) {
                   <div
                     className={cn(
                       Gradients.whiteGradientText,
-                      "uppercase tracking-widest text-[14px] font-sans",
+                      "uppercase tracking-widest text-[14px] leading-[24px] font-sans",
                       "[&_svg]:text-[24px]",
                       "grid grid-flow-col gap-[8px]",
                       "text-nowrap",
