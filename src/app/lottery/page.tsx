@@ -8,6 +8,10 @@ import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
+import { motion } from "framer-motion";
+import SeperateText, {
+  HoverTextAnimation,
+} from "@/components/animation/SeperateText";
 
 export default function LotteryPage() {
   const data = {
@@ -41,7 +45,7 @@ export default function LotteryPage() {
           <h1
             className={cn(
               Gradients.whiteGradientText,
-              "text-[64px] leading-[64px] font-sans font-extrabold",
+              "text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] font-sans font-extrabold",
             )}
           >
             Congratulations!
@@ -70,7 +74,15 @@ export default function LotteryPage() {
                 {data.fuelcells.toLocaleString("en-US")}
               </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
-                <p className={cn(Gradients.lightBlue, Shapes.pill)}>
+                <motion.p
+                  initial="initial"
+                  whileHover="hover"
+                  className={cn(
+                    Gradients.lightBlue,
+                    Shapes.pill,
+                    "text-agblack font-semibold font-general-sans",
+                  )}
+                >
                   <Image
                     src={IMAGEKIT_ICONS.PILL_DARK_X_CLAIMED}
                     alt="Fuel Cell"
@@ -78,18 +90,28 @@ export default function LotteryPage() {
                     height={24}
                     className="w-[24px] h-[24px] rounded-full"
                   />
-                  <span className="text-agblack font-semibold font-general-sans">
-                    DARK Matter
-                  </span>
-                </p>
+                  <HoverTextAnimation.Fading text="Fuel Cells" />
+                </motion.p>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
                   <span>{data.fuelCellsWon} Fuel Cells won</span>
                 </div>
               </div>
             </div>
-            <Button type="submit">
-              <PiWrenchDuotone /> Prune DARK Matter
+            <Button type="submit" initial="initial" whileHover="hover">
+              <motion.div
+                variants={{
+                  initial: { rotate: 0 },
+                  hover: {
+                    rotate: [0, -10, -10, -10, -20, -20, -20, -30, -30, -30, 0],
+                    transition: { duration: 1 },
+                  },
+                }}
+                className="origin-top-right"
+              >
+                <PiWrenchDuotone />
+              </motion.div>
+              <HoverTextAnimation.RollingIn text="Prune" />
             </Button>
           </form>
           <div
@@ -100,7 +122,7 @@ export default function LotteryPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer timestamp="nextJourneyTimestamp" />
           </div>
         </div>
       </div>

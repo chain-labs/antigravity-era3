@@ -64,7 +64,7 @@ export default function HeaderUserconnectedSection() {
                         onClick={openChainModal}
                       />
                       <p
-                        className="flex flex-col justify-start items-start gap-0 text-[16px] leading-[16px] uppercase bg-gradient-to-b font-extrabold from-[#B4EBF8] to-[#789DFA] text-transparent bg-clip-text"
+                        className="text-[16px] leading-[16px] uppercase bg-gradient-to-b font-extrabold from-[#B4EBF8] to-[#789DFA] text-[transparent] bg-clip-text"
                         onClick={openAccountModal}
                       >
                         {condenseAddress(`${account.address}`)}
@@ -86,7 +86,7 @@ export default function HeaderUserconnectedSection() {
                           onClick={openChainModal}
                         />
                         <p
-                          className="flex flex-col justify-start items-start gap-0 text-[16px] leading-[16px] uppercase bg-gradient-to-b font-extrabold from-[#B4EBF8] to-[#789DFA] text-transparent bg-clip-text"
+                          className="text-[16px] leading-[16px] uppercase bg-gradient-to-b font-extrabold from-[#B4EBF8] to-[#789DFA] text-[transparent] bg-clip-text"
                           onClick={openAccountModal}
                         >
                           {condenseAddress(`${account.address}`)}

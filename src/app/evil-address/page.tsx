@@ -1,19 +1,24 @@
 "use client";
 
+import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
+import { EVIL_ADDRESS_AVAILABLE } from "@/constants";
 import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import { notFound } from "next/navigation";
 import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
+import { motion } from "framer-motion";
 
 function PruneAndRollOver({ data }: { data: number }) {
   return (
-    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
+    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
-        <div
+        <motion.div
+          initial="initial"
+          whileHover="hover"
           className={cn(
             Gradients.darkBlue,
             "flex justify-center items-center",
@@ -21,8 +26,8 @@ function PruneAndRollOver({ data }: { data: number }) {
             "px-[8px] py-[4px] rounded-[6px]",
           )}
         >
-          Prune & Roll Over
-        </div>
+          <HoverTextAnimation.Fading text="Prune & Roll Over" />
+        </motion.div>
       </div>
       <form
         className={cn(
@@ -44,8 +49,20 @@ function PruneAndRollOver({ data }: { data: number }) {
           <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
             {data.toLocaleString("en-US")}
           </p>
-          <Button type="submit">
-            <PiWrenchDuotone /> Prune
+          <Button initial="initial" whileHover="hover" type="submit">
+            <motion.div
+              variants={{
+                initial: { rotate: 0 },
+                hover: {
+                  rotate: [0, -10, -10, -10, -20, -20, -20, -30, -30, -30, 0],
+                  transition: { duration: 1 },
+                },
+              }}
+              className="origin-top-right"
+            >
+              <PiWrenchDuotone />
+            </motion.div>
+            <HoverTextAnimation.RollingIn text="Prune" />
           </Button>
         </div>
       </form>
@@ -55,9 +72,11 @@ function PruneAndRollOver({ data }: { data: number }) {
 
 function MintFromEvilAddress({ data }: { data: number }) {
   return (
-    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg">
+    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
-        <div
+        <motion.div
+          initial="initial"
+          whileHover="hover"
           className={cn(
             Gradients.darkBlue,
             "flex justify-center items-center",
@@ -65,8 +84,8 @@ function MintFromEvilAddress({ data }: { data: number }) {
             "px-[8px] py-[4px] rounded-[6px]",
           )}
         >
-          Mint From Evil Address
-        </div>
+          <HoverTextAnimation.Fading text="Mint From Evil Address" />
+        </motion.div>
       </div>
       <form
         className={cn(
@@ -88,8 +107,19 @@ function MintFromEvilAddress({ data }: { data: number }) {
           <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
             {data.toLocaleString("en-US")}
           </p>
-          <Button type="submit">
-            <PiCubeDuotone /> Mint
+          <Button initial="initial" whileHover="hover" type="submit">
+            <motion.div
+              variants={{
+                initial: { scale: 1 },
+                hover: {
+                  scale: 1.25,
+                  transition: { duration: 0.25 },
+                },
+              }}
+            >
+              <PiCubeDuotone />
+            </motion.div>
+            <HoverTextAnimation.RollingIn text="Mint" />
           </Button>
         </div>
       </form>
@@ -105,7 +135,7 @@ export default function EvilAddressPage() {
     pruneAndRollover: 1000,
     mintFromEvilAddress: 500,
   };
-  if (process.env.NEXT_EVIL_ADDRESS_AVAILABLE !== "true") {
+  if (EVIL_ADDRESS_AVAILABLE === false) {
     return notFound();
   }
   return (
@@ -113,7 +143,7 @@ export default function EvilAddressPage() {
       style={{
         backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.EVIL_ADDRESS_1})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-[70%_50%] [background-size:120%] bg-no-repeat"
+      className="flex justify-center items-center min-h-screen bg-[70%_50%] bg-cover xl:[background-size:120%] bg-no-repeat"
     >
       <div
         className={cn(
@@ -125,8 +155,8 @@ export default function EvilAddressPage() {
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agwhite/30 backdrop-blur-lg",
-            "text-agblack",
+            "bg-agblack/30 backdrop-blur-lg",
+            "text-agwhite",
           )}
         >
           <h1
@@ -137,12 +167,6 @@ export default function EvilAddressPage() {
           >
             Evil Address
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {data.nextLotteryId}
-          </p>
-          <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {data.currentJourneyId}
-          </p>
         </div>
         <div className="flex flex-col justify-center items-center gap-[24px]">
           <PruneAndRollOver data={data.pruneAndRollover} />
@@ -155,7 +179,7 @@ export default function EvilAddressPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer timestamp="nextJourneyTimestamp" />
           </div>
         </div>
       </div>

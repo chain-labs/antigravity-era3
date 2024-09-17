@@ -14,6 +14,9 @@ import {
   PiTrophyDuotone,
   PiWrenchDuotone,
 } from "react-icons/pi";
+import { motion } from "framer-motion";
+import { HoverTextAnimation } from "@/components/animation/SeperateText";
+import { AGPROJECT_LINK } from "@/constants";
 
 export default function TreasuryPage() {
   const data = {
@@ -28,7 +31,7 @@ export default function TreasuryPage() {
       }}
       className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
     >
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
         className={cn(
           "flex flex-col items-center justify-center gap-[50px] z-[1]",
@@ -51,9 +54,6 @@ export default function TreasuryPage() {
           >
             Treasury
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Journey: {data.nextLotteryId}
-          </p>
         </div>
 
         <div className="flex flex-col justify-center items-center gap-[24px]">
@@ -80,7 +80,15 @@ export default function TreasuryPage() {
                 </small>
                 <p className="text-[32px]">100</p>
               </div>
-              <p className={cn(Gradients.lightBlue, Shapes.pill)}>
+              <motion.p
+                initial="initial"
+                whileHover="hover"
+                className={cn(
+                  Gradients.lightBlue,
+                  Shapes.pill,
+                  "text-agblack font-semibold font-general-sans",
+                )}
+              >
                 <Image
                   src={IMAGEKIT_ICONS.PILL_DARK_X_CLAIMED}
                   alt="Unclaimed Dark X"
@@ -88,10 +96,8 @@ export default function TreasuryPage() {
                   height={24}
                   className="w-[24px] h-[24px] rounded-full"
                 />
-                <span className="text-agblack font-semibold font-general-sans">
-                  DARK
-                </span>
-              </p>
+                <HoverTextAnimation.Fading text="Dark" />
+              </motion.p>
             </div>
             <div
               className={cn(
@@ -110,7 +116,15 @@ export default function TreasuryPage() {
                 </small>
                 <p className="text-[32px]">100</p>
               </div>
-              <p className={cn(Gradients.lightBlue, Shapes.pill)}>
+              <motion.p
+                initial="initial"
+                whileHover="hover"
+                className={cn(
+                  Gradients.lightBlue,
+                  Shapes.pill,
+                  "text-agblack font-semibold font-general-sans",
+                )}
+              >
                 <Image
                   src={IMAGEKIT_ICONS.FUEL_CELL}
                   alt="Fuel Cell"
@@ -118,10 +132,8 @@ export default function TreasuryPage() {
                   height={24}
                   className="w-[24px] h-[24px] mix-blend-multiply rounded-full"
                 />
-                <span className="text-agblack font-semibold font-general-sans">
-                  Fuel Cells
-                </span>
-              </p>
+                <HoverTextAnimation.Fading text="Fuel Cells" />
+              </motion.p>
             </div>
           </div>
           <div
@@ -132,19 +144,23 @@ export default function TreasuryPage() {
               "font-extrabold",
             )}
           >
-            <Timer />
+            <Timer timestamp="mintEndTimestamp" />
           </div>
           <Link
-            href="https://test.agproject.io/minting"
+            href={AGPROJECT_LINK + "/minting"}
             target="_blank"
             className={cn(
               Gradients.redToBlue,
               "relative rounded-[8px] p-[2px] w-fit",
             )}
           >
-            <div className="underline underline-offset-2 text-agwhite font-sans font-semibold uppercase tracking-widest px-[16px] py-[8px] rounded-[6px] bg-agblack h-">
-              Mint Now!
-            </div>
+            <motion.div
+              initial="initial"
+              whileHover="hover"
+              className="underline underline-offset-2 text-agwhite font-sans font-semibold uppercase tracking-widest px-[16px] py-[8px] rounded-[6px] bg-agblack h-"
+            >
+              <HoverTextAnimation.RollingIn text="Mint Now!" />
+            </motion.div>
           </Link>
         </div>
       </div>

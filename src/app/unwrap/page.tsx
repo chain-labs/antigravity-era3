@@ -18,6 +18,8 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { notFound } from "next/navigation";
+import { UNWRAP_AVAILABLE } from "@/constants";
+import { HoverTextAnimation } from "@/components/animation/SeperateText";
 
 export default function UnwrapPage() {
   const data = {
@@ -82,7 +84,7 @@ export default function UnwrapPage() {
 
   const [tableReveal, setTableReveal] = useState(false);
 
-  if (process.env.NEXT_UNWRAP_AVAILABLE !== "true") {
+  if (UNWRAP_AVAILABLE === false) {
     return notFound();
   }
 
@@ -91,7 +93,7 @@ export default function UnwrapPage() {
       style={{
         backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.UNWRAPPING_1})`,
       }}
-      className="relative flex justify-center items-center min-h-screen bg-[50%_30%] bg-opacity-15 z-0 "
+      className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
     >
       <div className={cn(Backdrop.darkOverlay)}></div>
       <div
@@ -116,12 +118,6 @@ export default function UnwrapPage() {
           >
             Unwrap
           </h1>
-          <p className="text-[14px] leading-[14px]">
-            Next Lottery ID: {data.nextLotteryId}
-          </p>
-          <p className="text-[14px] leading-[14px]">
-            Current Journey ID: {data.currentJourneyId}
-          </p>
         </div>
 
         <motion.div className="group [perspective:2000px]">
@@ -149,8 +145,10 @@ export default function UnwrapPage() {
                     "flex justify-between items-center",
                   )}
                 >
-                  <Input className="bg-none" />
-                  <p
+                  <Input className="w-[10ch]" />
+                  <motion.p
+                    initial="initial"
+                    whileHover="hover"
                     className={cn(
                       Gradients.lightBlue,
                       Shapes.pill,
@@ -165,21 +163,34 @@ export default function UnwrapPage() {
                       className="w-[24px] h-[24px] mix-blend-multiply"
                     />
                     <span className="text-agblack font-semibold font-general-sans">
-                      Fuel&nbsp;Cells
+                      <HoverTextAnimation.Fading text="Fuel&nbsp;Cells" />
                     </span>
-                  </p>
+                  </motion.p>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-[8px]">
-                  <Button type="submit">
-                    <PiDropboxLogoDuotone /> Unwrap
+                  <Button initial="initial" whileHover="hover" type="submit">
+                    <motion.div
+                      variants={{
+                        initial: { rotate: 0 },
+                        hover: {
+                          rotate: 180,
+                          transition: { duration: 0.25 },
+                        },
+                      }}
+                    >
+                      <PiDropboxLogoDuotone />
+                    </motion.div>
+                    <HoverTextAnimation.RollingIn text="Unwrap" />
                   </Button>
-                  <button
+                  <motion.button
+                    initial="initial"
+                    whileHover="hover"
                     type="button"
                     onClick={() => setTableReveal(true)}
                     className="bg-none underline text-agwhite font-sans font-semibold px-[16px] py-[4px] rounded-[6px] bg-agblack/50 backdrop-blur-lg"
                   >
-                    View Selected Fuel Cells
-                  </button>
+                    <HoverTextAnimation.RollingIn text="View Selected Fuel Cells" />
+                  </motion.button>
                 </div>
               </form>
               <div
@@ -190,7 +201,7 @@ export default function UnwrapPage() {
                   "font-extrabold",
                 )}
               >
-                <Timer />
+                <Timer timestamp="nextJourneyTimestamp" />
               </div>
             </motion.div>
 

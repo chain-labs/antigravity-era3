@@ -20,6 +20,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 4;
 
-export const Default: Story = {
-  args: {},
+export const MintTimestamp: Story = {
+  args: {
+    timestamp: "mintEndTimestamp", 
+  },
+};
+
+export const NextJourneyTimestamp: Story = {
+  args: {
+    timestamp: "nextJourneyTimestamp", 
+  },
 };
