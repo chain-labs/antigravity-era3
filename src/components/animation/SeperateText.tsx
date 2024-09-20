@@ -86,7 +86,6 @@ export class HoverTextAnimation {
           container: {
             initial: {},
             hover: {
-              overflow: "hidden",
               transition: { staggerChildren: 0.5 / text.length },
             },
           },
