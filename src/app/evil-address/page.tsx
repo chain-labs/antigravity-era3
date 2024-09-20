@@ -4,7 +4,7 @@ import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
-import { EVIL_ADDRESS_AVAILABLE } from "@/constants";
+import { BACKGROUNDS, EVIL_ADDRESS_AVAILABLE } from "@/constants";
 import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
@@ -149,9 +149,9 @@ export default function EvilAddressPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.EVIL_ADDRESS_1})`,
+        backgroundImage: `url(${BACKGROUNDS.EVIL_ADDRESS ?? ""})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-[70%_50%] bg-cover xl:[background-size:120%] bg-no-repeat"
+      className="flex justify-center items-center min-h-screen bg-cover bg-no-repeat"
     >
       <div
         className={cn(
