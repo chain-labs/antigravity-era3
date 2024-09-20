@@ -11,6 +11,8 @@ import { cn } from "@/lib/tailwindUtils";
 import { notFound } from "next/navigation";
 import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
+import { PiInfoDuotone } from "react-icons/pi";
+import Tooltip from "@/components/global/Tooltip";
 
 function PruneAndRollOver({ data }: { data: number }) {
   return (
@@ -21,12 +23,15 @@ function PruneAndRollOver({ data }: { data: number }) {
           whileHover="hover"
           className={cn(
             Gradients.darkBlue,
-            "flex justify-center items-center",
+            "relative flex justify-center items-center gap-[8px]",
             "font-bold text-[14px] text-agwhite font-sans text-nowrap",
             "px-[8px] py-[4px] rounded-[6px]",
           )}
         >
-          <HoverTextAnimation.Fading text="Prune & Roll Over" />
+          <HoverTextAnimation.Fading text="Prune & Roll Over" />{" "}
+          <Tooltip trigger={<PiInfoDuotone />} positionClassName="absolute top-[calc(100%_+_8px)] right-0">
+            hello
+          </Tooltip>
         </motion.div>
       </div>
       <form
@@ -79,12 +84,15 @@ function MintFromEvilAddress({ data }: { data: number }) {
           whileHover="hover"
           className={cn(
             Gradients.darkBlue,
-            "flex justify-center items-center",
+            "relative flex justify-center items-center gap-[8px]",
             "font-bold text-[14px] text-agwhite font-sans text-nowrap",
             "px-[8px] py-[4px] rounded-[6px]",
           )}
         >
-          <HoverTextAnimation.Fading text="Mint From Evil Address" />
+          <HoverTextAnimation.Fading text="Mint From Evil Address" />{" "}
+          <Tooltip trigger={<PiInfoDuotone />} positionClassName="absolute top-[calc(100%_+_8px)] right-0">
+            hello
+          </Tooltip>
         </motion.div>
       </div>
       <form
