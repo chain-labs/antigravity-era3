@@ -25,6 +25,7 @@ import {
   EVIL_ADDRESS_AVAILABLE,
   UNWRAP_AVAILABLE,
 } from "@/constants";
+import useHeaderStats from "./useHeaderStats";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,6 +37,8 @@ export default function Header() {
     journey: 1,
     userdark: 23432443,
   };
+
+  const { treasuryDark, journey, userDark } = useHeaderStats();
 
   return (
     <header
@@ -73,7 +76,7 @@ export default function Header() {
             <p>Treasury $DARK:</p>
             <motion.div initial="initial" whileHover="hover">
               <HoverTextAnimation.BounceReveal
-                text={data.treasurydark.toLocaleString("en-US")}
+                text={treasuryDark.toLocaleString("en-US")}
               />
             </motion.div>
           </div>
@@ -96,7 +99,7 @@ export default function Header() {
             <p>Journey:</p>
             <motion.div initial="initial" whileHover="hover">
               <HoverTextAnimation.BounceReveal
-                text={data.journey.toLocaleString("en-US")}
+                text={journey.toLocaleString("en-US")}
               />
             </motion.div>
           </div>
@@ -117,7 +120,7 @@ export default function Header() {
             <p>User $DARK:</p>
             <motion.div initial="initial" whileHover="hover">
               <HoverTextAnimation.BounceReveal
-                text={data.userdark.toLocaleString("en-US")}
+                text={userDark.toLocaleString("en-US")}
               />
             </motion.div>
           </div>
@@ -166,12 +169,12 @@ export default function Header() {
                 "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
               )}
             >
-              <Link href="/lottery">
+              <Link href="/lottery" replace={true}>
                 <HoverTextAnimation.Fading text="Lottery" />
               </Link>
             </motion.div>
 
-            <Link href="/treasury">
+            <Link href="/treasury" replace={true}>
               <motion.div
                 initial="initial"
                 whileHover="hover"
