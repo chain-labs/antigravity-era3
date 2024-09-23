@@ -5,27 +5,26 @@ import { PROJECT_ID } from "@/constants/rainbowkit";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { baseSepolia, pulsechain, pulsechainV4, sepolia } from "viem/chains";
-import { WagmiProvider } from "wagmi";
+import { cookieStorage, createStorage, WagmiProvider } from "wagmi";
 import React from "react";
 import { usePathname } from "next/navigation";
 
 const RainbowKit = ({ children }: React.PropsWithChildren) => {
-  const path = usePathname();
-
   const config = getDefaultConfig({
     appName: "AGProject-ERA3",
     projectId: `${PROJECT_ID}`,
     // @ts-ignore
-    chains: getRainbowKitChainsFromPage(path, TEST_NETWORK),
+    chains: TEST_NETWORK ? [baseSepolia] : [pulsechain],
     ssr: true,
+    storage: createStorage({ storage: cookieStorage }),
   });
 
   const queryClient = new QueryClient();
 
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={config} reconnectOnMount={true}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>{children}</RainbowKitProvider>
+        <RainbowKitProvider modalSize="compact">{children}</RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
