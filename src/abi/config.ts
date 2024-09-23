@@ -33,19 +33,6 @@ export const CONTRACTS: Record<
     jackpot: "0x3446Fd1cAd7ABA32b998B757767Be19569f866d6",
     darkFaucet: "0x1792dedc1A50849041C063BFB686b8350DF9CD73",
   },
-  [baseSepolia.id]: {
-    miningRig: "0x8Dea737AE483153c69934ff8a5c7E3D448c2DB4C",
-    darkX: "0xdE87E198D2A5d6894a03AfCb34876601A6dd226f",
-    dark: "0xFd1727935f98991f9288b4C675c06B22be4B5cEc",
-    wishWell: "0xC8A96A9163C2D11e2002C589a5DC7Ee4267499e2",
-    fuelCell: "0x1A530A9803B8faFA34491D70Fa7EE49C220e29Dc",
-    launchControlCenter: "0x79dEB64969Edf4DDb03c7F4eB6BEFB5F7bfA8092",
-    journeyPhaseManager: "0xf16834786221C51678cB386cf77a57ac7fcb3441",
-    evilAddress: "0xc8fbd57E614525Bec28ED512398c38261A3796c5",
-    treasury: "0x602Af48Fff12e4e3d6ffd6CDE7f2d1144091d251",
-    jackpot: "0x0C0D814F948e3Fdf1cd4FF5dB160de9fBF78C593",
-    darkFaucet: "0xC92616FBeB666cEE61cf1e1AB72b4a32593f67C0",
-  },
   [pulsechainV4.id]: {
     miningRig: "0x020d3Ca9605bb17CC17Ea0DB2bFfed3fA0869fCF",
     darkX: "0xb1BF01E195D511509B12D980769351eF5255eE0f",
@@ -65,18 +52,17 @@ export const CONTRACTS: Record<
     darkX: "0xCC18F40724971Be55AB5508607d8024Ee9Bf8796",
     wishWell: "0x332211A407489F497cD58bac7Db3F10Da5da47Ff",
   },
+  [baseSepolia.id]: {
+    miningRig: "0x8Dea737AE483153c69934ff8a5c7E3D448c2DB4C",
+    darkX: "0xdE87E198D2A5d6894a03AfCb34876601A6dd226f",
+    dark: "0x83faeb2911c1d15a7a020a7425b5e1be87aa61f7",
+    wishWell: "0xC8A96A9163C2D11e2002C589a5DC7Ee4267499e2",
+    fuelCell: "0xfc3b8e511dd44c9d87701e85f885cdb6b0e18b24",
+    launchControlCenter: "0xba10974c023beca7c2dca5ebb3acfc172b6b3ff0",
+    journeyPhaseManager: "0xd67db402be30dbde9a4afcf059e62e8a5d4ca0bf",
+    evilAddress: "0x8885aa5d99c462ab00e52b351a58c17b71412b52",
+    treasury: "0xc38931d6c1ee0040555078720b24741464f7b725",
+    jackpot: "0xc2fcab1e19682d9d5ce893d841dd7277379fa13b",
+    darkFaucet: "0x40ae6c67241756096c171aeb37e0a266f83dbc2c",
+  },
 };
-
-MiningRig: 0x8dea737ae483153c69934ff8a5c7e3d448c2db4c;
-DarkX: 0xde87e198d2a5d6894a03afcb34876601a6dd226f;
-Antigravity: 0xe2150da9bce4b63f89ebf61cd3f89eb7f3fb3f05;
-DarkClaims: null;
-Dark: 0xfd1727935f98991f9288b4c675c06b22be4b5cec;
-WishWell: 0xc8a96a9163c2d11e2002c589a5dc7ee4267499e2;
-FuelCell: 0x1a530a9803b8fafa34491d70fa7ee49c220e29dc;
-LaunchControlCenter: 0x79deb64969edf4ddb03c7f4eb6befb5f7bfa8092;
-JourneyPhaseManager: 0xf16834786221c51678cb386cf77a57ac7fcb3441;
-EvilAddress: 0xc8fbd57e614525bec28ed512398c38261a3796c5;
-Treasury: 0x602af48fff12e4e3d6ffd6cde7f2d1144091d251;
-Jackpot: 0x0c0d814f948e3fdf1cd4ff5db160de9fbf78c593;
-DarkFaucet: 0xc92616fbeb666cee61cf1e1ab72b4a32593f67c0;
