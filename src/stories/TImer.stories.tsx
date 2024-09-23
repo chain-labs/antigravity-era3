@@ -22,12 +22,14 @@ type Story = StoryObj<typeof meta>;
 
 export const MintTimestamp: Story = {
   args: {
-    timestamp: "mintEndTimestamp", 
+    label: "Sample Timer 1",
+    timestamp: new Date().getTime() / 1000 + 1000,
   },
 };
 
 export const NextJourneyTimestamp: Story = {
   args: {
-    timestamp: "nextJourneyTimestamp", 
+    label: "Sample Timer 2",
+    timestamp: new Date().getTime() / 1000 + 1000,
   },
 };
