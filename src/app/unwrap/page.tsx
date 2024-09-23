@@ -146,7 +146,7 @@ export default function UnwrapPage() {
                   )}
                 >
                   <Input className="w-[10ch]" />
-                  <motion.p
+                  <motion.div
                     initial="initial"
                     whileHover="hover"
                     className={cn(
@@ -165,7 +165,7 @@ export default function UnwrapPage() {
                     <span className="text-agblack font-semibold font-general-sans">
                       <HoverTextAnimation.Fading text="Fuel&nbsp;Cells" />
                     </span>
-                  </motion.p>
+                  </motion.div>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-[8px]">
                   <Button initial="initial" whileHover="hover" type="submit">
@@ -201,7 +201,10 @@ export default function UnwrapPage() {
                   "font-extrabold",
                 )}
               >
-                <Timer timestamp="nextJourneyTimestamp" />
+                <Timer
+                  label="Until we win"
+                  timestamp={new Date().getTime() + 1000}
+                />
               </div>
             </motion.div>
 

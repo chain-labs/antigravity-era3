@@ -100,7 +100,7 @@ export default function LotteryPage() {
                 )}
               </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
-                <motion.p
+                <motion.div
                   initial="initial"
                   whileHover="hover"
                   className={cn(
@@ -117,14 +117,18 @@ export default function LotteryPage() {
                     className="w-[24px] h-[24px] rounded-full"
                   />
                   <HoverTextAnimation.Fading text="Fuel Cells" />
-                </motion.p>
+                </motion.div>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
                   <span>{fuelCellsWon} Fuel cells won</span>
                 </div>
               </div>
             </div>
-            <Button type="submit" initial="initial" whileHover="hover">
+            <Button
+              onClick={handlePruneWinnings}
+              initial="initial"
+              whileHover="hover"
+            >
               <motion.div
                 variants={{
                   initial: { rotate: 0 },
@@ -137,9 +141,13 @@ export default function LotteryPage() {
               >
                 <PiWrenchDuotone />
               </motion.div>
-              <HoverTextAnimation.RollingIn text={pruneLoading
-                ? `${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`
-                : "Prune"} />
+              <HoverTextAnimation.RollingIn
+                text={
+                  pruneLoading
+                    ? `${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`
+                    : "Prune"
+                }
+              />
             </Button>
           </form>
           <div
