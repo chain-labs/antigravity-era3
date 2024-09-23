@@ -23,3 +23,17 @@ export const Default: Story = {
     children: "Click me", // Children passed to the Button component
   },
 };
+
+export const Loading: Story = {
+  args: {
+    children: "Loading...",
+    loading: true,
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    children: "Disabled",
+    disabled: true,
+  },
+};

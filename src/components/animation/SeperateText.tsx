@@ -98,3 +98,114 @@ export class HoverTextAnimation {
     );
   }
 }
+
+export class AutomaticTextAnimation {
+  static Typing({
+    text,
+    loopDuration = 1,
+  }: {
+    text: string;
+    loopDuration?: number;
+  }) {
+    return (
+      <SeperateText
+        text={text}
+        initial="initial"
+        animate="hover"
+        variants={{
+          container: {
+            initial: {},
+            hover: {
+              transition: { staggerChildren: 0.1, repeat: Infinity },
+            },
+          },
+          children: {
+            initial: { opacity: 0 },
+            hover: {
+              opacity: 1,
+              transition: {
+                duration: loopDuration,
+                repeat: Infinity,
+              },
+            },
+          },
+        }}
+      />
+    );
+  }
+
+  static TypingWithDelay({
+    text,
+    loopDuration = 1,
+  }: {
+    text: string;
+    loopDuration?: number;
+  }) {
+    return (
+      <SeperateText
+        text={text}
+        initial="initial"
+        animate="hover"
+        variants={{
+          container: {
+            initial: {},
+            hover: {
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.5,
+                repeat: Infinity,
+              },
+            },
+          },
+          children: {
+            initial: { opacity: 0 },
+            hover: {
+              opacity: 1,
+              transition: {
+                duration: loopDuration,
+                repeat: Infinity,
+              },
+            },
+          },
+        }}
+      />
+    );
+  }
+
+  static TypingWithRandomDelay({
+    text,
+    loopDuration,
+  }: {
+    text: string;
+    loopDuration?: number;
+  }) {
+    return (
+      <SeperateText
+        text={text}
+        initial="initial"
+        animate="hover"
+        variants={{
+          container: {
+            initial: {},
+            hover: {
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.5,
+              },
+            },
+          },
+          children: {
+            initial: { opacity: 0 },
+            hover: {
+              opacity: 1,
+              transition: {
+                duration: loopDuration,
+                repeat: Infinity,
+              },
+            },
+          },
+        }}
+      />
+    );
+  }
+}
