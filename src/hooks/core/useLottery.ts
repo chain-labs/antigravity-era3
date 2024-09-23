@@ -17,8 +17,9 @@ import MerkleTree from "merkletreejs";
 import { encodePacked, keccak256 } from "viem";
 import toast from "react-hot-toast";
 import { waitForTransactionReceipt } from "@wagmi/core";
+import useEAContract from "@/abi/EvilAddress";
 
-const PRUNE_BATCH_SIZE = 2;
+const PRUNE_BATCH_SIZE = 1;
 
 const useLottery = (): {
   currentLottery: number;
@@ -39,6 +40,7 @@ const useLottery = (): {
   // define contract instances here
   const JPMContract = useJPMContract();
   const JackpotContract = useJackpotContract();
+  const EAContract = useEAContract();
 
   // Reads from contracts
   const { data: JPMReadData, error: JPMReadError } = useReadContracts({
@@ -157,6 +159,7 @@ const useLottery = (): {
     }[];
   }>(
     ["User Winnings in current lottery"],
+    // `/api/lottery-result?walletAddress=${EAContract.address}`,
     `/api/lottery-result?walletAddress=${account.address}`,
     {
       enabled: account.isConnected,
@@ -333,18 +336,27 @@ const useLottery = (): {
         to: i + chunkSize,
         total: proofs.length,
       });
+      console.log({
+        proofSize: (() => {
+          let len = 0;
+          proofsChunk.forEach((proof) => {
+            len += proof[0].proofs.length;
+          });
+          return len;
+        })(),
+      });
 
       const tx = await batchPruneWinnings({
         address: JackpotContract.address as `0x${string}`,
         abi: JackpotContract.abi,
         functionName: "batchPruneWinning",
         args: [proofsChunk, tokenIdsChunk],
-        gas: BigInt(25000000),
+        gas: BigInt(30000000),
       });
 
       const receipt = await waitForTransactionReceipt(config, {
         hash: tx,
-        confirmations: 5,
+        confirmations: 2,
       });
       console.log({ receipt });
     }
