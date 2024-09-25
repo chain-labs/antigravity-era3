@@ -74,7 +74,7 @@ export default function TreasuryPage() {
                   TOTAL YIELD DISTRIBUTED
                 </small>
                 <p className="text-[32px]">
-                  {totalYieldDistributed.toFixed(2)}
+                  {Number(totalYieldDistributed.toFixed(2)).toLocaleString("en-US")}
                 </p>
               </div>
               <motion.div
@@ -111,7 +111,9 @@ export default function TreasuryPage() {
                 <small className="uppercase font-semibold">
                   TOTAL ACTIVE FUEL CELLS
                 </small>
-                <p className="text-[32px]">{fuelCellSupply}</p>
+                <p className="text-[32px]">
+                  {fuelCellSupply?.toLocaleString("en-US")}
+                </p>
               </div>
               <motion.div
                 initial="initial"
