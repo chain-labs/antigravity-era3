@@ -117,7 +117,7 @@ export default function LotteryPage() {
                     height={24}
                     className="w-[24px] h-[24px] rounded-full"
                   />
-                  <HoverTextAnimation.Fading text="Fuel Cells" />
+                  <HoverTextAnimation.Fading text="Dark Matter" />
                 </motion.div>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
