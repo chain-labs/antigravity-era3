@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { notFound } from "next/navigation";
-import { UNWRAP_AVAILABLE } from "@/constants";
+import { BACKGROUNDS, UNWRAP_AVAILABLE } from "@/constants";
 import { HoverTextAnimation } from "@/components/animation/SeperateText";
 
 export default function UnwrapPage() {
@@ -91,9 +91,9 @@ export default function UnwrapPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.UNWRAPPING_1})`,
+        backgroundImage: `url(${BACKGROUNDS.UNWRAP})`,
       }}
-      className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
+      className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
     >
       <div className={cn(Backdrop.darkOverlay)}></div>
       <div

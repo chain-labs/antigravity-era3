@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { HoverTextAnimation } from "@/components/animation/SeperateText";
-import { AGPROJECT_LINK } from "@/constants";
+import { AGPROJECT_LINK, BACKGROUNDS } from "@/constants";
 import useTreasury from "@/hooks/core/useTreasury";
 
 export default function TreasuryPage() {
@@ -22,9 +22,9 @@ export default function TreasuryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.TREASURY_2})`,
+        backgroundImage: `url(${BACKGROUNDS.TREASURY ?? ""})`,
       }}
-      className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
+      className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div

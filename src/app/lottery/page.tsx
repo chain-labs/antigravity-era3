@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import SeperateText, {
   HoverTextAnimation,
 } from "@/components/animation/SeperateText";
+import { BACKGROUNDS } from "@/constants";
 
 export default function LotteryPage() {
   const data = {
@@ -47,9 +48,9 @@ export default function LotteryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.LOTTERY_2})`,
+        backgroundImage: `url(${BACKGROUNDS.LOTTERY ?? ""})`,
       }}
-      className="relative flex justify-center items-center min-h-screen xl:[background-size:120%] xl:bg-[80%_50%] bg-cover bg-center bg-no-repeat"
+      className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div

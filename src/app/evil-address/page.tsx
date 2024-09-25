@@ -4,13 +4,15 @@ import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
-import { EVIL_ADDRESS_AVAILABLE } from "@/constants";
+import { BACKGROUNDS, EVIL_ADDRESS_AVAILABLE } from "@/constants";
 import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import { notFound } from "next/navigation";
 import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
+import { PiInfoDuotone } from "react-icons/pi";
+import Tooltip from "@/components/global/Tooltip";
 
 function PruneAndRollOver({ data }: { data: number }) {
   return (
@@ -21,12 +23,15 @@ function PruneAndRollOver({ data }: { data: number }) {
           whileHover="hover"
           className={cn(
             Gradients.darkBlue,
-            "flex justify-center items-center",
+            "relative flex justify-center items-center gap-[8px]",
             "font-bold text-[14px] text-agwhite font-sans text-nowrap",
             "px-[8px] py-[4px] rounded-[6px]",
           )}
         >
-          <HoverTextAnimation.Fading text="Prune & Roll Over" />
+          <HoverTextAnimation.Fading text="Prune & Roll Over" />{" "}
+          <Tooltip trigger={<PiInfoDuotone />} positionClassName="absolute top-[calc(100%_+_8px)] right-0">
+            hello
+          </Tooltip>
         </motion.div>
       </div>
       <form
@@ -79,12 +84,15 @@ function MintFromEvilAddress({ data }: { data: number }) {
           whileHover="hover"
           className={cn(
             Gradients.darkBlue,
-            "flex justify-center items-center",
+            "relative flex justify-center items-center gap-[8px]",
             "font-bold text-[14px] text-agwhite font-sans text-nowrap",
             "px-[8px] py-[4px] rounded-[6px]",
           )}
         >
-          <HoverTextAnimation.Fading text="Mint From Evil Address" />
+          <HoverTextAnimation.Fading text="Mint From Evil Address" />{" "}
+          <Tooltip trigger={<PiInfoDuotone />} positionClassName="absolute top-[calc(100%_+_8px)] right-0">
+            hello
+          </Tooltip>
         </motion.div>
       </div>
       <form
@@ -141,9 +149,9 @@ export default function EvilAddressPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${IMAGEKIT_BACKGROUNDS.EVIL_ADDRESS_1})`,
+        backgroundImage: `url(${BACKGROUNDS.EVIL_ADDRESS ?? ""})`,
       }}
-      className="flex justify-center items-center min-h-screen bg-[70%_50%] bg-cover xl:[background-size:120%] bg-no-repeat"
+      className="flex justify-center items-center min-h-screen bg-cover bg-no-repeat"
     >
       <div
         className={cn(
