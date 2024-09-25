@@ -3,14 +3,18 @@
 import { cn } from "@/lib/tailwindUtils";
 import React from "react";
 import { AnimationProps, motion, MotionProps } from "framer-motion";
+import { PiSpinner, PiSpinnerDuotone } from "react-icons/pi";
+import { AutomaticTextAnimation, HoverTextAnimation } from "../animation/SeperateText";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
+  loading?: boolean;
   children: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps & MotionProps> = ({
   className,
+  loading = false,
   children,
   ...buttonProps
 }) => {
@@ -24,11 +28,32 @@ const Button: React.FC<ButtonProps & MotionProps> = ({
         "[&_svg]:text-[24px]",
         "disabled:opacity-[0.5] disabled:cursor-not-allowed disabled:select-none",
         "active:bg-agblack",
+        loading && "translate-y-[4px] cursor-wait",
+        buttonProps.disabled && "cursor-not-allowed translate-y-[4px]",
         className, // Merge the passed className with the default classes
       )}
       {...buttonProps}
     >
-      {children}
+      {loading ? (
+        <>
+          <motion.div
+            initial={{ rotate: 0 }}
+            animate={{
+              rotate: 360,
+              transition: {
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "linear",
+              },
+            }}
+          >
+            <PiSpinnerDuotone />
+          </motion.div>
+          <AutomaticTextAnimation.TypingWithRandomDelay text="Loading..." loopDuration={2.5} />
+        </>
+      ) : (
+        children
+      )}
     </motion.button>
   );
 };
