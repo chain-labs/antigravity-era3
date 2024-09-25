@@ -35,7 +35,11 @@ const useLottery = (): {
   const account = useAccount();
   const [pruneLoading, setPruneLoading] = useState(false);
   const [prePrune, setPrePrune] = useState(false);
-  const [pruneBatch, setPruneBatch] = useState({ from: 0, to: 50, total: 50 });
+  const [pruneBatch, setPruneBatch] = useState({
+    from: 0,
+    to: PRUNE_BATCH_SIZE,
+    total: PRUNE_BATCH_SIZE,
+  });
 
   // define contract instances here
   const JPMContract = useJPMContract();
@@ -304,13 +308,13 @@ const useLottery = (): {
       userWinnings?.lotteryResult?.map(({ tokenId }) => tokenId) ?? [];
 
     const chunkSize = PRUNE_BATCH_SIZE;
-    const START_INDEX = 1;
+    const START_INDEX = 0;
     for (let i = START_INDEX; i < proofs.length; i += chunkSize) {
       const proofsChunk = proofs.slice(i, i + chunkSize);
       const tokenIdsChunk = tokenIds.slice(i, i + chunkSize);
       setPruneBatch({
         from: i + 1,
-        to: i + chunkSize,
+        to: Math.min(i + chunkSize, proofs.length),
         total: proofs.length,
       });
       console.log({
