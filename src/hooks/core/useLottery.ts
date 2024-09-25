@@ -159,8 +159,8 @@ const useLottery = (): {
     }[];
   }>(
     ["User Winnings in current lottery"],
-    // `/api/lottery-result?walletAddress=${EAContract.address}`,
-    `/api/lottery-result?walletAddress=${account.address}`,
+    `/api/lottery-result?walletAddress=${EAContract.address}`,
+    // `/api/lottery-result?walletAddress=${account.address}`,
     {
       enabled: account.isConnected,
     },
@@ -220,25 +220,6 @@ const useLottery = (): {
 
   const createMerkleTrees = async (): Promise<Record<string, MerkleTree>> => {
     try {
-      const responses = await Promise.all(
-        lotteriesWon.map((lottery) =>
-          axios.get(
-            `${API_ENDPOINT}/api/all-lottery-results?journeyId=${lottery.journeyId}&lotteryId=${lottery.lotteryId}`,
-          ),
-        ),
-      );
-
-      // create merkle trees for all the responses
-      let lotteryTrees = {};
-      responses.forEach((entry) => {
-        lotteryTrees = {
-          ...lotteryTrees,
-          [`${entry.data?.[0].journeyId}_${entry.data?.[0]?.lotteryId}`]:
-            createMerkleTreeForLottery(entry.data),
-        };
-      });
-
-      // alternative approach to match above lotteryTrees
       let lotteryTrees2 = {};
 
       lotteriesWon.forEach((lottery) => {
@@ -257,11 +238,6 @@ const useLottery = (): {
 
       // lotteriesWon.forEach((lottery) => {});
 
-      console.log({
-        lotteryTrees,
-        lotteryTrees2,
-        test: lotteryTrees === lotteryTrees2,
-      });
       return lotteryTrees2;
     } catch (err) {
       console.log({ err });
