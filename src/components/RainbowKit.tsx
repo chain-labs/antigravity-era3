@@ -5,9 +5,10 @@ import { PROJECT_ID } from "@/constants/rainbowkit";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { baseSepolia, pulsechain, pulsechainV4, sepolia } from "viem/chains";
-import { cookieStorage, createStorage, WagmiProvider } from "wagmi";
+import { cookieStorage, createStorage, http, WagmiProvider } from "wagmi";
 import React from "react";
 import { usePathname } from "next/navigation";
+import { ALCHEMY_KEY } from "@/constants";
 
 const RainbowKit = ({ children }: React.PropsWithChildren) => {
   const config = getDefaultConfig({
@@ -17,6 +18,11 @@ const RainbowKit = ({ children }: React.PropsWithChildren) => {
     chains: TEST_NETWORK ? [baseSepolia] : [pulsechain],
     ssr: true,
     storage: createStorage({ storage: cookieStorage }),
+    transports: {
+      [baseSepolia.id]: http(
+        `https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+      ),
+    },
   });
 
   const queryClient = new QueryClient();

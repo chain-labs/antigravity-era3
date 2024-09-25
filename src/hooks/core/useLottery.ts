@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 
-const PRUNE_BATCH_SIZE = 1;
+const PRUNE_BATCH_SIZE = 15;
 
 const useLottery = (): {
   currentLottery: number;
@@ -159,8 +159,8 @@ const useLottery = (): {
     }[];
   }>(
     ["User Winnings in current lottery"],
-    `/api/lottery-result?walletAddress=${EAContract.address}`,
-    // `/api/lottery-result?walletAddress=${account.address}`,
+    // `/api/lottery-result?walletAddress=${EAContract.address}`,
+    `/api/lottery-result?walletAddress=${account.address}`,
     {
       enabled: account.isConnected,
     },
@@ -220,15 +220,17 @@ const useLottery = (): {
 
   const createMerkleTrees = async (): Promise<Record<string, MerkleTree>> => {
     try {
+      console.log({ userWinnings, lotteriesWon });
       let lotteryTrees2 = {};
 
       lotteriesWon.forEach((lottery) => {
         const list =
-          userWinnings?.uniqueCombinationTokens.filter(
-            (item) =>
-              item.lotteryId === lottery.lotteryId &&
-              item.journeyId === lottery.journeyId,
-          ) ?? [];
+          userWinnings?.uniqueCombinationTokens?.[
+            // @ts-ignore
+            `${lottery.journeyId}_${lottery.lotteryId}`
+          ] ?? [];
+
+        console.log({ tag: `${lottery.journeyId}_${lottery.lotteryId}`, list });
         lotteryTrees2 = {
           ...lotteryTrees2,
           [`${lottery.journeyId}_${lottery.lotteryId}`]:
@@ -302,11 +304,10 @@ const useLottery = (): {
       userWinnings?.lotteryResult?.map(({ tokenId }) => tokenId) ?? [];
 
     const chunkSize = PRUNE_BATCH_SIZE;
-    const START_INDEX = 0;
+    const START_INDEX = 1;
     for (let i = START_INDEX; i < proofs.length; i += chunkSize) {
       const proofsChunk = proofs.slice(i, i + chunkSize);
       const tokenIdsChunk = tokenIds.slice(i, i + chunkSize);
-      console.log({ proofsChunk, tokenIdsChunk });
       setPruneBatch({
         from: i + 1,
         to: i + chunkSize,
@@ -327,7 +328,7 @@ const useLottery = (): {
         abi: JackpotContract.abi,
         functionName: "batchPruneWinning",
         args: [proofsChunk, tokenIdsChunk],
-        gas: BigInt(30000000),
+        gas: BigInt(20000000),
       });
 
       const receipt = await waitForTransactionReceipt(config, {

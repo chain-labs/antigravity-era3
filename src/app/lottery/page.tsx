@@ -129,6 +129,8 @@ export default function LotteryPage() {
               onClick={handlePruneWinnings}
               initial="initial"
               whileHover="hover"
+              loading={pruneLoading}
+              loadingText={`${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`}
             >
               <motion.div
                 variants={{
@@ -142,13 +144,7 @@ export default function LotteryPage() {
               >
                 <PiWrenchDuotone />
               </motion.div>
-              <HoverTextAnimation.RollingIn
-                text={
-                  pruneLoading
-                    ? `${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`
-                    : "Prune"
-                }
-              />
+              <HoverTextAnimation.RollingIn text="Prune" />
             </Button>
           </form>
           <div
