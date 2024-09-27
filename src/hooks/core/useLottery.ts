@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 
-const PRUNE_BATCH_SIZE = 25;
+const PRUNE_BATCH_SIZE = 50;
 
 const useLottery = (): {
   nextLotteryTimestamp: number;
