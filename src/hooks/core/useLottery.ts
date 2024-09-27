@@ -317,15 +317,6 @@ const useLottery = (): {
         to: Math.min(i + chunkSize, proofs.length),
         total: proofs.length,
       });
-      console.log({
-        proofSize: (() => {
-          let len = 0;
-          proofsChunk.forEach((proof) => {
-            len += proof[0].proofs.length;
-          });
-          return len;
-        })(),
-      });
 
       const tx = await batchPruneWinnings({
         address: JackpotContract.address as `0x${string}`,
@@ -339,7 +330,20 @@ const useLottery = (): {
         hash: tx,
         confirmations: 2,
       });
-      console.log({ receipt });
+      console.log({
+        proofSize: (() => {
+          let len = 0;
+          let max = 0;
+          proofsChunk.forEach((proof) => {
+            max = Math.max(max, proof[0].proofs.length);
+            len += proof[0].proofs.length;
+          });
+          return { avg: len / proofsChunk.length, total: len, max };
+        })(),
+        status: "passed",
+      });
+
+      console.log({ status: true });
     }
     await syncPrune({ walletAddress: account.address });
     setPruneLoading(false);
