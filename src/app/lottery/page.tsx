@@ -26,8 +26,6 @@ export default function LotteryPage() {
   };
 
   const {
-    currentJourney,
-    currentLottery,
     nextLotteryTimestamp,
     lotteryPayout,
     fuelCellsWon,
