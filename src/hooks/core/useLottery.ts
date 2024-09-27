@@ -143,7 +143,8 @@ const useLottery = (): {
     }[];
   }>(
     ["User Winnings in current lottery"],
-    `/api/lottery-result?walletAddress=${EAContract.address}`,
+    // `/api/lottery-result?walletAddress=${EAContract.address}`,
+    `/api/lottery-result?walletAddress=${account.address}`,
     {
       enabled: account.isConnected,
     },
@@ -320,16 +321,19 @@ const useLottery = (): {
         });
 
         console.log({ status: true, receipt });
-        // await syncPrune({ walletAddress: account.address });
-        await syncPrune({ walletAddress: EAContract.address });
+        toast.success(
+          `Prune Successful for Batch ${i + 1}-${Math.min(i + chunkSize, proofs.length)} out of ${proofs.length}!`,
+        );
+        await syncPrune({ walletAddress: account.address });
+        // await syncPrune({ walletAddress: EAContract.address });
       } catch (err) {
         console.error({ err });
         toast.error(
           `Prune Failed for Batch ${i + 1}-${Math.min(i + chunkSize, proofs.length)} out of ${proofs.length}. Trying to Prune Next Batch`,
         );
         console.log({ status: "failed" });
-        // await syncPrune({ walletAddress: account.address });
-        await syncPrune({ walletAddress: EAContract.address });
+        await syncPrune({ walletAddress: account.address });
+        // await syncPrune({ walletAddress: EAContract.address });
       }
     }
     setPruneLoading(false);
