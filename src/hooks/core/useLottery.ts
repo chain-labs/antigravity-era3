@@ -19,11 +19,9 @@ import toast from "react-hot-toast";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 
-const PRUNE_BATCH_SIZE = 15;
+const PRUNE_BATCH_SIZE = 25;
 
 const useLottery = (): {
-  currentLottery: number;
-  currentJourney: number;
   nextLotteryTimestamp: number;
   lotteryPayout: string;
   fuelCellsWon: number;
@@ -97,44 +95,26 @@ const useLottery = (): {
     return 0;
   }, [JPMReadData]);
 
-  const { data: latestLotteryResultData, isFetched: latestLotteryFetched } =
-    useGQLFetch<{
-      lotteryResults: {
-        journeyId: string;
-        lotteryId: string;
-        timestamp: string;
-        uri: string;
-      }[];
-    }>(
-      ["latest lottery"],
-      gql`
-        query getLatestLottery {
-          lotteryResults(orderBy: timestamp, orderDirection: desc, first: 1) {
-            journeyId
-            lotteryId
-            timestamp
-            uri
-          }
-        }
-      `,
-      {},
-    );
-
   const { data: lotteryPayouts, isFetched: lotteryPayoutsFetched } =
     useGQLFetch<{
       lotteryResults: {
-        journeyId: string;
-        lotteryId: string;
-        payoutPerFuelCell: string;
-      }[];
+        items: {
+          journeyId: string;
+          lotteryId: string;
+          payoutPerFuelCell: string;
+        }[];
+      };
     }>(
       ["lottery payouts"],
       gql`
-        query GetLotteryPayouts {
+        query MyQuery {
           lotteryResults {
-            journeyId
-            lotteryId
-            payoutPerFuelCell
+            items {
+              journeyId
+              lotteryId
+              payoutPerFuelCell
+              numberOfWinners
+            }
           }
         }
       `,
@@ -163,8 +143,7 @@ const useLottery = (): {
     }[];
   }>(
     ["User Winnings in current lottery"],
-    // `/api/lottery-result?walletAddress=${EAContract.address}`,
-    `/api/lottery-result?walletAddress=${account.address}`,
+    `/api/lottery-result?walletAddress=${EAContract.address}`,
     {
       enabled: account.isConnected,
     },
@@ -201,7 +180,10 @@ const useLottery = (): {
 
   const totalWinnings = useMemo(() => {
     if (lotteryPayouts && lotteriesWon) {
-      const payouts = lotteryPayouts.lotteryResults;
+      const payouts = lotteryPayouts.lotteryResults.items;
+
+      console.log({ payouts });
+
       let sum = BigInt(0);
 
       lotteriesWon.map((lottery) => {
@@ -224,7 +206,6 @@ const useLottery = (): {
 
   const createMerkleTrees = async (): Promise<Record<string, MerkleTree>> => {
     try {
-      console.log({ userWinnings, lotteriesWon });
       let lotteryTrees2 = {};
 
       lotteriesWon.forEach((lottery) => {
@@ -262,15 +243,6 @@ const useLottery = (): {
   // });
 
   useEffect(() => {
-    if (batchPruneError) {
-      console.log({ batchPruneError });
-      setPrePrune(false);
-      setPruneLoading(false);
-      toast.error("Could not prune you winnings. Try Again");
-    }
-  }, [batchPruneError]);
-
-  useEffect(() => {
     if (batchPruneHash) {
       // setPrePrune(false);
       // setPruneLoading(false);
@@ -292,6 +264,7 @@ const useLottery = (): {
       userWinnings?.lotteryResult?.map((win) => {
         const { lotteryId, tokenId, journeyId } = win;
         const merkleTree = trees[`${journeyId}_${lotteryId}`];
+        // console.log({ root: merkleTree.getHexRoot() });
 
         const leaf = keccak256(
           encodePacked(
@@ -301,62 +274,69 @@ const useLottery = (): {
         );
 
         const proof = merkleTree.getHexProof(leaf);
-        return [{ journeyId, lotteryId, proofs: proof }];
+        return {
+          journeyId,
+          lotteryId,
+          tokenId: BigInt(`${tokenId}`),
+          proofs: proof,
+        };
       }) ?? [];
-
-    const tokenIds =
-      userWinnings?.lotteryResult?.map(({ tokenId }) => tokenId) ?? [];
 
     const chunkSize = PRUNE_BATCH_SIZE;
     const START_INDEX = 0;
     for (let i = START_INDEX; i < proofs.length; i += chunkSize) {
-      const proofsChunk = proofs.slice(i, i + chunkSize);
-      const tokenIdsChunk = tokenIds.slice(i, i + chunkSize);
-      setPruneBatch({
-        from: i + 1,
-        to: Math.min(i + chunkSize, proofs.length),
-        total: proofs.length,
-      });
+      try {
+        const proofsChunk = proofs.slice(i, i + chunkSize);
+        console.log({ proofsChunk });
+        setPruneBatch({
+          from: i + 1,
+          to: Math.min(i + chunkSize, proofs.length),
+          total: proofs.length,
+        });
 
-      const tx = await batchPruneWinnings({
-        address: JackpotContract.address as `0x${string}`,
-        abi: JackpotContract.abi,
-        functionName: "batchPruneWinning",
-        args: [proofsChunk, tokenIdsChunk],
-        gas: BigInt(20000000),
-      });
+        console.log({
+          proofSize: (() => {
+            let len = 0;
+            let max = 0;
+            proofsChunk.forEach((proof) => {
+              max = Math.max(max, proof.proofs.length);
+              len += proof.proofs.length;
+            });
+            return { avg: len / proofsChunk.length, total: len, max };
+          })(),
+        });
 
-      const receipt = await waitForTransactionReceipt(config, {
-        hash: tx,
-        confirmations: 2,
-      });
-      console.log({
-        proofSize: (() => {
-          let len = 0;
-          let max = 0;
-          proofsChunk.forEach((proof) => {
-            max = Math.max(max, proof[0].proofs.length);
-            len += proof[0].proofs.length;
-          });
-          return { avg: len / proofsChunk.length, total: len, max };
-        })(),
-        status: "passed",
-      });
+        const tx = await batchPruneWinnings({
+          address: JackpotContract.address as `0x${string}`,
+          abi: JackpotContract.abi,
+          functionName: "pruneWinnings",
+          args: [proofsChunk],
+          gas: BigInt(12000000),
+        });
 
-      console.log({ status: true });
+        const receipt = await waitForTransactionReceipt(config, {
+          hash: tx,
+          confirmations: 2,
+        });
+
+        console.log({ status: true, receipt });
+        // await syncPrune({ walletAddress: account.address });
+        await syncPrune({ walletAddress: EAContract.address });
+      } catch (err) {
+        console.error({ err });
+        toast.error(
+          `Prune Failed for Batch ${i + 1}-${Math.min(i + chunkSize, proofs.length)} out of ${proofs.length}. Trying to Prune Next Batch`,
+        );
+        console.log({ status: "failed" });
+        // await syncPrune({ walletAddress: account.address });
+        await syncPrune({ walletAddress: EAContract.address });
+      }
     }
-    await syncPrune({ walletAddress: account.address });
     setPruneLoading(false);
   };
 
   return {
-    currentJourney: Number(
-      latestLotteryResultData?.lotteryResults?.[0]?.journeyId ?? 1,
-    ),
     nextLotteryTimestamp,
-    currentLottery: Number(
-      latestLotteryResultData?.lotteryResults?.[0]?.lotteryId ?? 1,
-    ),
     lotteryPayout: totalWinnings,
     fuelCellsWon: userWinnings?.lotteryResult?.length ?? 0,
     pruneLoading,
