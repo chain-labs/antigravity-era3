@@ -10,8 +10,6 @@ import {
 import { useGQLFetch } from "../api/useGraphQLClient";
 import { gql } from "graphql-request";
 import { useRestFetch, useRestPost } from "../api/useRestClient";
-import axios from "axios";
-import { API_ENDPOINT } from "@/constants";
 import { createMerkleTreeForLottery } from "@/utils/merkletree";
 import MerkleTree from "merkletreejs";
 import { encodePacked, keccak256 } from "viem";
@@ -20,6 +18,7 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 
 const PRUNE_BATCH_SIZE = 50;
+const GAS_LIMIT = 20000000;
 
 const useLottery = (): {
   nextLotteryTimestamp: number;
@@ -43,6 +42,11 @@ const useLottery = (): {
   const JPMContract = useJPMContract();
   const JackpotContract = useJackpotContract();
   const EAContract = useEAContract();
+
+  const userAccount = useMemo(() => {
+    // return EAContract.address;
+    return account.address;
+  }, [account.address]);
 
   // Reads from contracts
   const { data: JPMReadData, error: JPMReadError } = useReadContracts({
@@ -144,7 +148,7 @@ const useLottery = (): {
   }>(
     ["User Winnings in current lottery"],
     // `/api/lottery-result?walletAddress=${EAContract.address}`,
-    `/api/lottery-result?walletAddress=${account.address}`,
+    `/api/lottery-result?walletAddress=${userAccount}`,
     {
       enabled: account.isConnected,
     },
@@ -312,7 +316,7 @@ const useLottery = (): {
           abi: JackpotContract.abi,
           functionName: "pruneWinnings",
           args: [proofsChunk],
-          gas: BigInt(12000000),
+          gas: BigInt(GAS_LIMIT),
         });
 
         const receipt = await waitForTransactionReceipt(config, {
@@ -324,7 +328,7 @@ const useLottery = (): {
         toast.success(
           `Prune Successful for Batch ${i + 1}-${Math.min(i + chunkSize, proofs.length)} out of ${proofs.length}!`,
         );
-        await syncPrune({ walletAddress: account.address });
+        await syncPrune({ walletAddress: userAccount });
         // await syncPrune({ walletAddress: EAContract.address });
       } catch (err) {
         console.error({ err });
@@ -332,7 +336,7 @@ const useLottery = (): {
           `Prune Failed for Batch ${i + 1}-${Math.min(i + chunkSize, proofs.length)} out of ${proofs.length}. Trying to Prune Next Batch`,
         );
         console.log({ status: "failed" });
-        await syncPrune({ walletAddress: account.address });
+        await syncPrune({ walletAddress: userAccount });
         // await syncPrune({ walletAddress: EAContract.address });
       }
     }
