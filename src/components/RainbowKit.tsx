@@ -15,12 +15,15 @@ const RainbowKit = ({ children }: React.PropsWithChildren) => {
     appName: "AGProject-ERA3",
     projectId: `${PROJECT_ID}`,
     // @ts-ignore
-    chains: TEST_NETWORK ? [baseSepolia] : [pulsechain],
+    chains: TEST_NETWORK ? [pulsechainV4] : [pulsechain],
     ssr: true,
     storage: createStorage({ storage: cookieStorage }),
     transports: {
       [baseSepolia.id]: http(
         `https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+      ),
+      [pulsechainV4.id]: http(
+        `https://rpc-testnet-pulsechain.g4mm4.io`,
       ),
     },
   });
@@ -43,6 +46,6 @@ export const getRainbowKitChainsFromPage = (page: string, test: boolean) => {
   switch (page) {
     // add cases here for each custom page chains list
     default:
-      return test ? [baseSepolia] : [pulsechain];
+      return test ? [pulsechainV4] : [pulsechain];
   }
 };
