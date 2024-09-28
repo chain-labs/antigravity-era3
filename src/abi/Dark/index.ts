@@ -1,40 +1,42 @@
 import { baseSepolia, pulsechain, pulsechainV4, sepolia } from "viem/chains";
-import { CONTRACTS } from "../config";
-import abi from "./abi.json";
-import { useEffect, useState } from "react";
-import { zeroAddress } from "viem";
-import { TEST_NETWORK } from "@/constants/global";
-import { getRainbowKitChainsFromPage } from "@/components/RainbowKit";
-import { usePathname } from "next/navigation";
+import { useAccount } from "wagmi";
 
 interface IContract {
   address?: `0x${string}`;
   abi?: any;
 }
 
+import abi from "./abi.json";
+import { CONTRACTS } from "../config";
+import { useEffect, useState } from "react";
+import { zeroAddress } from "viem";
+import { usePathname } from "next/navigation";
+import { getRainbowKitChainsFromPage } from "@/components/RainbowKit";
+import { TEST_NETWORK } from "@/constants/global";
+
 const contracts: Record<
   number,
   { address: `0x${string}` | undefined; abi: any }
 > = {
   [sepolia.id]: {
-    address: CONTRACTS[sepolia.id].treasury,
+    address: CONTRACTS[sepolia.id].dark,
     abi,
   },
   [pulsechainV4.id]: {
-    address: CONTRACTS[pulsechainV4.id].treasury,
+    address: CONTRACTS[pulsechainV4.id].dark,
     abi,
   },
   [pulsechain.id]: {
-    address: CONTRACTS[pulsechain.id].treasury,
+    address: CONTRACTS[pulsechain.id].dark,
     abi,
   },
   [baseSepolia.id]: {
-    address: CONTRACTS[baseSepolia.id].treasury,
+    address: CONTRACTS[baseSepolia.id].dark,
     abi,
   },
 };
 
-const useTreasuryContract = () => {
+const useDarkContract = () => {
   const [contract, setContract] = useState<IContract>({
     abi: {},
     address: zeroAddress,
@@ -49,4 +51,4 @@ const useTreasuryContract = () => {
   return contract;
 };
 
-export default useTreasuryContract;
+export default useDarkContract;

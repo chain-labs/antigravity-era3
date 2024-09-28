@@ -4,6 +4,7 @@ import "./globals.css";
 import RainbowKit from "@/components/RainbowKit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { IMAGEKIT_BACKGROUNDS } from "@/images";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -54,7 +55,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <RainbowKit>{children}</RainbowKit>
+        <RainbowKit>
+          <Toaster />
+          {children}
+        </RainbowKit>
       </body>
     </html>
   );

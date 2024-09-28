@@ -1,29 +1,24 @@
 "use client";
 
 import Timer from "@/components/global/Timer";
-import Button from "@/components/html/Button";
-import Input from "@/components/html/Input";
 import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  PiAlignRight,
-  PiCubeDuotone,
-  PiTrophyDuotone,
-  PiWrenchDuotone,
-} from "react-icons/pi";
 import { motion } from "framer-motion";
 import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import { AGPROJECT_LINK, BACKGROUNDS } from "@/constants";
+import useTreasury from "@/hooks/core/useTreasury";
 
 export default function TreasuryPage() {
-  const data = {
-    nextLotteryId: 2,
-    currentJourneyId: 1,
-    fuelCellsWon: 123,
-  };
+  const {
+    fuelCellSupply,
+    totalYieldDistributed,
+    isMintActive,
+    nextMintTimestamp,
+    nextPhaseTimestamp,
+  } = useTreasury();
   return (
     <div
       style={{
@@ -78,9 +73,11 @@ export default function TreasuryPage() {
                 <small className="uppercase font-semibold">
                   TOTAL YIELD DISTRIBUTED
                 </small>
-                <p className="text-[32px]">100</p>
+                <p className="text-[32px]">
+                  {Number(totalYieldDistributed.toFixed(2)).toLocaleString("en-US")}
+                </p>
               </div>
-              <motion.p
+              <motion.div
                 initial="initial"
                 whileHover="hover"
                 className={cn(
@@ -97,7 +94,7 @@ export default function TreasuryPage() {
                   className="w-[24px] h-[24px] rounded-full"
                 />
                 <HoverTextAnimation.Fading text="Dark" />
-              </motion.p>
+              </motion.div>
             </div>
             <div
               className={cn(
@@ -114,9 +111,11 @@ export default function TreasuryPage() {
                 <small className="uppercase font-semibold">
                   TOTAL ACTIVE FUEL CELLS
                 </small>
-                <p className="text-[32px]">100</p>
+                <p className="text-[32px]">
+                  {fuelCellSupply?.toLocaleString("en-US")}
+                </p>
               </div>
-              <motion.p
+              <motion.div
                 initial="initial"
                 whileHover="hover"
                 className={cn(
@@ -133,7 +132,7 @@ export default function TreasuryPage() {
                   className="w-[24px] h-[24px] mix-blend-multiply rounded-full"
                 />
                 <HoverTextAnimation.Fading text="Fuel Cells" />
-              </motion.p>
+              </motion.div>
             </div>
           </div>
           <div
@@ -144,7 +143,16 @@ export default function TreasuryPage() {
               "font-extrabold",
             )}
           >
-            <Timer timestamp="mintEndTimestamp" />
+            <Timer
+              label={
+                isMintActive ? "Minting Active for" : "Next Mint starts in"
+              }
+              timestamp={
+                isMintActive
+                  ? Number(nextPhaseTimestamp)
+                  : Number(nextMintTimestamp)
+              }
+            />
           </div>
           <Link
             href={AGPROJECT_LINK + "/minting"}

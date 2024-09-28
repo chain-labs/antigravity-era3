@@ -227,19 +227,6 @@
     },
     {
         "type": "function",
-        "name": "TOTAL_LOTTERY_DURATION",
-        "inputs": [],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
         "name": "acceptOwnership",
         "inputs": [],
         "outputs": [],
@@ -280,41 +267,6 @@
                         "internalType": "string"
                     }
                 ]
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "batchPruneWinning",
-        "inputs": [
-            {
-                "name": "_batchWinnings",
-                "type": "tuple[][]",
-                "internalType": "struct JackpotStorage.PruneWinning[][]",
-                "components": [
-                    {
-                        "name": "journeyId",
-                        "type": "uint16",
-                        "internalType": "uint16"
-                    },
-                    {
-                        "name": "lotteryId",
-                        "type": "uint16",
-                        "internalType": "uint16"
-                    },
-                    {
-                        "name": "proofs",
-                        "type": "bytes32[]",
-                        "internalType": "bytes32[]"
-                    }
-                ]
-            },
-            {
-                "name": "tokenIds",
-                "type": "uint256[]",
-                "internalType": "uint256[]"
             }
         ],
         "outputs": [],
@@ -463,16 +415,16 @@
                         "internalType": "uint16"
                     },
                     {
+                        "name": "tokenId",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
                         "name": "proofs",
                         "type": "bytes32[]",
                         "internalType": "bytes32[]"
                     }
                 ]
-            },
-            {
-                "name": "tokenId",
-                "type": "uint256",
-                "internalType": "uint256"
             }
         ],
         "outputs": [
@@ -608,16 +560,16 @@
                         "internalType": "uint16"
                     },
                     {
+                        "name": "tokenId",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
                         "name": "proofs",
                         "type": "bytes32[]",
                         "internalType": "bytes32[]"
                     }
                 ]
-            },
-            {
-                "name": "tokenId",
-                "type": "uint256",
-                "internalType": "uint256"
             }
         ],
         "outputs": [],
@@ -940,6 +892,11 @@
     {
         "type": "error",
         "name": "ArrayLengthMismatch",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "CanPruneForSameAddressOnly",
         "inputs": []
     },
     {

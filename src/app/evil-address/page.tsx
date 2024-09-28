@@ -13,6 +13,7 @@ import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
 import { PiInfoDuotone } from "react-icons/pi";
 import Tooltip from "@/components/global/Tooltip";
+import useEvilAddress from "@/hooks/core/useEvilAddress";
 
 function PruneAndRollOver({ data }: { data: number }) {
   return (
@@ -29,7 +30,10 @@ function PruneAndRollOver({ data }: { data: number }) {
           )}
         >
           <HoverTextAnimation.Fading text="Prune & Roll Over" />{" "}
-          <Tooltip trigger={<PiInfoDuotone />} positionClassName="absolute top-[calc(100%_+_8px)] right-0">
+          <Tooltip
+            trigger={<PiInfoDuotone />}
+            positionClassName="absolute top-[calc(100%_+_8px)] right-0"
+          >
             hello
           </Tooltip>
         </motion.div>
@@ -90,7 +94,10 @@ function MintFromEvilAddress({ data }: { data: number }) {
           )}
         >
           <HoverTextAnimation.Fading text="Mint From Evil Address" />{" "}
-          <Tooltip trigger={<PiInfoDuotone />} positionClassName="absolute top-[calc(100%_+_8px)] right-0">
+          <Tooltip
+            trigger={<PiInfoDuotone />}
+            positionClassName="absolute top-[calc(100%_+_8px)] right-0"
+          >
             hello
           </Tooltip>
         </motion.div>
@@ -136,13 +143,7 @@ function MintFromEvilAddress({ data }: { data: number }) {
 }
 
 export default function EvilAddressPage() {
-  const data = {
-    nextLotteryId: 2,
-    currentJourneyId: 1,
-    fuelCellsWon: 123,
-    pruneAndRollover: 1000,
-    mintFromEvilAddress: 500,
-  };
+  const { perPruneChunk } = useEvilAddress();
   if (EVIL_ADDRESS_AVAILABLE === false) {
     return notFound();
   }
@@ -177,8 +178,8 @@ export default function EvilAddressPage() {
           </h1>
         </div>
         <div className="flex flex-col justify-center items-center gap-[24px]">
-          <PruneAndRollOver data={data.pruneAndRollover} />
-          <MintFromEvilAddress data={data.mintFromEvilAddress} />
+          <PruneAndRollOver data={perPruneChunk} />
+          <MintFromEvilAddress data={50} />
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
@@ -187,7 +188,10 @@ export default function EvilAddressPage() {
               "font-extrabold",
             )}
           >
-            <Timer timestamp="nextJourneyTimestamp" />
+            <Timer
+              label="Time to next mint"
+              timestamp={~~(new Date().getTime() / 1000 + 15000)}
+            />
           </div>
         </div>
       </div>

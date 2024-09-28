@@ -3,11 +3,14 @@
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
+import useLottery from "@/hooks/core/useLottery";
 import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
+import { useEffect } from "react";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
+import { formatUnits } from "viem";
 import { motion } from "framer-motion";
 import SeperateText, {
   HoverTextAnimation,
@@ -21,6 +24,25 @@ export default function LotteryPage() {
     currentJourneyId: 1,
     fuelCellsWon: 123,
   };
+
+  const {
+    nextLotteryTimestamp,
+    lotteryPayout,
+    fuelCellsWon,
+    pruneBatch,
+    pruneLoading,
+    batchPrune,
+  } = useLottery();
+
+  useEffect(() => {
+    console.log({ nextLotteryTimestamp });
+  }, [nextLotteryTimestamp]);
+
+  const handlePruneWinnings = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    batchPrune();
+  };
+
   return (
     <div
       style={{
@@ -72,10 +94,12 @@ export default function LotteryPage() {
               )}
             >
               <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
-                {data.fuelcells.toLocaleString("en-US")}
+                {Number(formatUnits(BigInt(lotteryPayout), 18)).toLocaleString(
+                  "en-US",
+                )}
               </p>
               <div className="flex flex-col justify-end items-end gap-[8px]">
-                <motion.p
+                <motion.div
                   initial="initial"
                   whileHover="hover"
                   className={cn(
@@ -91,15 +115,21 @@ export default function LotteryPage() {
                     height={24}
                     className="w-[24px] h-[24px] rounded-full"
                   />
-                  <HoverTextAnimation.Fading text="Fuel Cells" />
-                </motion.p>
+                  <HoverTextAnimation.Fading text="Dark Matter" />
+                </motion.div>
                 <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
                   <PiTrophyDuotone className="text-[16px]" />
-                  <span>{data.fuelCellsWon} Fuel Cells won</span>
+                  <span>{fuelCellsWon} Fuel cells won</span>
                 </div>
               </div>
             </div>
-            <Button type="submit" initial="initial" whileHover="hover">
+            <Button
+              onClick={handlePruneWinnings}
+              initial="initial"
+              whileHover="hover"
+              loading={pruneLoading}
+              loadingText={`${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`}
+            >
               <motion.div
                 variants={{
                   initial: { rotate: 0 },
@@ -123,7 +153,7 @@ export default function LotteryPage() {
               "font-extrabold",
             )}
           >
-            <Timer timestamp="nextJourneyTimestamp" />
+            <Timer label="Next Lottery in" timestamp={nextLotteryTimestamp} />
           </div>
         </div>
       </div>

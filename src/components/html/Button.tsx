@@ -4,17 +4,22 @@ import { cn } from "@/lib/tailwindUtils";
 import React from "react";
 import { AnimationProps, motion, MotionProps } from "framer-motion";
 import { PiSpinner, PiSpinnerDuotone } from "react-icons/pi";
-import { AutomaticTextAnimation, HoverTextAnimation } from "../animation/SeperateText";
+import {
+  AutomaticTextAnimation,
+  HoverTextAnimation,
+} from "../animation/SeperateText";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   loading?: boolean;
+  loadingText?: string;
   children: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps & MotionProps> = ({
   className,
   loading = false,
+  loadingText = "Loading",
   children,
   ...buttonProps
 }) => {
@@ -49,7 +54,10 @@ const Button: React.FC<ButtonProps & MotionProps> = ({
           >
             <PiSpinnerDuotone />
           </motion.div>
-          <AutomaticTextAnimation.TypingWithRandomDelay text="Loading..." loopDuration={2.5} />
+          <AutomaticTextAnimation.TypingWithRandomDelay
+            text={loadingText}
+            loopDuration={2.5}
+          />
         </>
       ) : (
         children

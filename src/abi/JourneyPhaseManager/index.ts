@@ -17,24 +17,24 @@ const contracts: Record<
   { address: `0x${string}` | undefined; abi: any }
 > = {
   [sepolia.id]: {
-    address: CONTRACTS[sepolia.id].treasury,
+    address: CONTRACTS[sepolia.id].journeyPhaseManager,
     abi,
   },
   [pulsechainV4.id]: {
-    address: CONTRACTS[pulsechainV4.id].treasury,
+    address: CONTRACTS[pulsechainV4.id].journeyPhaseManager,
     abi,
   },
   [pulsechain.id]: {
-    address: CONTRACTS[pulsechain.id].treasury,
+    address: CONTRACTS[pulsechain.id].journeyPhaseManager,
     abi,
   },
   [baseSepolia.id]: {
-    address: CONTRACTS[baseSepolia.id].treasury,
+    address: CONTRACTS[baseSepolia.id].journeyPhaseManager,
     abi,
   },
 };
 
-const useTreasuryContract = () => {
+const useJPMContract = () => {
   const [contract, setContract] = useState<IContract>({
     abi: {},
     address: zeroAddress,
@@ -49,4 +49,4 @@ const useTreasuryContract = () => {
   return contract;
 };
 
-export default useTreasuryContract;
+export default useJPMContract;

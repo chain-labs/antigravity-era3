@@ -25,6 +25,7 @@ import {
   EVIL_ADDRESS_AVAILABLE,
   UNWRAP_AVAILABLE,
 } from "@/constants";
+import useHeaderStats from "./useHeaderStats";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,6 +37,8 @@ export default function Header() {
     journey: 1,
     userdark: 23432443,
   };
+
+  const { treasuryDark, journey, userDark } = useHeaderStats();
 
   return (
     <header
@@ -71,11 +74,11 @@ export default function Header() {
               <PiTreasureChestDuotone />
             </motion.div>
             <p>Treasury $DARK:</p>
-            <motion.p initial="initial" whileHover="hover">
+            <motion.div initial="initial" whileHover="hover">
               <HoverTextAnimation.BounceReveal
-                text={data.treasurydark.toLocaleString("en-US")}
+                text={treasuryDark.toLocaleString("en-US")}
               />
-            </motion.p>
+            </motion.div>
           </div>
           <div className="flex justify-center items-center gap-[8px]">
             <motion.div initial="initial" whileHover="hover">
@@ -94,11 +97,11 @@ export default function Header() {
               </motion.div>
             </motion.div>
             <p>Journey:</p>
-            <motion.p initial="initial" whileHover="hover">
+            <motion.div initial="initial" whileHover="hover">
               <HoverTextAnimation.BounceReveal
-                text={data.journey.toLocaleString("en-US")}
+                text={journey.toLocaleString("en-US")}
               />
-            </motion.p>
+            </motion.div>
           </div>
           <div className="flex justify-center items-center gap-[8px]">
             <motion.div
@@ -115,11 +118,11 @@ export default function Header() {
               <PiWalletDuotone />
             </motion.div>
             <p>User $DARK:</p>
-            <motion.p initial="initial" whileHover="hover">
+            <motion.div initial="initial" whileHover="hover">
               <HoverTextAnimation.BounceReveal
-                text={data.userdark.toLocaleString("en-US")}
+                text={userDark.toLocaleString("en-US")}
               />
-            </motion.p>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -137,7 +140,7 @@ export default function Header() {
             "px-[16px] py-[8px]",
           )}
         >
-          <motion.p initial="initial" whileHover="hover">
+          <motion.div initial="initial" whileHover="hover">
             <Link href="/lottery" className="flex justify-center items-center">
               <Image
                 src={IMAGEKIT_LOGOS.LOGO}
@@ -155,23 +158,24 @@ export default function Header() {
                 <HoverTextAnimation.Fading text="Antigravity" />
               </h1>
             </Link>
-          </motion.p>
+          </motion.div>
 
           <div className="flex justify-center items-center gap-[16px]">
-            <motion.p
+            <motion.div
               initial="initial"
               whileHover="hover"
               className={cn(
-                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
+                Gradients.whiteGradientText,
+                "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px]",
               )}
             >
-              <Link href="/lottery">
+              <Link href="/lottery" replace={true}>
                 <HoverTextAnimation.Fading text="Lottery" />
               </Link>
-            </motion.p>
+            </motion.div>
 
-            <Link href="/treasury">
-              <motion.p
+            <Link href="/treasury" replace={true}>
+              <motion.div
                 initial="initial"
                 whileHover="hover"
                 className={cn(
@@ -179,11 +183,11 @@ export default function Header() {
                 )}
               >
                 <HoverTextAnimation.Fading text="Treasury" />
-              </motion.p>
+              </motion.div>
             </Link>
             {EVIL_ADDRESS_AVAILABLE && (
               <Link href="/evil-address">
-                <motion.p
+                <motion.div
                   initial="initial"
                   whileHover="hover"
                   className={cn(
@@ -191,12 +195,12 @@ export default function Header() {
                   )}
                 >
                   <HoverTextAnimation.Fading text="Evil" />
-                </motion.p>
+                </motion.div>
               </Link>
             )}
             {UNWRAP_AVAILABLE && (
               <Link href="/unwrap">
-                <motion.p
+                <motion.div
                   initial="initial"
                   whileHover="hover"
                   className={cn(
@@ -204,11 +208,11 @@ export default function Header() {
                   )}
                 >
                   <HoverTextAnimation.Fading text="Unwrap" />
-                </motion.p>
+                </motion.div>
               </Link>
             )}
             <Link href={AGPROJECT_LINK} target="_blank">
-              <motion.p
+              <motion.div
                 initial="initial"
                 whileHover="hover"
                 className={cn(
@@ -216,7 +220,7 @@ export default function Header() {
                 )}
               >
                 <HoverTextAnimation.Fading text="agproject.io" />
-              </motion.p>
+              </motion.div>
             </Link>
           </div>
 
