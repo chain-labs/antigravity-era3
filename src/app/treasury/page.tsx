@@ -74,7 +74,9 @@ export default function TreasuryPage() {
                   TOTAL YIELD DISTRIBUTED
                 </small>
                 <p className="text-[32px]">
-                  {Number(totalYieldDistributed.toFixed(2)).toLocaleString("en-US")}
+                  {Number(totalYieldDistributed.toFixed(2)).toLocaleString(
+                    "en-US",
+                  )}
                 </p>
               </div>
               <motion.div
@@ -154,22 +156,24 @@ export default function TreasuryPage() {
               }
             />
           </div>
-          <Link
-            href={AGPROJECT_LINK + "/minting"}
-            target="_blank"
-            className={cn(
-              Gradients.redToBlue,
-              "relative rounded-[8px] p-[2px] w-fit",
-            )}
-          >
-            <motion.div
-              initial="initial"
-              whileHover="hover"
-              className="underline underline-offset-2 text-agwhite font-sans font-semibold uppercase tracking-widest px-[16px] py-[8px] rounded-[6px] bg-agblack h-"
+          {isMintActive && (
+            <Link
+              href={AGPROJECT_LINK + "/minting"}
+              target="_blank"
+              className={cn(
+                Gradients.redToBlue,
+                "relative rounded-[8px] p-[2px] w-fit",
+              )}
             >
-              <HoverTextAnimation.RollingIn text="Mint Now!" />
-            </motion.div>
-          </Link>
+              <motion.div
+                initial="initial"
+                whileHover="hover"
+                className="underline underline-offset-2 text-agwhite font-sans font-semibold uppercase tracking-widest px-[16px] py-[8px] rounded-[6px] bg-agblack h-"
+              >
+                <HoverTextAnimation.RollingIn text="Mint Now!" />
+              </motion.div>
+            </Link>
+          )}
         </div>
       </div>
     </div>
