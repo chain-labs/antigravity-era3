@@ -18,7 +18,7 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 
 const PRUNE_BATCH_SIZE = 50;
-const GAS_LIMIT = 20000000;
+const GAS_LIMIT = 1000000;
 
 const useLottery = (): {
   nextLotteryTimestamp: number;
@@ -316,7 +316,7 @@ const useLottery = (): {
           abi: JackpotContract.abi,
           functionName: "pruneWinnings",
           args: [proofsChunk],
-          gas: BigInt(GAS_LIMIT),
+          // gas: BigInt(GAS_LIMIT),
         });
 
         const receipt = await waitForTransactionReceipt(config, {
