@@ -54,7 +54,7 @@ function PruneAndRollOver({ data }: { data: number }) {
             "w-full",
             "flex justify-between items-center",
           )}
-        >
+        > 
           <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
             {data.toLocaleString("en-US")}
           </p>
@@ -158,6 +158,7 @@ export default function EvilAddressPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
+          "pt-[100px]"
         )}
       >
         <div
