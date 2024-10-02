@@ -1,4 +1,10 @@
-import { pulsechain, pulsechainV4, sepolia, baseSepolia } from "viem/chains";
+import {
+  base,
+  baseSepolia,
+  pulsechain,
+  pulsechainV4,
+  sepolia,
+} from "viem/chains";
 
 type Address = `0x${string}`;
 
@@ -37,20 +43,15 @@ export const CONTRACTS: Record<
     miningRig: "0x020d3Ca9605bb17CC17Ea0DB2bFfed3fA0869fCF",
     darkX: "0xb1BF01E195D511509B12D980769351eF5255eE0f",
     darkClaims: "0x6b3099EfFF4dAE69e48240d88C141a7cfa793ae6",
-    dark: "0x54E87718fa5db681c3767e6B5fBA1A94B5466e2a",
+    dark: "0xa45E0fC67464f6B07D2a5D58541038522Cee0893",
     wishWell: "0x43F4cdC343f39EDD323C66492E9fdf3D72Df0eC0",
-    fuelCell: "0x48A50EA41d7f022BBe4AE44Dcc29EDEe81FfB92a",
-    launchControlCenter: "0xeC176F0d84e8C29A0cAb19a77c7358549CF3D24C",
-    journeyPhaseManager: "0x9e0B4C4C54BD62D418d8479dB8B36C547BcD0602",
-    evilAddress: "0xBB0b3819020438fC123c9FdD8B197ece9322C392",
-    treasury: "0xFC5BdF784d6F8630B3700D20c5250908b005C32B",
-    jackpot: "0xb152287f9c143f38e34D7838c4EADf584A590dc4",
-    darkFaucet: "0x684126cF5711CA106C17ED985A9cf045b1e2C3d5",
-  },
-  [pulsechain.id]: {
-    miningRig: "0x1Eca1A64E18E72c46971a80D91F015a569FE9FBd",
-    darkX: "0xCC18F40724971Be55AB5508607d8024Ee9Bf8796",
-    wishWell: "0x332211A407489F497cD58bac7Db3F10Da5da47Ff",
+    fuelCell: "0x7F186D6D225C07a3A8378467275579b012FEC93d",
+    launchControlCenter: "0x8F05794478c464C96c117Ca54cB089E67e439eb6",
+    journeyPhaseManager: "0xD956b208178bCB6750D158e73497381d90b17b3D",
+    evilAddress: "0x1c8cB3CCA2d00B5bf9698C2C0db740DD2CDFe727",
+    treasury: "0x933E44Bda641Ffd8C00fe4D3B0c8E3446d0846dd",
+    jackpot: "0xBaa72Ba326E35883A95E1A56fAB0f8cc4641e75B",
+    darkFaucet: "0x0E386125A07acfD07D64A3CCb1c567B6B1A37D87",
   },
   [baseSepolia.id]: {
     miningRig: "0x8Dea737AE483153c69934ff8a5c7E3D448c2DB4C",
@@ -64,5 +65,15 @@ export const CONTRACTS: Record<
     treasury: "0x5C0CB2f806Bfe9827709853BE7d950921Fac420E",
     jackpot: "0x557913C038C51a8f976a4De8032Bea92e8DeB4F3",
     darkFaucet: "0xde199d27867f42b0F96614FcFe107Fabae19091c",
+  },
+  [pulsechain.id]: {
+    miningRig: "0x1Eca1A64E18E72c46971a80D91F015a569FE9FBd",
+    darkX: "0xCC18F40724971Be55AB5508607d8024Ee9Bf8796",
+    wishWell: "0x332211A407489F497cD58bac7Db3F10Da5da47Ff",
+  },
+  [base.id]: {
+    miningRig: "0x698Ae58B7AB13ad232A84d684e8111D2c6A6d904",
+    darkX: "0xb070db7dCad8F5081c3e9033633782258fCa811c",
+    wishWell: "0x332211A407489F497cD58bac7Db3F10Da5da47Ff",
   },
 };
