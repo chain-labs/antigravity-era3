@@ -177,7 +177,6 @@ export default function LotteryPage() {
               <HoverTextAnimation.RollingIn text="Prune" />
             </Button>
           </form>
-          <p>{lotteriesInfo?.journeyId}</p>
           <ProgressingStates
             states={lotteryState}
             journeyId={`${lotteriesInfo?.journeyId}`}
