@@ -8,7 +8,7 @@ import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
 import { formatUnits } from "viem";
 import { motion } from "framer-motion";
@@ -16,14 +16,14 @@ import SeperateText, {
   HoverTextAnimation,
 } from "@/components/animation/SeperateText";
 import { BACKGROUNDS } from "@/constants";
+import ProgressingStates, { STEPPERS } from "./ProgressingStates";
 
 export default function LotteryPage() {
-  const data = {
-    fuelcells: 122223,
-    nextLotteryId: 2,
-    currentJourneyId: 1,
-    fuelCellsWon: 123,
-  };
+  const [lotteryState, setLotteryState] = useState<STEPPERS>({
+    big: "success",
+    bigger: "pending",
+    biggest: "pending",
+  });
 
   const {
     nextLotteryTimestamp,
@@ -31,6 +31,7 @@ export default function LotteryPage() {
     fuelCellsWon,
     pruneBatch,
     pruneLoading,
+    lotteriesInfo,
     batchPrune,
   } = useLottery();
 
@@ -42,6 +43,37 @@ export default function LotteryPage() {
     e.preventDefault();
     batchPrune();
   };
+
+  useEffect(() => {
+    const lotteryIdAnnounced = lotteriesInfo?.lotteryId;
+
+    switch (lotteryIdAnnounced) {
+      case "1": {
+        setLotteryState({
+          big: "success",
+          bigger: "pending",
+          biggest: "pending",
+        });
+        return;
+      }
+      case "2": {
+        setLotteryState({
+          big: "success",
+          bigger: "pending",
+          biggest: "pending",
+        });
+        return;
+      }
+      case "3": {
+        setLotteryState({
+          big: "success",
+          bigger: "pending",
+          biggest: "pending",
+        });
+        return;
+      }
+    }
+  }, [lotteriesInfo]);
 
   return (
     <div
@@ -145,6 +177,11 @@ export default function LotteryPage() {
               <HoverTextAnimation.RollingIn text="Prune" />
             </Button>
           </form>
+          <p>{lotteriesInfo?.journeyId}</p>
+          <ProgressingStates
+            states={lotteryState}
+            journeyId={`${lotteriesInfo?.journeyId}`}
+          />
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",

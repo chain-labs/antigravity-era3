@@ -18,6 +18,7 @@ export default function TreasuryPage() {
     isMintActive,
     nextMintTimestamp,
     nextPhaseTimestamp,
+    userMinted,
   } = useTreasury();
   return (
     <div
@@ -49,6 +50,14 @@ export default function TreasuryPage() {
           >
             Treasury
           </h1>
+          <h4 className="font-bold text-agyellow">
+            Total Minted:{" "}
+            <span className="text-agwhite">{userMinted} Fuel Cells</span>
+          </h4>
+          {/* <h4 className="font-bold text-agyellow">
+            Total Yield Accumulated:{" "}
+            <span className="text-agwhite">{2} $DARK</span>
+          </h4> */}
         </div>
 
         <div className="flex flex-col justify-center items-center gap-[24px]">

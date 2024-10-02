@@ -1,14 +1,19 @@
 import useFuelCellContract from "@/abi/FuelCell";
 import useJPMContract from "@/abi/JourneyPhaseManager";
 import useTreasuryContract from "@/abi/Treasury";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { formatUnits } from "viem";
-import { useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
+import { useGQLFetch } from "../api/useGraphQLClient";
+import { gql } from "graphql-request";
+import useEAContract from "@/abi/EvilAddress";
 
 const useTreasury = () => {
   const FuelCellsContract = useFuelCellContract();
   const TreasuryContract = useTreasuryContract();
   const JPMContract = useJPMContract();
+
+  const account = useAccount();
 
   const { data: yieldDistributedData, isFetched: yieldDistributedFetched } =
     useReadContract({
@@ -94,12 +99,75 @@ const useTreasury = () => {
     return ~~(new Date().getTime() / 1000);
   }, [nextPhaseTimestampData, nextPhaseTimestampFetched]);
 
+  const { data: userMintData, isLoading: userMintDataLoading } = useGQLFetch<{
+    user: { address: string; mints: { items: { amount: string }[] } };
+  }>(
+    ["totalMintedUser"],
+    gql`
+      query MyQuery {
+        user(id: "${account.address}") {
+          address
+          mints {
+            items {
+              amount
+            }
+          }
+        }
+      }
+    `,
+    {},
+    { enabled: !!account.address },
+  );
+
+  const userMinted = useMemo(() => {
+    if (!userMintDataLoading) {
+      console.log({ userMintData });
+      const mints =
+        userMintData?.user.mints.items.map((mint) => mint.amount) ?? [];
+
+      let total = 0;
+      mints.forEach((mint) => {
+        total += Number(mint);
+      });
+      return total;
+    }
+
+    return 0;
+  }, [userMintDataLoading, userMintData]);
+
+  const { data: lotteryWinnings, isLoading: lotteryWinningsLoading } =
+    useGQLFetch<{
+      user: { address: string; mints: { items: { amount: string }[] } };
+    }>(
+      ["totalMintedUser"],
+      gql`
+        query MyQuery {
+          lotteryResults {
+            items {
+              payoutPerFuelCell
+              lotteryId
+              journeyId
+              jackpotId
+            }
+          }
+        }
+      `,
+      {},
+      { enabled: !!account.address },
+    );
+
+  const userYield = useMemo(() => {}, [
+    lotteryWinningsLoading,
+    lotteryWinnings,
+  ]);
+
   return {
     fuelCellSupply,
     totalYieldDistributed,
     isMintActive,
     nextMintTimestamp,
     nextPhaseTimestamp,
+    userMinted,
   };
 };
 

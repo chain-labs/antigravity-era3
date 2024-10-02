@@ -22,6 +22,7 @@ const GAS_LIMIT = 1000000;
 
 const useLottery = (): {
   nextLotteryTimestamp: number;
+  lotteriesInfo: { journeyId: string; lotteryId: string } | null;
   lotteryPayout: string;
   fuelCellsWon: number;
   batchPrune: () => void;
@@ -112,7 +113,7 @@ const useLottery = (): {
       ["lottery payouts"],
       gql`
         query MyQuery {
-          lotteryResults {
+          lotteryResults(orderBy: "timestamp", orderDirection: "desc") {
             items {
               journeyId
               lotteryId
@@ -208,6 +209,27 @@ const useLottery = (): {
 
     return "0";
   }, [lotteriesWon, lotteryPayouts]);
+
+  const lotteriesInfo = useMemo(() => {
+    if (lotteryPayoutsFetched) {
+      const payouts = lotteryPayouts?.lotteryResults.items ?? [];
+
+      const latestPayout = payouts[0];
+
+      if (latestPayout) {
+        console.log({ latestPayout });
+
+        return {
+          journeyId: latestPayout.journeyId,
+          lotteryId: latestPayout.lotteryId,
+        };
+      } else {
+        return null;
+      }
+    }
+
+    return null;
+  }, [lotteryPayouts, lotteryPayoutsFetched]);
 
   const createMerkleTrees = async (): Promise<Record<string, MerkleTree>> => {
     try {
@@ -351,6 +373,7 @@ const useLottery = (): {
     pruneBatch,
     batchPrune,
     createMerkleTrees,
+    lotteriesInfo,
   };
 };
 
