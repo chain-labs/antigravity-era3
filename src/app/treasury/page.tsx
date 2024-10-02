@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import { AGPROJECT_LINK, BACKGROUNDS } from "@/constants";
 import useTreasury from "@/hooks/core/useTreasury";
+import { useAccount } from "wagmi";
 
 export default function TreasuryPage() {
   const {
@@ -20,6 +21,8 @@ export default function TreasuryPage() {
     nextPhaseTimestamp,
     userMinted,
   } = useTreasury();
+
+  const account = useAccount();
   return (
     <div
       style={{
@@ -50,14 +53,16 @@ export default function TreasuryPage() {
           >
             Treasury
           </h1>
-          <h4 className="font-bold text-agyellow">
-            Total Minted:{" "}
-            <span className="text-agwhite">{userMinted} Fuel Cells</span>
-          </h4>
-          {/* <h4 className="font-bold text-agyellow">
-            Total Yield Accumulated:{" "}
-            <span className="text-agwhite">{2} $DARK</span>
-          </h4> */}
+          {account.isConnected ? (
+            <h4 className="font-bold text-agyellow">
+              Total Minted:{" "}
+              <span className="text-agwhite">{userMinted} Fuel Cells</span>
+            </h4>
+          ) : // <h4 className="font-bold text-agyellow">
+          //   Total Yield Accumulated:{" "}
+          //   <span className="text-agwhite">{2} $DARK</span>
+          // </h4>
+          null}
         </div>
 
         <div className="flex flex-col justify-center items-center gap-[24px]">
