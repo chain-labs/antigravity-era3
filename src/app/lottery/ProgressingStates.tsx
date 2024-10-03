@@ -212,8 +212,6 @@ export default function ProgressingStates({
     }
   }, [states]);
 
-  console.log("circlePositions", circleCenterPositions);
-
   return (
     <div className="flex flex-col place-items-center gap-y-[8px] text-[16px] leading-[19.84px] tracking-widest font-extrabold font-sans uppercase w-full">
       <p className="text-center">
