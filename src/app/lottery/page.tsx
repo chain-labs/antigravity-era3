@@ -80,7 +80,7 @@ export default function LotteryPage() {
       style={{
         backgroundImage: `url(${BACKGROUNDS.LOTTERY ?? ""})`,
       }}
-      className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
+      className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat pt-[100px]"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
@@ -177,10 +177,19 @@ export default function LotteryPage() {
               <HoverTextAnimation.RollingIn text="Prune" />
             </Button>
           </form>
-          <ProgressingStates
-            states={lotteryState}
-            journeyId={`${lotteriesInfo?.journeyId}`}
-          />
+          <div
+            className={cn(
+              "flex flex-col justify-start items-start gap-[8px] w-full",
+              "py-[8px] px-[16px] rounded-[6px]",
+              "bg-agblack/30 backdrop-blur-lg",
+              "font-extrabold",
+            )}
+          >
+            <ProgressingStates
+              states={lotteryState}
+              journeyId={`${lotteriesInfo?.journeyId}`}
+            />
+          </div>
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
