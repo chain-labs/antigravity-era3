@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useLayoutEffect, useState } from "react";
 
 export type states = "pending" | "progress" | "success" | "failed";
 
@@ -172,6 +172,9 @@ export default function ProgressingStates({
   states: { [key in string]: states };
   journeyId: string;
 }) {
+  const [circleCenterPositions, setCircleCenterPositions] = useState<string[]>(
+    [],
+  );
   const [states, setStates] = useState<{
     [key in string]: states;
   }>({
@@ -185,6 +188,31 @@ export default function ProgressingStates({
       setStates(previousStates);
     }
   }, [previousStates]);
+
+  useEffect(() => {
+    if (window) {
+      window.onresize = () => {
+        setCircleCenterPositions(
+          Object.keys(states).map((_, idx) => {
+            const circle = document.getElementById(`circle-${idx}`);
+            const left = circle?.offsetLeft || 0;
+            const width = circle?.offsetWidth || 0;
+            return left + width / 2 + "px";
+          }),
+        );
+      };
+      setCircleCenterPositions(
+        Object.keys(states).map((_, idx) => {
+          const circle = document.getElementById(`circle-${idx}`);
+          const left = circle?.offsetLeft || 0;
+          const width = circle?.offsetWidth || 0;
+          return left + width / 2 + "px";
+        }),
+      );
+    }
+  }, [states]);
+
+  console.log("circlePositions", circleCenterPositions);
 
   return (
     <div className="flex flex-col place-items-center gap-y-[8px] text-[16px] leading-[19.84px] tracking-widest font-extrabold font-sans uppercase w-full">
@@ -218,6 +246,7 @@ export default function ProgressingStates({
                     height: "16px",
                     ...statesCircleCSS[states[userState]],
                   }}
+                  id={`circle-${idx}`}
                   className="relative w-[16px] h-[16px] rounded-full py-[8px] mx-auto transition-all duration-300 z-0"
                 >
                   {/* {states[userState] === "success" && <RandomSparkels />} */}
@@ -254,19 +283,22 @@ export default function ProgressingStates({
             ))}
         </AnimatePresence>
       </div>
-      <div className="flex justify-between items-center w-full pl-[16px]">
+      <div className="w-full h-[1em]">
         {typeof states === "object" &&
           Object.keys(states).map((userState: string, idx: number) => (
-            <p
+            <motion.p
               key={1 * idx}
               style={{
                 color: statesColors[states[userState]],
                 gridColumn: `${idx * 2 + 1}`,
                 gridRow: "2",
+                position: "absolute",
+                left: circleCenterPositions[idx],
+                transform: "translate(-50%, 0)",
               }}
             >
               {userState}
-            </p>
+            </motion.p>
           ))}
       </div>
     </div>
