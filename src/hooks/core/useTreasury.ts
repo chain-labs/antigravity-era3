@@ -100,18 +100,14 @@ const useTreasury = () => {
   }, [nextPhaseTimestampData, nextPhaseTimestampFetched]);
 
   const { data: userMintData, isLoading: userMintDataLoading } = useGQLFetch<{
-    user: { address: string; mints: { items: { amount: string }[] } };
+    user: { address: string; fuelCellBalance: string };
   }>(
     ["totalMintedUser"],
     gql`
       query MyQuery {
         user(id: "${account.address}") {
           address
-          mints {
-            items {
-              amount
-            }
-          }
+          fuelCellBalance
         }
       }
     `,
@@ -121,45 +117,10 @@ const useTreasury = () => {
 
   const userMinted = useMemo(() => {
     if (!userMintDataLoading) {
-      console.log({ userMintData });
-      const mints =
-        userMintData?.user.mints.items.map((mint) => mint.amount) ?? [];
-
-      let total = 0;
-      mints.forEach((mint) => {
-        total += Number(mint);
-      });
-      return total;
+      return Number(userMintData?.user?.fuelCellBalance ?? "0");
     }
-
     return 0;
   }, [userMintDataLoading, userMintData]);
-
-  const { data: lotteryWinnings, isLoading: lotteryWinningsLoading } =
-    useGQLFetch<{
-      user: { address: string; mints: { items: { amount: string }[] } };
-    }>(
-      ["totalMintedUser"],
-      gql`
-        query MyQuery {
-          lotteryResults {
-            items {
-              payoutPerFuelCell
-              lotteryId
-              journeyId
-              jackpotId
-            }
-          }
-        }
-      `,
-      {},
-      { enabled: !!account.address },
-    );
-
-  const userYield = useMemo(() => {}, [
-    lotteryWinningsLoading,
-    lotteryWinnings,
-  ]);
 
   return {
     fuelCellSupply,

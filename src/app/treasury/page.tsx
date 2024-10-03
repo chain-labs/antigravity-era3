@@ -55,7 +55,7 @@ export default function TreasuryPage() {
           </h1>
           {account.isConnected ? (
             <h4 className="font-bold text-agyellow">
-              Total Minted:{" "}
+              Fuel Cell Balance:{" "}
               <span className="text-agwhite">{userMinted} Fuel Cells</span>
             </h4>
           ) : // <h4 className="font-bold text-agyellow">
