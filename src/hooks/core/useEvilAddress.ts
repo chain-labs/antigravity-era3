@@ -19,12 +19,13 @@ import toast from "react-hot-toast";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 
-const PRUNE_BATCH_SIZE = 10;
+const PRUNE_BATCH_SIZE = 50;
 
 const useEvilAddress = () => {
   const [pruneLoading, setPruneLoading] = useState(false);
 
   const EAContract = useEAContract();
+  const JackpotContract = useJackpotContract();
   const account = useAccount();
 
   const {
@@ -113,69 +114,53 @@ const useEvilAddress = () => {
     data: batchPruneHash,
   } = useWriteContract();
 
-  useEffect(() => {
-    if (batchPruneError) {
-      console.log({ batchPruneError });
-      setPruneLoading(false);
-      toast.error("Could not prune you winnings. Try Again");
-    }
-  }, [batchPruneError]);
-
-  useEffect(() => {
-    if (batchPruneHash) {
-      // setPrePrune(false);
-      // setPruneLoading(false);
-      // toast.success("Winnings pruned successfully");
-      console.log({ batchPruneHash });
-    }
-  }, [batchPruneHash]);
-
   const config = useConfig();
 
   const { mutateAsync: syncPrune } = useRestPost(["sync prune"], "/api/prune");
 
   const evilPrune = async () => {
+    setPruneLoading(true);
+    const trees = await createMerkleTrees();
+
+    let proofs =
+      userWinnings?.lotteryResult?.map((win) => {
+        const { lotteryId, tokenId, journeyId } = win;
+        const merkleTree = trees[`${journeyId}_${lotteryId}`];
+
+        const leaf = keccak256(
+          encodePacked(
+            ["uint256", "uint16", "uint16"],
+            [BigInt(tokenId), journeyId, lotteryId],
+          ),
+        );
+
+        const proof = merkleTree.getHexProof(leaf);
+        return {
+          journeyId,
+          lotteryId,
+          tokenId: BigInt(`${tokenId}`),
+          proofs: proof,
+        };
+      }) ?? [];
+
     try {
-      setPruneLoading(true);
-      const trees = await createMerkleTrees();
-
-      let proofs =
-        userWinnings?.lotteryResult?.map((win) => {
-          const { lotteryId, tokenId, journeyId } = win;
-          const merkleTree = trees[`${journeyId}_${lotteryId}`];
-
-          const leaf = keccak256(
-            encodePacked(
-              ["uint256", "uint16", "uint16"],
-              [BigInt(tokenId), journeyId, lotteryId],
-            ),
-          );
-
-          const proof = merkleTree.getHexProof(leaf);
-          return [{ journeyId, lotteryId, proofs: proof }];
-        }) ?? [];
-
-      const tokenIds =
-        userWinnings?.lotteryResult?.map(({ tokenId }) => tokenId) ?? [];
-
-      console.log({
-        proofSize: (() => {
-          let len = 0;
-          let max = 0;
-          proofs.forEach((proof) => {
-            max = Math.max(max, proof[0].proofs.length);
-            len += proof[0].proofs.length;
-          });
-          return { avg: len / proofs.length, total: len, max };
-        })(),
-      });
+      // console.log({
+      //   proofSize: (() => {
+      //     let len = 0;
+      //     let max = 0;
+      //     proofs.forEach((proof) => {
+      //       max = Math.max(max, proof.proofs.length);
+      //       len += proof.proofs.length;
+      //     });
+      //     return { avg: len / proofs.length, total: len, max };
+      //   })(),
+      // });
 
       const tx = await batchPruneWinnings({
-        address: EAContract.address as `0x${string}`,
-        abi: EAContract.abi,
-        functionName: "batchPruneWinning",
-        args: [proofs, tokenIds],
-        gas: BigInt(15000000),
+        address: JackpotContract.address as `0x${string}`,
+        abi: JackpotContract.abi,
+        functionName: "pruneWinnings",
+        args: [proofs],
       });
 
       const receipt = await waitForTransactionReceipt(config, {
@@ -184,19 +169,97 @@ const useEvilAddress = () => {
       });
 
       console.log({ status: true, receipt });
-
+      toast.success("Evil Prune Successful!");
       await syncPrune({ walletAddress: EAContract.address });
-      setPruneLoading(false);
+    } catch (err) {
+      console.error({ err });
+      toast.error(`Prune Failed! Please Try again.`);
+      console.log({ status: "failed" });
+      await syncPrune({ walletAddress: EAContract.address });
+    }
+    setPruneLoading(false);
+  };
+
+  // Mint
+  const { writeContractAsync: evilMintFn } = useWriteContract();
+  const [evilMintLoading, setEvilMintLoading] = useState(false);
+
+  const evilMint = async () => {
+    try {
+      setEvilMintLoading(true);
+      const tx = await evilMintFn({
+        address: EAContract.address as `0x${string}`,
+        abi: EAContract.abi,
+        functionName: "evilMint",
+        args: [],
+      });
+
+      const receipt = await waitForTransactionReceipt(config, {
+        hash: tx,
+        confirmations: 2,
+      });
+
+      console.log({ status: "Mint Passed", receipt });
+      toast.success(`Evil Mint Successful!`);
+      setEvilMintLoading(false);
     } catch (err) {
       console.log({ err });
-      console.log({ status: false });
+      console.log({ status: "Mint Failed" });
+      setEvilMintLoading(false);
+      toast.error("Failed to Evil Mint! Please Try Again");
     }
   };
+
+  const { data: mintState, mutateAsync: fetchMintState } = useRestPost<{
+    currentJourney: string;
+    currentPhase: string;
+    isJourneyPaused: boolean;
+    nextJourneyTimestamp: string;
+    mintEndTimestamp: string;
+    multiplier: number;
+    rewardMultiplier: string;
+  }>(["fetching mint state"], "/api/era-3-timestamps-multipliers");
+
+  useEffect(() => {
+    const fetch = async () => {
+      const mintState = await fetchMintState({
+        walletAddress: account.address ?? "",
+      });
+      console.log({ mintState });
+    };
+
+    fetch();
+  }, []);
+
+  const isMintActive = useMemo(() => {
+    if (mintState) {
+      if (mintState.mintEndTimestamp) return true;
+    }
+    return false;
+  }, [mintState]);
+
+  const mintTimestamp = useMemo(() => {
+    if (mintState) {
+      return Number(
+        mintState.mintEndTimestamp !== ""
+          ? mintState.mintEndTimestamp
+          : mintState.nextJourneyTimestamp,
+      );
+    }
+    return ~~(new Date().getTime() / 1000);
+  }, [mintState]);
+
   return {
     perPruneChunk: Math.min(
       PRUNE_BATCH_SIZE,
       userWinnings?.lotteryResult.length ?? 0,
     ),
+    evilMint,
+    evilMintLoading,
+    evilPrune,
+    evilPruneLoading: pruneLoading,
+    isMintActive,
+    mintTimestamp,
   };
 };
 

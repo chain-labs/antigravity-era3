@@ -154,7 +154,6 @@ const useLottery = (): {
       enabled: account.isConnected,
     },
   );
-
   const lotteriesWon = useMemo(() => {
     if (userWinningsFetched) {
       console.log({ userWinnings });
