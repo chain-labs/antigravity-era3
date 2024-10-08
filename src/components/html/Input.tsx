@@ -4,6 +4,7 @@ import { cn } from "@/lib/tailwindUtils";
 import { FC, forwardRef, Ref, useRef, useState } from "react";
 import { motion, MotionProps } from "framer-motion";
 import { fontSizeClamping } from "@/lib/uiUtils";
+import _ from "lodash";
 
 // Define the props for the Input component
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -38,6 +39,10 @@ const Input: FC<InputProps & MotionProps> = forwardRef(
         ? e.target.value.replace(/\D/g, "")
         : e.target.value;
       const numericValue = integer ? parseInt(inputValue) : Number(inputValue);
+
+      _.debounce((value) => {
+        console.log("Debounced value:", value);
+      }, 500);
 
       if (inputValue === "" || isNaN(numericValue)) {
         e.target.value = "0";
