@@ -3,27 +3,34 @@ import { useRestPost } from "../api/useRestClient";
 import useTreasury from "./useTreasury";
 import axios from "axios";
 import { SUBGRAPH_URL } from "@/constants";
+import { useEffect, useMemo, useState } from "react";
+import { useAccount } from "wagmi";
+import useEAContract from "@/abi/EvilAddress";
+import { fetchUserFuelCellsMappingWithTotalYield } from "@/utils/unwrap";
 
 const userOwnedFuelCellsQuery = (
   walletAddress: string,
-  afterCursor: string,
   batchSize: number = 500,
+  afterCursor?: string,
 ) => `query MyQuery {
-      users(where: { address: "${walletAddress}" }) {
+  users(where: { address: "${walletAddress}" }) {
+    items {
+      ownedFuelCells(after: ${
+        afterCursor ? `"${afterCursor}"` : null
+      }, limit: ${batchSize}) {
         items {
-          ownedFuelCells(after: ${
-            afterCursor ? `"${afterCursor}"` : null
-          }, limit: ${batchSize}) {
-            items {
-              journeyId
-              tokenId
+          journeyId
+          tokenId
+        }
       }
-    }`;
+    }
+  }
+}`;
 
 const fetchUserOwnedFuelCellsPaginated = async (
   walletAddress: string,
-  cursor: string,
   batchSize: number,
+  cursor?: string,
 ) => {
   let userOwnedFuelCells: { journeyId: number; tokenId: number }[] = [];
   let pageInfo = {};
@@ -36,8 +43,8 @@ const fetchUserOwnedFuelCellsPaginated = async (
       {
         query: userOwnedFuelCellsQuery(
           checksumWalletAddress,
-          cursor,
           batchSize,
+          cursor,
         ),
       },
       {
@@ -47,6 +54,10 @@ const fetchUserOwnedFuelCellsPaginated = async (
       },
     );
 
+    console.log({
+      response,
+      query: userOwnedFuelCellsQuery(checksumWalletAddress, batchSize, cursor),
+    });
     const currentFuelCells: { journeyId: string; tokenId: string }[] =
       response?.data?.data?.users?.items?.[0]?.ownedFuelCells?.items || [];
     pageInfo =
@@ -64,8 +75,37 @@ const fetchUserOwnedFuelCellsPaginated = async (
   return { userOwnedFuelCells, pageInfo };
 };
 
-const useUnwrap = () => {
-    const TreasuryContract = useTreasury();
-    
-    
+const useUnwrap = (inputValue: number) => {
+  const TreasuryContract = useTreasury();
+  const EAContract = useEAContract();
+  const account = useAccount();
+
+  const [totalData, setTotalData] = useState({});
+
+  useEffect(() => {
+    if (account.address) {
+      let hasNextPage = true;
+      let tableData = [];
+      while (hasNextPage) {
+        fetchUserFuelCellsMappingWithTotalYield(
+          `${EAContract.address}`,
+          500,
+        ).then((data) => {
+          console.log({ data });
+          hasNextPage = data.pageInfo.hasNextPage;
+        });
+      }
+      // setTotalData(tableData);
+    }
+  }, [account.address]);
+
+  const tableData = useMemo(() => {
+    if (totalData) {
+      // console.log({ totalData });
+    }
+  }, [totalData]);
+
+  return { tableData };
 };
+
+export default useUnwrap;

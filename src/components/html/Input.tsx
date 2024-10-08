@@ -11,12 +11,21 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   integer?: boolean;
   error?: boolean;
+  inputValue: number;
+  setInputValue: (arg0: number) => void;
 }
 
 // Input component with forwardRef to allow ref forwarding
 const Input: FC<InputProps & MotionProps> = forwardRef(
   (props: InputProps & MotionProps, ref: Ref<HTMLInputElement>) => {
-    const { className, integer, error, ...inputProps } = props;
+    const {
+      className,
+      integer,
+      error,
+      inputValue,
+      setInputValue,
+      ...inputProps
+    } = props;
 
     const classOfElements = cn(
       "text-agwhite text-[32px] leading-[32px] font-sans",
@@ -29,7 +38,6 @@ const Input: FC<InputProps & MotionProps> = forwardRef(
 
     const parentRef = useRef<HTMLDivElement>(null);
     const [inputInFocus, setInputInFocus] = useState<boolean>(true);
-    const [inputValue, setInputValue] = useState<number>(0);
     const integerPartOfValue = inputValue.toString().includes(".")
       ? inputValue.toString().split(".")[0]
       : inputValue;
@@ -39,10 +47,6 @@ const Input: FC<InputProps & MotionProps> = forwardRef(
         ? e.target.value.replace(/\D/g, "")
         : e.target.value;
       const numericValue = integer ? parseInt(inputValue) : Number(inputValue);
-
-      _.debounce((value) => {
-        console.log("Debounced value:", value);
-      }, 500);
 
       if (inputValue === "" || isNaN(numericValue)) {
         e.target.value = "0";

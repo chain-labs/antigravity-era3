@@ -20,15 +20,14 @@ import { IoClose } from "react-icons/io5";
 import { notFound } from "next/navigation";
 import { BACKGROUNDS, UNWRAP_AVAILABLE } from "@/constants";
 import { HoverTextAnimation } from "@/components/animation/SeperateText";
+import useUnwrap from "@/hooks/core/useUnwrap";
 
 export default function UnwrapPage() {
-  const data = {
-    nextLotteryId: 2,
-    currentJourneyId: 1,
-    fuelCellsWon: 123,
-  };
+  const [inputValue, setInputValue] = useState<number>(0);
 
-  const tableData = {
+  const { tableData } = useUnwrap(inputValue);
+
+  const tableConfigs = {
     header: [
       <>
         <Image
@@ -145,7 +144,11 @@ export default function UnwrapPage() {
                     "flex justify-between items-center",
                   )}
                 >
-                  <Input className="w-[10ch]" />
+                  <Input
+                    className="w-[10ch]"
+                    inputValue={inputValue}
+                    setInputValue={setInputValue}
+                  />
                   <motion.div
                     initial="initial"
                     whileHover="hover"
@@ -226,7 +229,7 @@ export default function UnwrapPage() {
               >
                 <IoClose />
               </button>
-              <Table header={tableData.header} body={tableData.data} />
+              <Table header={tableConfigs.header} body={tableConfigs.data} />
             </motion.div>
           </div>
         </motion.div>
