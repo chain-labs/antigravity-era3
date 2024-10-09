@@ -192,6 +192,7 @@ export default function EvilAddressPage() {
     evilPruneLoading,
     isMintActive,
     mintTimestamp,
+    mintsAllowed,
   } = useEvilAddress();
 
   useEffect(() => {
@@ -213,7 +214,7 @@ export default function EvilAddressPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
-          "md:pt-[150px]"
+          "md:pt-[150px]",
         )}
       >
         <div
@@ -239,7 +240,7 @@ export default function EvilAddressPage() {
             {...{ evilPrune, evilPruneLoading }}
           />
           <MintFromEvilAddress
-            data={50}
+            data={Number(mintsAllowed) ?? 500}
             evilMint={evilMint}
             evilMintLoading={evilMintLoading}
             isMintActive={isMintActive}

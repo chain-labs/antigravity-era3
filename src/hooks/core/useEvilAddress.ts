@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useConfig,
+  useReadContract,
   useReadContracts,
   useWriteContract,
 } from "wagmi";
@@ -26,6 +27,7 @@ const useEvilAddress = () => {
 
   const EAContract = useEAContract();
   const JackpotContract = useJackpotContract();
+  const JPMContract = useJPMContract();
   const account = useAccount();
 
   const {
@@ -113,6 +115,13 @@ const useEvilAddress = () => {
     error: batchPruneError,
     data: batchPruneHash,
   } = useWriteContract();
+
+  const { data: mintsAllowed, isFetched: mintsAllowedFetched } =
+    useReadContract({
+      address: EAContract.address as `0x${string}`,
+      abi: EAContract.abi,
+      functionName: "PER_TRX_MINT_LIMIT",
+    });
 
   const config = useConfig();
 
@@ -256,6 +265,7 @@ const useEvilAddress = () => {
     ),
     evilMint,
     evilMintLoading,
+    mintsAllowed,
     evilPrune,
     evilPruneLoading: pruneLoading,
     isMintActive,
