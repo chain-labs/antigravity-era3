@@ -83,18 +83,21 @@ const useUnwrap = (inputValue: number) => {
   const [totalData, setTotalData] = useState({});
 
   useEffect(() => {
-    if (account.address) {
+    const fetchAllData = async () => {
       let hasNextPage = true;
       let tableData = [];
       while (hasNextPage) {
-        fetchUserFuelCellsMappingWithTotalYield(
-          `${EAContract.address}`,
+        const data = await fetchUserFuelCellsMappingWithTotalYield(
+          // `${EAContract.address}`,
+          `${account.address}`,
           500,
-        ).then((data) => {
-          console.log({ data });
-          hasNextPage = data.pageInfo.hasNextPage;
-        });
+        );
+        console.log({ data });
+        hasNextPage = data.pageInfo.hasNextPage;
       }
+    };
+    if (account.address) {
+      fetchAllData();
       // setTotalData(tableData);
     }
   }, [account.address]);

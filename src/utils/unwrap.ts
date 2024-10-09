@@ -85,7 +85,10 @@ const fetchUserOwnedFuelCellsPaginated = async (
   cursor?: string,
 ) => {
   let userOwnedFuelCells: { journeyId: number; tokenId: number }[] = [];
-  let pageInfo = {};
+  let pageInfo: { endCursor: string; hasNextPage: boolean } = {
+    endCursor: "",
+    hasNextPage: true,
+  };
 
   const checksumWalletAddress = getAddress(walletAddress);
 
