@@ -35,10 +35,6 @@ export default function LotteryPage() {
     batchPrune,
   } = useLottery();
 
-  useEffect(() => {
-    console.log({ nextLotteryTimestamp });
-  }, [nextLotteryTimestamp]);
-
   const handlePruneWinnings = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     batchPrune();
@@ -46,6 +42,8 @@ export default function LotteryPage() {
 
   useEffect(() => {
     const lotteryIdAnnounced = lotteriesInfo?.lotteryId;
+
+    console.log({ lotteryIdAnnounced });
 
     switch (lotteryIdAnnounced) {
       case "1": {
@@ -59,7 +57,7 @@ export default function LotteryPage() {
       case "2": {
         setLotteryState({
           big: "success",
-          bigger: "pending",
+          bigger: "success",
           biggest: "pending",
         });
         return;
@@ -67,6 +65,14 @@ export default function LotteryPage() {
       case "3": {
         setLotteryState({
           big: "success",
+          bigger: "success",
+          biggest: "success",
+        });
+        return;
+      }
+      default: {
+        setLotteryState({
+          big: "pending",
           bigger: "pending",
           biggest: "pending",
         });
