@@ -31,7 +31,7 @@ const RainbowKit = ({ children }: React.PropsWithChildren) => {
   const queryClient = new QueryClient();
 
   return (
-    <WagmiProvider config={config} reconnectOnMount={true}>
+    <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider modalSize="compact">{children}</RainbowKitProvider>
       </QueryClientProvider>
