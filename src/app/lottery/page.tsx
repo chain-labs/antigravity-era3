@@ -110,7 +110,7 @@ export default function LotteryPage() {
             )}
           >
             Congratulations!
-            <br /> Prune your winnings!
+            <br /> Prune your winnings
           </h1>
         </div>
 
