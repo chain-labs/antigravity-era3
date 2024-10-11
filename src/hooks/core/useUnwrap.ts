@@ -85,16 +85,45 @@ const useUnwrap = (inputValue: number) => {
   useEffect(() => {
     const fetchAllData = async () => {
       let hasNextPage = true;
-      let tableData = [];
+      let nextCursor;
+      let count = 0;
+      let tableData: Record<
+        string,
+        { fuelCells: number[]; totalYieldPerFuelCell: number }
+      >[] = [];
       while (hasNextPage) {
         const data = await fetchUserFuelCellsMappingWithTotalYield(
           // `${EAContract.address}`,
           `${account.address}`,
           500,
+          nextCursor,
         );
+        const { pageInfo, ...dataWithoutPageInfo } = data;
+        hasNextPage = pageInfo.hasNextPage;
+        nextCursor = pageInfo.endCursor;
         console.log({ data });
-        hasNextPage = data.pageInfo.hasNextPage;
+        tableData.push(dataWithoutPageInfo);
+        count++;
       }
+      console.log({ tableData });
+      const finalData: Record<
+        string,
+        { fuelCells: number[]; totalYieldPerFuelCell: number }
+      > = {};
+      // tableData.map((item) => {
+      //   const keys = Object.keys(item);
+      //   console.log({ keys });
+      //   keys.forEach((key) => {
+      //     const fuelCells = finalData[key].fuelCells;
+      //     console.log({ fuelCells });
+      //     // finalData[key] = {
+      //     //   fuelCells: [...finalData[key]?.fuelCells, ...item[key]?.fuelCells],
+      //     //   totalYieldPerFuelCell: item[key]?.totalYieldPerFuelCell,
+      //     // };
+      //   });
+      // });
+
+      console.log({ finalData });
     };
     if (account.address) {
       fetchAllData();
