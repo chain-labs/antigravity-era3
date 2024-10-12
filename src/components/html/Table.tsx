@@ -5,7 +5,7 @@ import { cn } from "@/lib/tailwindUtils";
 
 type TableProps = {
   header: React.ReactNode[];
-  body: Array<React.ReactNode[]>;
+  body: Array<Array<Number | string>>;
 };
 
 export default function Table({ header, body }: TableProps) {
@@ -50,7 +50,7 @@ export default function Table({ header, body }: TableProps) {
                       "px-[12px] py-[10px]",
                     )}
                   >
-                    {cell}
+                    {`${cell}`}
                   </div>
                 </td>
               ))}

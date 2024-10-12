@@ -1,96 +1,44 @@
-import { getAddress } from "viem";
+import { formatUnits, getAddress, parseUnits } from "viem";
 import { useRestPost } from "../api/useRestClient";
 import useTreasury from "./useTreasury";
 import axios from "axios";
 import { SUBGRAPH_URL } from "@/constants";
 import { useEffect, useMemo, useState } from "react";
-import { useAccount } from "wagmi";
+import {
+  useAccount,
+  useConfig,
+  useReadContract,
+  useWriteContract,
+} from "wagmi";
 import useEAContract from "@/abi/EvilAddress";
-import { fetchUserFuelCellsMappingWithTotalYield } from "@/utils/unwrap";
+import {
+  fetchNonPrunedWinnings,
+  fetchUserFuelCellsMappingWithTotalYield,
+} from "@/utils/unwrap";
+import toast from "react-hot-toast";
+import useFuelCellContract from "@/abi/FuelCell";
+import useTreasuryContract from "@/abi/Treasury";
+import { waitForTransactionReceipt } from "@wagmi/core";
 
-const userOwnedFuelCellsQuery = (
-  walletAddress: string,
-  batchSize: number = 500,
-  afterCursor?: string,
-) => `query MyQuery {
-  users(where: { address: "${walletAddress}" }) {
-    items {
-      ownedFuelCells(after: ${
-        afterCursor ? `"${afterCursor}"` : null
-      }, limit: ${batchSize}) {
-        items {
-          journeyId
-          tokenId
-        }
-      }
-    }
-  }
-}`;
+type TABLE_DATA_UF = Record<
+  number,
+  { fuelCells: number[]; totalYieldPerFuelCell: number }
+>;
 
-const fetchUserOwnedFuelCellsPaginated = async (
-  walletAddress: string,
-  batchSize: number,
-  cursor?: string,
-) => {
-  let userOwnedFuelCells: { journeyId: number; tokenId: number }[] = [];
-  let pageInfo = {};
-
-  const checksumWalletAddress = getAddress(walletAddress);
-
-  try {
-    const response = await axios.post(
-      SUBGRAPH_URL,
-      {
-        query: userOwnedFuelCellsQuery(
-          checksumWalletAddress,
-          batchSize,
-          cursor,
-        ),
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    console.log({
-      response,
-      query: userOwnedFuelCellsQuery(checksumWalletAddress, batchSize, cursor),
-    });
-    const currentFuelCells: { journeyId: string; tokenId: string }[] =
-      response?.data?.data?.users?.items?.[0]?.ownedFuelCells?.items || [];
-    pageInfo =
-      response?.data?.data?.users?.items?.[0]?.ownedFuelCells?.pageInfo || {};
-
-    userOwnedFuelCells = currentFuelCells.map((fuelCell) => {
-      return {
-        journeyId: parseInt(fuelCell.journeyId, 10),
-        tokenId: parseInt(fuelCell.tokenId, 10),
-      };
-    });
-  } catch (e) {
-    console.error("Error while fetching mints from subgraph: ", e);
-  }
-  return { userOwnedFuelCells, pageInfo };
-};
-
-const useUnwrap = (inputValue: number) => {
-  const TreasuryContract = useTreasury();
+const useUnwrap = (inputValue: number, optimized: boolean) => {
+  const TreasuryContract = useTreasuryContract();
   const EAContract = useEAContract();
+  const FuelCellContract = useFuelCellContract();
   const account = useAccount();
 
-  const [totalData, setTotalData] = useState({});
+  const [totalData, setTotalData] = useState<TABLE_DATA_UF>({});
 
   useEffect(() => {
     const fetchAllData = async () => {
       let hasNextPage = true;
       let nextCursor;
       let count = 0;
-      let tableData: Record<
-        string,
-        { fuelCells: number[]; totalYieldPerFuelCell: number }
-      >[] = [];
+      let tableData: TABLE_DATA_UF[] = [];
       while (hasNextPage) {
         const data = await fetchUserFuelCellsMappingWithTotalYield(
           // `${EAContract.address}`,
@@ -105,26 +53,36 @@ const useUnwrap = (inputValue: number) => {
         tableData.push(dataWithoutPageInfo);
         count++;
       }
-      console.log({ tableData });
-      const finalData: Record<
-        string,
-        { fuelCells: number[]; totalYieldPerFuelCell: number }
-      > = {};
-      // tableData.map((item) => {
-      //   const keys = Object.keys(item);
-      //   console.log({ keys });
-      //   keys.forEach((key) => {
-      //     const fuelCells = finalData[key].fuelCells;
-      //     console.log({ fuelCells });
-      //     // finalData[key] = {
-      //     //   fuelCells: [...finalData[key]?.fuelCells, ...item[key]?.fuelCells],
-      //     //   totalYieldPerFuelCell: item[key]?.totalYieldPerFuelCell,
-      //     // };
-      //   });
-      // });
+      const finalData: TABLE_DATA_UF = {};
+      tableData.map((item) => {
+        const keys = Object.keys(item);
+        keys.forEach((key) => {
+          const nKey = Number(key);
+          const fuelCells = finalData?.[nKey]?.fuelCells ?? [];
+          finalData[nKey] = {
+            fuelCells: [...fuelCells, ...item[nKey]?.fuelCells],
+            totalYieldPerFuelCell: item[nKey]?.totalYieldPerFuelCell,
+          };
+        });
+      });
 
-      console.log({ finalData });
+      const nonPrunedWinnings = await fetchNonPrunedWinnings(
+        `${account.address ?? ""}`,
+      );
+
+      const updatedkeys = Object.keys(finalData);
+
+      updatedkeys.forEach((key) => {
+        const nKey = Number(key);
+        const fuelCells = finalData[nKey].fuelCells;
+        const nonPrunedWinningFuelCells = nonPrunedWinnings[nKey];
+        finalData[nKey].fuelCells = fuelCells.filter(
+          (fuelCell) => !nonPrunedWinningFuelCells.includes(fuelCell),
+        );
+      });
+      setTotalData(finalData);
     };
+
     if (account.address) {
       fetchAllData();
       // setTotalData(tableData);
@@ -132,12 +90,115 @@ const useUnwrap = (inputValue: number) => {
   }, [account.address]);
 
   const tableData = useMemo(() => {
-    if (totalData) {
-      // console.log({ totalData });
+    if (totalData && inputValue > 0) {
+      const keys = Object.keys(totalData)
+        .map(Number)
+        .sort((a, b) => (optimized ? a - b : b - a));
+      let count = 0;
+      let result: (Number | string)[][] = [];
+      keys.forEach((key) => {
+        const journeyFuelCells = totalData[key].fuelCells;
+        const payoutPerFuelCell = formatUnits(
+          BigInt(totalData[key].totalYieldPerFuelCell),
+          18,
+        );
+        journeyFuelCells.forEach((fuelCell) => {
+          if (count < inputValue) {
+            count++;
+            result.push([fuelCell, key, Number(payoutPerFuelCell).toFixed(3)]);
+          }
+        });
+      });
+      console.log({ result });
+      return result;
     }
+
+    return [];
+  }, [totalData, inputValue, optimized]);
+
+  const totalFuelCells = useMemo(() => {
+    const nKeys = Object.keys(totalData).map(Number);
+    let total = 0;
+    nKeys.forEach((key) => {
+      total += totalData[key].fuelCells.length;
+    });
+    console.log({ total });
+
+    return total;
   }, [totalData]);
 
-  return { tableData };
+  // <============= UNWRAP FUNCTIONALITY ============>
+
+  const [isApproved, setIsApproved] = useState(false);
+
+  // Declaration of write Function for unwrap
+  const { writeContractAsync: unwrap } = useWriteContract();
+
+  // Declaration of write Function for Approval
+  const { writeContractAsync: approve } = useWriteContract();
+  // Check if Treasury SC is allowed to transfer Fuel Cells
+  const { data: isApprovedData, isFetched: approvalFetched } = useReadContract({
+    address: FuelCellContract.address as `0x${string}`,
+    abi: FuelCellContract.abi,
+    functionName: "isApprovedForAll",
+    args: [`${account.address}`, `${TreasuryContract.address}`],
+  });
+
+  useEffect(() => {
+    if (approvalFetched) {
+      setIsApproved(isApprovedData as boolean);
+    }
+  }, [isApprovedData, approvalFetched]);
+
+  const config = useConfig();
+
+  const unwrapFn = async () => {
+    if (inputValue > 0 && inputValue <= totalFuelCells) {
+      let approved = isApproved;
+      try {
+        if (!isApproved) {
+          const tx = await approve({
+            address: FuelCellContract.address as `0x${string}`,
+            abi: FuelCellContract.abi,
+            functionName: "setApprovalForAll",
+            args: [`${TreasuryContract.address}`, true],
+          });
+          const receipt = await waitForTransactionReceipt(config, { hash: tx });
+          toast("Approved Success!");
+          setIsApproved(true);
+          approved = true;
+        }
+      } catch (err) {
+        const message = "Error during approval! Please Try Again";
+        toast.error(message);
+        console.log(message, err);
+      }
+      try {
+        const fuelCellsArgs: any = tableData.map((data) => {
+          return { fuelCellId: data[0], journeyId: data[1] };
+        });
+
+        const tx = await unwrap({
+          address: TreasuryContract.address as `0x${string}`,
+          abi: TreasuryContract.abi,
+          functionName: "unwrap",
+          args: [fuelCellsArgs],
+        });
+
+        const receipt = await waitForTransactionReceipt(config, { hash: tx });
+
+        toast.success("Unwrap Successful");
+      } catch (err) {
+        const message = "Error during unwrap! Please Try Again";
+        toast.error(message);
+        console.log(message, err);
+      }
+    } else {
+      toast.error("Check Fuel Cells input!");
+    }
+  };
+
+  return { tableData, totalFuelCells, isApproved, unwrapFn };
 };
 
 export default useUnwrap;

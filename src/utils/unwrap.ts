@@ -1,4 +1,4 @@
-import { SUBGRAPH_URL } from "@/constants";
+import { API_ENDPOINT, SUBGRAPH_URL } from "@/constants";
 import axios from "axios";
 import { formatUnits, getAddress, parseUnits } from "viem";
 
@@ -245,4 +245,31 @@ const fetchUserFuelCellsMappingWithTotalYield = async (
   return { ...userFuelCellsMapping, pageInfo };
 };
 
-export { fetchUserFuelCellsMappingWithTotalYield };
+const fetchNonPrunedWinnings = async (userAddress: string) => {
+  if (userAddress) {
+    try {
+      const response = await axios.get(
+        `${API_ENDPOINT}/api/lottery-result?walletAddress=${userAddress}`,
+      );
+
+      const lotteryResult = response?.data?.lotteryResult ?? [];
+      const nonPrunedWinnings: Record<number, number[]> = {};
+      lotteryResult.forEach(
+        (result: { lotteryId: number; journeyId: number; tokenId: number }) => {
+          const { tokenId, journeyId } = result;
+          const oldEntry = nonPrunedWinnings[journeyId] ?? [];
+          nonPrunedWinnings[journeyId] = [...oldEntry, tokenId];
+        },
+      );
+
+      return nonPrunedWinnings;
+    } catch (err) {
+      console.log("Error while fetching user winnings!", err);
+      return {};
+    }
+  }
+
+  return {};
+};
+
+export { fetchUserFuelCellsMappingWithTotalYield, fetchNonPrunedWinnings };
