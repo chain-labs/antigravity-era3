@@ -49,7 +49,7 @@ export default function LotteryPage() {
       case "1": {
         setLotteryState({
           big: "success",
-          bigger: "pending",
+          bigger: "progress",
           biggest: "pending",
         });
         return;
@@ -58,7 +58,7 @@ export default function LotteryPage() {
         setLotteryState({
           big: "success",
           bigger: "success",
-          biggest: "pending",
+          biggest: "progress",
         });
         return;
       }
@@ -72,7 +72,7 @@ export default function LotteryPage() {
       }
       default: {
         setLotteryState({
-          big: "pending",
+          big: "progress",
           bigger: "pending",
           biggest: "pending",
         });

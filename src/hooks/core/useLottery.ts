@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useConfig,
+  useReadContract,
   useReadContracts,
   useWriteContract,
 } from "wagmi";
@@ -17,6 +18,7 @@ import toast from "react-hot-toast";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 import { getTransactionCount } from "@wagmi/core";
+import { lotteryBuffer } from "@/constants";
 
 const PRUNE_BATCH_SIZE = 50;
 const GAS_LIMIT = 1000000;
@@ -59,6 +61,7 @@ const useLottery = (): {
       "getNextJourneyTimestamp",
       "PHASE_1_DURATION",
       "PHASE_2_DURATION",
+      "LOTTERIES_PER_JOURNEY",
     ].map((functionName) => ({
       address: JPMContract?.address,
       abi: JPMContract?.abi,
@@ -66,35 +69,73 @@ const useLottery = (): {
     })),
   });
 
+  const { data: currentLotteryId, error: currentLotteryIdError } =
+    useReadContract({
+      address: JackpotContract.address as `0x${string}`,
+      abi: JackpotContract.abi,
+      functionName: "currentLotteryId",
+      args: [Number(JPMReadData?.[0].result)],
+      query: {
+        enabled: !!JPMReadData?.[0],
+      },
+    });
+
   const nextLotteryTimestamp = useMemo(() => {
     if (JPMReadData) {
-      const currentJourney = Number(JPMReadData[0].result);
+      // calculate timings
+      const phase2Duration = JPMReadData[5].result as bigint;
+      const totalLotteriesInAJourney = JPMReadData[6].result as bigint;
+      // duration period when a particular lottery should be announced
+      const singleLotteryDuration = phase2Duration / totalLotteriesInAJourney;
+      // end timestamp of lottery phase (in seconds)
+      const endTimestamp = JPMReadData[2].result as bigint;
+      // start timestamp of lottery phase (in seconds)
+      const startTimestamp = endTimestamp - phase2Duration;
+      // current timestamp (in seconds)
+      const currentTimestamp = BigInt(Math.ceil(Date.now() / 1000));
+      console.log({ currentLotteryId });
+
+      const lotteryId = Number(currentLotteryId ?? 0) + 1;
+      // timestamp when lottery should be announced
+      const lotteryResultTimestamp =
+        startTimestamp +
+        BigInt(lotteryId) * singleLotteryDuration -
+        BigInt(lotteryBuffer);
+      // ISO timestring when lottery should be announced
+      const lotteryResultISOTime = new Date(
+        parseInt(lotteryResultTimestamp.toString()) * 1000,
+      );
+      console.log({ lotteryResultISOTime });
+      // if current timestamp is less than lottery result timestamp, then end cron
+
       const currentPhase = Number(JPMReadData[1].result);
       const nextJourneyTimestamp = Number(JPMReadData[3].result);
       const PHASE_1_SECONDS = Number(JPMReadData[4].result);
       const PER_LOTTERY_SECONDS = Number(JPMReadData[5].result) / 3;
       const nextTimestamp = Number(JPMReadData[2].result);
       const now = ~~(new Date().getTime() / 1000); // convert current time to seconds
-      if (Number(currentPhase) === 1) {
-        // start of lottery 1
-        return nextTimestamp;
-      } else {
-        // start of lottery 2
-        let currentPhaseStart =
-          nextTimestamp - PER_LOTTERY_SECONDS * 3 + PER_LOTTERY_SECONDS;
-        if (currentPhaseStart > now) {
-          return currentPhaseStart;
-        }
+      // if (Number(currentPhase) === 1) {
+      //   // start of lottery 1
+      //   return nextTimestamp;
+      // } else {
+      //   // start of lottery 2
+      //   let currentPhaseStart =
+      //     nextTimestamp - PER_LOTTERY_SECONDS * 3 + PER_LOTTERY_SECONDS;
+      //   if (currentPhaseStart > now) {
+      //     return currentPhaseStart;
+      //   }
 
-        // start of lottery 3
-        currentPhaseStart += PER_LOTTERY_SECONDS;
-        if (currentPhaseStart > now) {
-          return currentPhaseStart;
-        }
+      //   // start of lottery 3
+      //   currentPhaseStart += PER_LOTTERY_SECONDS;
+      //   if (currentPhaseStart > now) {
+      //     return currentPhaseStart;
+      //   }
 
-        // start of next journey lottery 1
-        return nextJourneyTimestamp + PHASE_1_SECONDS;
-      }
+      //   // start of next journey lottery 1
+      //   return ;
+      // }
+
+      return Number(lotteryResultTimestamp);
     }
 
     // default to 0
@@ -342,14 +383,20 @@ const useLottery = (): {
 
         console.log({ status: true, receipt });
         toast.success(
-          `Prune Successful for Batch ${i + 1}-${Math.min(i + chunkSize, proofs.length)} out of ${proofs.length}!`,
+          `Prune Successful for Batch ${i + 1}-${Math.min(
+            i + chunkSize,
+            proofs.length,
+          )} out of ${proofs.length}!`,
         );
         await syncPrune({ walletAddress: userAccount });
         // await syncPrune({ walletAddress: EAContract.address });
       } catch (err) {
         console.error({ err });
         toast.error(
-          `Prune Failed for Batch ${i + 1}-${Math.min(i + chunkSize, proofs.length)} out of ${proofs.length}. Trying to Prune Next Batch`,
+          `Prune Failed for Batch ${i + 1}-${Math.min(
+            i + chunkSize,
+            proofs.length,
+          )} out of ${proofs.length}. Trying to Prune Next Batch`,
         );
         console.log({ status: "failed" });
         await syncPrune({ walletAddress: userAccount });

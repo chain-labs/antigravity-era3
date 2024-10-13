@@ -17,3 +17,7 @@ export const BACKGROUNDS = {
   EVIL_ADDRESS: process.env.NEXT_PUBLIC_EVIL_ADDRESS_BG,
   UNWRAP: process.env.NEXT_PUBLIC_UNWRAP_BG,
 };
+
+export const lotteryBuffer = Number(
+  process.env.NEXT_PUBLIC_LOTTERY_BUFFER ?? "0",
+);
