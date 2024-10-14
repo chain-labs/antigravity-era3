@@ -20,6 +20,7 @@ export default function TreasuryPage() {
     nextMintTimestamp,
     nextPhaseTimestamp,
     userMinted,
+    onTimerEnd,
   } = useTreasury();
 
   const account = useAccount();
@@ -168,6 +169,7 @@ export default function TreasuryPage() {
                   ? Number(nextPhaseTimestamp)
                   : Number(nextMintTimestamp)
               }
+              onTimerEnd={onTimerEnd}
             />
           </div>
           {isMintActive && (

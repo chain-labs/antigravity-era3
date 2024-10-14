@@ -19,6 +19,7 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 import { getTransactionCount } from "@wagmi/core";
 import { lotteryBuffer } from "@/constants";
+import { PiNumberCircleFive } from "react-icons/pi";
 
 const PRUNE_BATCH_SIZE = 50;
 const GAS_LIMIT = 1000000;
@@ -27,20 +28,27 @@ const useLottery = (): {
   nextLotteryTimestamp: number;
   lotteriesInfo: { journeyId: string; lotteryId: string } | null;
   lotteryPayout: string;
+  currentPhase: number;
   fuelCellsWon: number;
   batchPrune: () => void;
   pruneLoading: boolean;
   pruneBatch: { from: number; to: number; total: number };
   createMerkleTrees: () => Promise<Record<string, MerkleTree>>;
+  onTimerEnd: () => void;
 } => {
   const account = useAccount();
   const [pruneLoading, setPruneLoading] = useState(false);
   const [prePrune, setPrePrune] = useState(false);
+  const [refetchInfo, setRefetchInfo] = useState(true);
   const [pruneBatch, setPruneBatch] = useState({
     from: 0,
     to: PRUNE_BATCH_SIZE,
     total: PRUNE_BATCH_SIZE,
   });
+
+  const onTimerEnd = () => {
+    setRefetchInfo(true);
+  };
 
   // define contract instances here
   const JPMContract = useJPMContract();
@@ -67,6 +75,9 @@ const useLottery = (): {
       abi: JPMContract?.abi,
       functionName,
     })),
+    query: {
+      enabled: refetchInfo,
+    },
   });
 
   const { data: currentLotteryId, error: currentLotteryIdError } =
@@ -76,66 +87,67 @@ const useLottery = (): {
       functionName: "currentLotteryId",
       args: [Number(JPMReadData?.[0].result)],
       query: {
-        enabled: !!JPMReadData?.[0],
+        enabled: !!JPMReadData?.[0] && refetchInfo,
       },
     });
 
   const nextLotteryTimestamp = useMemo(() => {
     if (JPMReadData) {
-      // calculate timings
+      setRefetchInfo(false);
       const phase2Duration = JPMReadData[5].result as bigint;
       const totalLotteriesInAJourney = JPMReadData[6].result as bigint;
-      // duration period when a particular lottery should be announced
-      const singleLotteryDuration = phase2Duration / totalLotteriesInAJourney;
-      // end timestamp of lottery phase (in seconds)
-      const endTimestamp = JPMReadData[2].result as bigint;
-      // start timestamp of lottery phase (in seconds)
-      const startTimestamp = endTimestamp - phase2Duration;
-      // current timestamp (in seconds)
-      const currentTimestamp = BigInt(Math.ceil(Date.now() / 1000));
-      console.log({ currentLotteryId });
-
-      const lotteryId = Number(currentLotteryId ?? 0) + 1;
-      // timestamp when lottery should be announced
-      const lotteryResultTimestamp =
-        startTimestamp +
-        BigInt(lotteryId) * singleLotteryDuration -
-        BigInt(lotteryBuffer);
-      // ISO timestring when lottery should be announced
-      const lotteryResultISOTime = new Date(
-        parseInt(lotteryResultTimestamp.toString()) * 1000,
-      );
-      console.log({ lotteryResultISOTime });
-      // if current timestamp is less than lottery result timestamp, then end cron
-
-      const currentPhase = Number(JPMReadData[1].result);
       const nextJourneyTimestamp = Number(JPMReadData[3].result);
       const PHASE_1_SECONDS = Number(JPMReadData[4].result);
-      const PER_LOTTERY_SECONDS = Number(JPMReadData[5].result) / 3;
+      const currentPhase = Number(JPMReadData[1].result);
+      const PER_LOTTERY_SECONDS =
+        Number(JPMReadData[5].result) / Number(totalLotteriesInAJourney);
       const nextTimestamp = Number(JPMReadData[2].result);
       const now = ~~(new Date().getTime() / 1000); // convert current time to seconds
-      // if (Number(currentPhase) === 1) {
-      //   // start of lottery 1
-      //   return nextTimestamp;
-      // } else {
-      //   // start of lottery 2
-      //   let currentPhaseStart =
-      //     nextTimestamp - PER_LOTTERY_SECONDS * 3 + PER_LOTTERY_SECONDS;
-      //   if (currentPhaseStart > now) {
-      //     return currentPhaseStart;
-      //   }
 
-      //   // start of lottery 3
-      //   currentPhaseStart += PER_LOTTERY_SECONDS;
-      //   if (currentPhaseStart > now) {
-      //     return currentPhaseStart;
-      //   }
+      if (Number(currentPhase) === 1) {
+        // start of lottery 1
+        const nextLottery = nextTimestamp + PER_LOTTERY_SECONDS - lotteryBuffer;
+        console.log("From Phase 1 to lottery 1", { nextLottery });
+        return nextLottery;
+      } else if (Number(currentPhase) === 2) {
+        let nextLottery =
+          nextTimestamp -
+          Number(phase2Duration) -
+          lotteryBuffer +
+          PER_LOTTERY_SECONDS;
+        // start of lottery 1
+        if (nextLottery > now) {
+          console.log("From phase 2 to lottery 1", { nextLottery });
+        }
 
-      //   // start of next journey lottery 1
-      //   return ;
-      // }
+        // start of lottery 2
+        nextLottery += PER_LOTTERY_SECONDS;
+        if (nextLottery > now) {
+          console.log("From lottery 1 to lottery 2", { nextLottery });
+          return nextLottery;
+        }
 
-      return Number(lotteryResultTimestamp);
+        // start of lottery 3
+        nextLottery += PER_LOTTERY_SECONDS;
+        if (nextLottery > now) {
+          console.log("From lottery 2 to lottery 3", { nextLottery });
+          return nextLottery;
+        }
+      } else {
+        const nextLottery =
+          nextJourneyTimestamp +
+          PHASE_1_SECONDS +
+          PER_LOTTERY_SECONDS -
+          lotteryBuffer;
+        console.log("From phase 3 to lottery 1", { nextLottery });
+
+        return (
+          nextJourneyTimestamp +
+          PHASE_1_SECONDS +
+          PER_LOTTERY_SECONDS -
+          lotteryBuffer
+        );
+      }
     }
 
     // default to 0
@@ -166,6 +178,7 @@ const useLottery = (): {
         }
       `,
       {},
+      { enabled: refetchInfo },
     );
 
   // const { data: lotteryWinners, isFetched: lotteryWinnersFetched } =
@@ -193,7 +206,7 @@ const useLottery = (): {
     // `/api/lottery-result?walletAddress=${EAContract.address}`,
     `/api/lottery-result?walletAddress=${userAccount}`,
     {
-      enabled: account.isConnected,
+      enabled: account.isConnected && refetchInfo,
     },
   );
 
@@ -311,15 +324,6 @@ const useLottery = (): {
   //   hash: batchPruneHash,
   // });
 
-  useEffect(() => {
-    if (batchPruneHash) {
-      // setPrePrune(false);
-      // setPruneLoading(false);
-      // toast.success("Winnings pruned successfully");
-      console.log({ batchPruneHash });
-    }
-  }, [batchPruneHash]);
-
   const config = useConfig();
 
   const { mutateAsync: syncPrune } = useRestPost(["sync prune"], "/api/prune");
@@ -409,12 +413,14 @@ const useLottery = (): {
   return {
     nextLotteryTimestamp,
     lotteryPayout: totalWinnings,
+    currentPhase: Number(JPMReadData?.[1].result) ?? 1,
     fuelCellsWon: userWinnings?.lotteryResult?.length ?? 0,
     pruneLoading,
     pruneBatch,
     batchPrune,
     createMerkleTrees,
     lotteriesInfo,
+    onTimerEnd,
   };
 };
 

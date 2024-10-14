@@ -31,6 +31,7 @@ export default function LotteryPage() {
     fuelCellsWon,
     pruneBatch,
     pruneLoading,
+    currentPhase,
     lotteriesInfo,
     batchPrune,
   } = useLottery();
@@ -63,11 +64,15 @@ export default function LotteryPage() {
         return;
       }
       case "3": {
-        setLotteryState({
-          big: "success",
-          bigger: "success",
-          biggest: "success",
-        });
+        setLotteryState(
+          currentPhase === 2
+            ? { big: "progress", bigger: "pending", biggest: "pending" }
+            : {
+                big: "success",
+                bigger: "success",
+                biggest: "success",
+              },
+        );
         return;
       }
       default: {
