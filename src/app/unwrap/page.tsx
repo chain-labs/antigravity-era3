@@ -4,7 +4,7 @@ import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
 import Table from "@/components/html/Table";
-import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS } from "@/images";
+import { IMAGEKIT_BACKGROUNDS, IMAGEKIT_ICONS, IMAGEKIT_LOGOS } from "@/images";
 import { Backdrop, Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
@@ -13,6 +13,7 @@ import {
   PiCube,
   PiDropboxLogoDuotone,
   PiTrophyDuotone,
+  PiWalletDuotone,
   PiWrenchDuotone,
 } from "react-icons/pi";
 import { motion } from "framer-motion";
@@ -26,10 +27,15 @@ import {
 } from "@/components/animation/SeperateText";
 import useUnwrap from "@/hooks/core/useUnwrap";
 import { table } from "console";
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export default function UnwrapPage() {
   const [inputValue, setInputValue] = useState<number>(0);
   const [optimized, setOptimized] = useState(false);
+
+  const account = useAccount();
+  const { openConnectModal } = useConnectModal();
 
   const { tableData, totalFuelCells, isApproved, unwrapFn, dataLoading } =
     useUnwrap(inputValue, optimized);
@@ -186,52 +192,75 @@ export default function UnwrapPage() {
                   </div>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-[8px]">
-                  <Button
-                    initial="initial"
-                    whileHover="hover"
-                    type="submit"
-                    disabled={loading || inputValue > totalFuelCells}
-                    loading={loading}
-                    loadingText="Unwrapping..."
-                  >
-                    <motion.div
-                      variants={{
-                        initial: { rotate: 0, scale: 1 },
-                        hover: {
-                          rotate: isApproved ? 180 : 0,
-                          scale: isApproved ? 1 : 1.25,
-                          transition: { duration: 0.25 },
-                        },
-                      }}
+                  {account.isConnected ? (
+                    <Button
+                      initial="initial"
+                      whileHover="hover"
+                      type="submit"
+                      disabled={loading || inputValue > totalFuelCells}
+                      loading={loading}
+                      loadingText="Unwrapping..."
                     >
-                      {isApproved ? (
-                        <PiDropboxLogoDuotone />
-                      ) : (
-                        <PiCheckCircle />
-                      )}
-                    </motion.div>
-                    <HoverTextAnimation.RollingIn
-                      text={
-                        isApproved
-                          ? totalFuelCells >= inputValue
-                            ? "Unwrap"
-                            : "Insufficent Fuel Cells"
-                          : "Approve Treasury"
-                      }
-                    />
-                  </Button>
-                  <motion.button
-                    initial="initial"
-                    whileHover="hover"
-                    type="button"
-                    onClick={() => setTableReveal(true)}
-                    className="bg-none underline text-agwhite font-sans font-semibold px-[16px] py-[4px] rounded-[6px] bg-agblack/50 backdrop-blur-lg"
-                  >
-                    <HoverTextAnimation.RollingIn text="View Selected Fuel Cells" />
-                  </motion.button>
+                      <motion.div
+                        variants={{
+                          initial: { rotate: 0, scale: 1 },
+                          hover: {
+                            rotate: isApproved ? 180 : 0,
+                            scale: isApproved ? 1 : 1.25,
+                            transition: { duration: 0.25 },
+                          },
+                        }}
+                      >
+                        {isApproved ? (
+                          <PiDropboxLogoDuotone />
+                        ) : (
+                          <PiCheckCircle />
+                        )}
+                      </motion.div>
+                      <HoverTextAnimation.RollingIn
+                        text={
+                          isApproved
+                            ? totalFuelCells >= inputValue
+                              ? "Unwrap"
+                              : "Insufficent Fuel Cells"
+                            : "Approve Treasury"
+                        }
+                      />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={openConnectModal}
+                      initial="initial"
+                      whileHover="hover"
+                    >
+                      <motion.div
+                        variants={{
+                          initial: { rotate: 0 },
+                          hover: {
+                            rotate: [0, 10, -10, 10, 0],
+                            transition: { duration: 0.25 },
+                          },
+                        }}
+                      >
+                        <PiWalletDuotone />
+                      </motion.div>
+                      <HoverTextAnimation.RollingIn text="Connect wallet" />
+                    </Button>
+                  )}
+                  {account.isConnected && (
+                    <motion.button
+                      initial="initial"
+                      whileHover="hover"
+                      type="button"
+                      onClick={() => setTableReveal(true)}
+                      className="bg-none underline text-agwhite font-sans font-semibold px-[16px] py-[4px] rounded-[6px] bg-agblack/50 backdrop-blur-lg"
+                    >
+                      <HoverTextAnimation.RollingIn text="View Selected Fuel Cells" />
+                    </motion.button>
+                  )}
                 </div>
               </form>
-              <div
+              {/* <div
                 className={cn(
                   "flex flex-col justify-start items-start gap-[8px]",
                   "p-[8px] rounded-[6px]",
@@ -243,7 +272,7 @@ export default function UnwrapPage() {
                   label="Until we win"
                   timestamp={new Date().getTime() + 1000}
                 />
-              </div>
+              </div> */}
             </motion.div>
 
             <motion.div
