@@ -19,7 +19,10 @@ import { useAccount } from "wagmi";
 import HeaderUserconnectedSection from "./HeaderUserconnectedSection";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
-import { HoverTextAnimation } from "../animation/SeperateText";
+import {
+  AutomaticTextAnimation,
+  HoverTextAnimation,
+} from "../animation/SeperateText";
 import {
   AGPROJECT_LINK,
   EVIL_ADDRESS_AVAILABLE,
@@ -31,12 +34,6 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const account = useAccount();
   const { openConnectModal } = useConnectModal();
-
-  const data = {
-    treasurydark: 500000,
-    journey: 1,
-    userdark: 23432443,
-  };
 
   const { treasuryDark, journey, userDark } = useHeaderStats();
 
@@ -75,9 +72,13 @@ export default function Header() {
             </motion.div>
             <p>Treasury $DARK:</p>
             <motion.div initial="initial" whileHover="hover">
-              <HoverTextAnimation.BounceReveal
-                text={treasuryDark.toLocaleString("en-US")}
-              />
+              {treasuryDark ? (
+                <HoverTextAnimation.BounceReveal
+                  text={treasuryDark.toLocaleString("en-US")}
+                />
+              ) : (
+                <AutomaticTextAnimation.Loading />
+              )}
             </motion.div>
           </div>
           <div className="flex justify-center items-center gap-[8px]">
@@ -98,9 +99,13 @@ export default function Header() {
             </motion.div>
             <p>Journey:</p>
             <motion.div initial="initial" whileHover="hover">
-              <HoverTextAnimation.BounceReveal
-                text={journey.toLocaleString("en-US")}
-              />
+              {journey ? (
+                <HoverTextAnimation.BounceReveal
+                  text={journey.toLocaleString("en-US")}
+                />
+              ) : (
+                <AutomaticTextAnimation.Loading />
+              )}
             </motion.div>
           </div>
           <div className="flex justify-center items-center gap-[8px]">
@@ -119,9 +124,13 @@ export default function Header() {
             </motion.div>
             <p>User $DARK:</p>
             <motion.div initial="initial" whileHover="hover">
-              <HoverTextAnimation.BounceReveal
-                text={userDark.toLocaleString("en-US")}
-              />
+              {userDark ? (
+                <HoverTextAnimation.BounceReveal
+                  text={userDark.toLocaleString("en-US")}
+                />
+              ) : (
+                <AutomaticTextAnimation.Loading />
+              )}
             </motion.div>
           </div>
         </div>
