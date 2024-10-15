@@ -15,6 +15,7 @@ type Timer = {
 // Custom hook to manage a countdown timer
 export default function useCountdownTimer(
   initialTimeInSeconds: number,
+  onTimerEnd?: () => void,
 ): [Timer, (newInitialTime: number) => void] {
   // State to store the initial time given for the countdown
   const [initialTime, setInitialTime] = useState<number>(initialTimeInSeconds);
@@ -31,6 +32,9 @@ export default function useCountdownTimer(
     const timer = setInterval(() => {
       setRemainingTime((prevTime: number) => {
         if (prevTime <= 0) {
+          if (onTimerEnd) {
+            onTimerEnd();
+          }
           return 0; // Stop the timer when it reaches zero
         }
         return prevTime - 1; // Decrease the remaining time by one second
