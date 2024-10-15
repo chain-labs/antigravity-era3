@@ -20,7 +20,10 @@ import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { notFound } from "next/navigation";
 import { BACKGROUNDS, UNWRAP_AVAILABLE } from "@/constants";
-import { HoverTextAnimation } from "@/components/animation/SeperateText";
+import {
+  AutomaticTextAnimation,
+  HoverTextAnimation,
+} from "@/components/animation/SeperateText";
 import useUnwrap from "@/hooks/core/useUnwrap";
 import { table } from "console";
 
@@ -28,10 +31,8 @@ export default function UnwrapPage() {
   const [inputValue, setInputValue] = useState<number>(0);
   const [optimized, setOptimized] = useState(false);
 
-  const { tableData, totalFuelCells, isApproved, unwrapFn } = useUnwrap(
-    inputValue,
-    optimized,
-  );
+  const { tableData, totalFuelCells, isApproved, unwrapFn, dataLoading } =
+    useUnwrap(inputValue, optimized);
 
   const tableConfigs = {
     header: [
@@ -89,7 +90,7 @@ export default function UnwrapPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
-          "pt-[100px]"
+          "pt-[100px]",
         )}
       >
         <div
@@ -164,10 +165,15 @@ export default function UnwrapPage() {
                         <HoverTextAnimation.Fading text="Fuel&nbsp;Cells" />
                       </span>
                     </motion.div>
-                    <p className="text-xs font-semibold mt-2">
+                    <p className="text-xs font-semibold mt-2 flex items-center gap-x-1">
                       Max:{" "}
-                      <span className="text-agyellow font-bold">
-                        {totalFuelCells} FuelCells
+                      <span className="text-agyellow font-bold flex items-center gap-x-1">
+                        {dataLoading ? (
+                          <AutomaticTextAnimation.Loading />
+                        ) : (
+                          totalFuelCells
+                        )}{" "}
+                        FuelCells
                       </span>
                     </p>
                     <div>

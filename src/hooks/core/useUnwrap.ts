@@ -32,61 +32,63 @@ const useUnwrap = (inputValue: number, optimized: boolean) => {
   const account = useAccount();
 
   const [totalData, setTotalData] = useState<TABLE_DATA_UF>({});
+  const [dataLoading, setDataLoading] = useState(false);
+
+  const fetchAllData = async () => {
+    setDataLoading(true);
+    let hasNextPage = true;
+    let nextCursor;
+    let count = 0;
+    let tableData: TABLE_DATA_UF[] = [];
+    while (hasNextPage) {
+      const data = await fetchUserFuelCellsMappingWithTotalYield(
+        // `${EAContract.address}`,
+        `${account.address}`,
+        500,
+        nextCursor,
+      );
+      const { pageInfo, ...dataWithoutPageInfo } = data;
+      hasNextPage = pageInfo.hasNextPage;
+      nextCursor = pageInfo.endCursor;
+      console.log({ data });
+      tableData.push(dataWithoutPageInfo);
+      count++;
+    }
+    const finalData: TABLE_DATA_UF = {};
+    tableData.map((item) => {
+      const keys = Object.keys(item);
+      keys.forEach((key) => {
+        const nKey = Number(key);
+        const fuelCells = finalData?.[nKey]?.fuelCells ?? [];
+        finalData[nKey] = {
+          fuelCells: [...fuelCells, ...item[nKey]?.fuelCells],
+          totalYieldPerFuelCell: item[nKey]?.totalYieldPerFuelCell,
+        };
+      });
+    });
+
+    const nonPrunedWinnings = await fetchNonPrunedWinnings(
+      `${account.address ?? ""}`,
+    );
+
+    const updatedkeys = Object.keys(finalData);
+
+    updatedkeys.forEach((key) => {
+      const nKey = Number(key);
+      const fuelCells = finalData[nKey].fuelCells;
+      const nonPrunedWinningFuelCells = nonPrunedWinnings[nKey];
+      console.log({ nonPrunedWinningFuelCells });
+      finalData[nKey].fuelCells = fuelCells.filter(
+        (fuelCell) => !nonPrunedWinningFuelCells?.includes(fuelCell),
+      );
+    });
+    setTotalData(finalData);
+    setDataLoading(false);
+  };
 
   useEffect(() => {
-    const fetchAllData = async () => {
-      let hasNextPage = true;
-      let nextCursor;
-      let count = 0;
-      let tableData: TABLE_DATA_UF[] = [];
-      while (hasNextPage) {
-        const data = await fetchUserFuelCellsMappingWithTotalYield(
-          // `${EAContract.address}`,
-          `${account.address}`,
-          500,
-          nextCursor,
-        );
-        const { pageInfo, ...dataWithoutPageInfo } = data;
-        hasNextPage = pageInfo.hasNextPage;
-        nextCursor = pageInfo.endCursor;
-        console.log({ data });
-        tableData.push(dataWithoutPageInfo);
-        count++;
-      }
-      const finalData: TABLE_DATA_UF = {};
-      tableData.map((item) => {
-        const keys = Object.keys(item);
-        keys.forEach((key) => {
-          const nKey = Number(key);
-          const fuelCells = finalData?.[nKey]?.fuelCells ?? [];
-          finalData[nKey] = {
-            fuelCells: [...fuelCells, ...item[nKey]?.fuelCells],
-            totalYieldPerFuelCell: item[nKey]?.totalYieldPerFuelCell,
-          };
-        });
-      });
-
-      const nonPrunedWinnings = await fetchNonPrunedWinnings(
-        `${account.address ?? ""}`,
-      );
-
-      const updatedkeys = Object.keys(finalData);
-
-      updatedkeys.forEach((key) => {
-        const nKey = Number(key);
-        const fuelCells = finalData[nKey].fuelCells;
-        const nonPrunedWinningFuelCells = nonPrunedWinnings[nKey];
-        console.log({ nonPrunedWinningFuelCells });
-        finalData[nKey].fuelCells = fuelCells.filter(
-          (fuelCell) => !nonPrunedWinningFuelCells?.includes(fuelCell),
-        );
-      });
-      setTotalData(finalData);
-    };
-
     if (account.address) {
       fetchAllData();
-      // setTotalData(tableData);
     }
   }, [account.address]);
 
@@ -187,6 +189,7 @@ const useUnwrap = (inputValue: number, optimized: boolean) => {
         });
 
         const receipt = await waitForTransactionReceipt(config, { hash: tx });
+        fetchAllData();
 
         toast.success("Unwrap Successful");
       } catch (err) {
@@ -199,7 +202,7 @@ const useUnwrap = (inputValue: number, optimized: boolean) => {
     }
   };
 
-  return { tableData, totalFuelCells, isApproved, unwrapFn };
+  return { tableData, totalFuelCells, isApproved, unwrapFn, dataLoading };
 };
 
 export default useUnwrap;
