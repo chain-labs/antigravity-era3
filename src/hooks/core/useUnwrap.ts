@@ -76,8 +76,9 @@ const useUnwrap = (inputValue: number, optimized: boolean) => {
         const nKey = Number(key);
         const fuelCells = finalData[nKey].fuelCells;
         const nonPrunedWinningFuelCells = nonPrunedWinnings[nKey];
+        console.log({ nonPrunedWinningFuelCells });
         finalData[nKey].fuelCells = fuelCells.filter(
-          (fuelCell) => !nonPrunedWinningFuelCells.includes(fuelCell),
+          (fuelCell) => !nonPrunedWinningFuelCells?.includes(fuelCell),
         );
       });
       setTotalData(finalData);
