@@ -70,6 +70,7 @@ const useLottery = (): {
       "PHASE_1_DURATION",
       "PHASE_2_DURATION",
       "LOTTERIES_PER_JOURNEY",
+      "PHASE_3_DURATION",
     ].map((functionName) => ({
       address: JPMContract?.address,
       abi: JPMContract?.abi,
@@ -98,61 +99,83 @@ const useLottery = (): {
       const totalLotteriesInAJourney = JPMReadData[6].result as bigint;
       const nextJourneyTimestamp = Number(JPMReadData[3].result);
       const PHASE_1_SECONDS = Number(JPMReadData[4].result);
-      const currentPhase = Number(JPMReadData[1].result);
+      const PHASE_3_SECONDS = Number(JPMReadData[7].result);
       const PER_LOTTERY_SECONDS =
         Number(JPMReadData[5].result) / Number(totalLotteriesInAJourney);
+      console.log({
+        phase2Duration,
+        PHASE_1_SECONDS,
+        PHASE_3_SECONDS,
+        currentLotteryId,
+        PER_LOTTERY_SECONDS,
+      });
+      const currentPhase = Number(JPMReadData[1].result);
       const nextTimestamp = Number(JPMReadData[2].result);
       const now = ~~(new Date().getTime() / 1000); // convert current time to seconds
 
-      if (Number(currentPhase) === 1) {
-        // start of lottery 1
-        const nextLottery = nextTimestamp + PER_LOTTERY_SECONDS - lotteryBuffer;
-        console.log("From Phase 1 to lottery 1", { nextLottery });
-        return nextLottery;
-      } else if (Number(currentPhase) === 2) {
-        let nextLottery =
-          nextTimestamp -
-          Number(phase2Duration) -
-          lotteryBuffer +
-          PER_LOTTERY_SECONDS;
-        // start of lottery 1
-        if (nextLottery > now) {
-          console.log("From phase 2 to lottery 1", { nextLottery });
-        }
+      const phase2StartTimestamp =
+        currentPhase === 1
+          ? nextTimestamp
+          : nextJourneyTimestamp + PHASE_1_SECONDS;
 
-        // start of lottery 2
-        nextLottery += PER_LOTTERY_SECONDS;
-        if (nextLottery > now) {
-          console.log("From lottery 1 to lottery 2", { nextLottery });
-          return nextLottery;
-        }
+      // if (Number(currentPhase) === 1) {
+      //   // start of lottery 1
+      //   const nextLottery = nextTimestamp + PER_LOTTERY_SECONDS - lotteryBuffer;
+      //   console.log("From Phase 1 to lottery 1", { nextLottery });
+      //   return nextLottery;
+      // } else if (Number(currentPhase) === 2) {
+      //   let nextLottery =
+      //     nextTimestamp -
+      //     Number(phase2Duration) -
+      //     lotteryBuffer +
+      //     PER_LOTTERY_SECONDS;
+      //   // start of lottery 1
+      //   if (nextLottery > now) {
+      //     console.log("From phase 2 to lottery 1", { nextLottery });
+      //   }
 
-        // start of lottery 3
-        nextLottery += PER_LOTTERY_SECONDS;
-        if (nextLottery > now) {
-          console.log("From lottery 2 to lottery 3", { nextLottery });
-          return nextLottery;
-        }
-      } else {
-        const nextLottery =
-          nextJourneyTimestamp +
-          PHASE_1_SECONDS +
-          PER_LOTTERY_SECONDS -
-          lotteryBuffer;
-        console.log("From phase 3 to lottery 1", { nextLottery });
+      //   // start of lottery 2
+      //   nextLottery += PER_LOTTERY_SECONDS;
+      //   if (nextLottery > now) {
+      //     console.log("From lottery 1 to lottery 2", { nextLottery });
+      //     return nextLottery;
+      //   }
 
-        return (
-          nextJourneyTimestamp +
-          PHASE_1_SECONDS +
-          PER_LOTTERY_SECONDS -
-          lotteryBuffer
-        );
-      }
+      //   // start of lottery 3
+      //   nextLottery += PER_LOTTERY_SECONDS;
+      //   if (nextLottery > now) {
+      //     console.log("From lottery 2 to lottery 3", { nextLottery });
+      //     return nextLottery;
+      //   }
+      // } else {
+      //   const nextLottery =
+      //     nextJourneyTimestamp +
+      //     PHASE_1_SECONDS +
+      //     PER_LOTTERY_SECONDS -
+      //     lotteryBuffer;
+      //   console.log("From phase 3 to lottery 1", { nextLottery });
+
+      //   return (
+      //     nextJourneyTimestamp +
+      //     PHASE_1_SECONDS +
+      //     PER_LOTTERY_SECONDS -
+      //     lotteryBuffer
+      //   );
+      // }
+
+      const nextLottery =
+        phase2StartTimestamp +
+        Number(currentLotteryId ?? "0") * PER_LOTTERY_SECONDS -
+        lotteryBuffer;
+
+      console.log({ currentLotteryId, nextLottery });
+
+      return nextLottery + (!!currentLotteryId ? 0 : lotteryBuffer);
     }
 
     // default to 0
     return 0;
-  }, [JPMReadData]);
+  }, [JPMReadData]); 
 
   const { data: lotteryPayouts, isFetched: lotteryPayoutsFetched } =
     useGQLFetch<{
