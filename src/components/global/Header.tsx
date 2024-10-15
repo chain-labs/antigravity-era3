@@ -5,7 +5,7 @@ import { Gradients } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   PiListDuotone,
   PiRocketDuotone,
@@ -108,31 +108,34 @@ export default function Header() {
               )}
             </motion.div>
           </div>
-          <div className="flex justify-center items-center gap-[8px]">
-            <motion.div
-              initial="initial"
-              whileHover="hover"
-              variants={{
-                initial: { rotate: 0 },
-                hover: {
-                  rotate: [0, 10, -10, 10, 0],
-                  transition: { duration: 0.25 },
-                },
-              }}
-            >
-              <PiWalletDuotone />
-            </motion.div>
-            <p>User $DARK:</p>
-            <motion.div initial="initial" whileHover="hover">
-              {userDark ? (
-                <HoverTextAnimation.BounceReveal
-                  text={userDark.toLocaleString("en-US")}
-                />
-              ) : (
-                <AutomaticTextAnimation.Loading />
-              )}
-            </motion.div>
-          </div>
+          {account.isConnected && (
+            <div className="flex justify-center items-center gap-[8px]">
+              <motion.div
+                initial="initial"
+                whileHover="hover"
+                variants={{
+                  initial: { rotate: 0 },
+                  hover: {
+                    rotate: [0, 10, -10, 10, 0],
+                    transition: { duration: 0.25 },
+                  },
+                }}
+              >
+                <PiWalletDuotone />
+              </motion.div>
+
+              <p>User $DARK:</p>
+              <motion.div initial="initial" whileHover="hover">
+                {userDark >= 0 ? (
+                  <HoverTextAnimation.BounceReveal
+                    text={userDark.toLocaleString("en-US")}
+                  />
+                ) : (
+                  <AutomaticTextAnimation.Loading />
+                )}
+              </motion.div>
+            </div>
+          )}
         </div>
       </div>
       <div
