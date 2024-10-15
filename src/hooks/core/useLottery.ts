@@ -16,6 +16,7 @@ import { encodePacked, keccak256 } from "viem";
 import toast from "react-hot-toast";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
+import { getTransactionCount } from "@wagmi/core";
 
 const PRUNE_BATCH_SIZE = 50;
 const GAS_LIMIT = 1000000;
@@ -311,26 +312,17 @@ const useLottery = (): {
 
     const chunkSize = PRUNE_BATCH_SIZE;
     const START_INDEX = 0;
+    const transactionCount = await getTransactionCount(config, {
+      address: `${account.address}` as `0x${string}`,
+    });
+    let nonce = transactionCount;
     for (let i = START_INDEX; i < proofs.length; i += chunkSize) {
       try {
         const proofsChunk = proofs.slice(i, i + chunkSize);
-        console.log({ proofsChunk });
         setPruneBatch({
           from: i + 1,
           to: Math.min(i + chunkSize, proofs.length),
           total: proofs.length,
-        });
-
-        console.log({
-          proofSize: (() => {
-            let len = 0;
-            let max = 0;
-            proofsChunk.forEach((proof) => {
-              max = Math.max(max, proof.proofs.length);
-              len += proof.proofs.length;
-            });
-            return { avg: len / proofsChunk.length, total: len, max };
-          })(),
         });
 
         const tx = await batchPruneWinnings({
@@ -339,7 +331,9 @@ const useLottery = (): {
           functionName: "pruneWinnings",
           args: [proofsChunk],
           // gas: BigInt(GAS_LIMIT),
+          nonce,
         });
+        nonce++;
 
         const receipt = await waitForTransactionReceipt(config, {
           hash: tx,
