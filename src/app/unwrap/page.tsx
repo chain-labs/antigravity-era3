@@ -75,9 +75,11 @@ export default function UnwrapPage() {
 
   const handleUnwrapSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    await unwrapFn();
-    setLoading(false);
+    if (account.isConnected) {  
+      setLoading(true);
+      await unwrapFn();
+      setLoading(false);
+    }
   };
 
   if (UNWRAP_AVAILABLE === false) {
