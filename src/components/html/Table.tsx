@@ -38,24 +38,34 @@ export default function Table({ header, body }: TableProps) {
           </tr>
         </thead>
         <tbody className={cn(Gradients.tableBlue, "relative")}>
-          {body.map((row, i) => (
-            <tr key={i} className="[scroll-snap-align]:[start]">
-              {row.map((cell, j) => (
-                <td key={j} className="border-[1px] border-agpurple">
-                  <div
-                    className={cn(
-                      "uppercase tracking-widest text-[14px] font-general-sans font-medium",
-                      "[&_svg]:text-[24px]",
-                      "flex gap-[8px]",
-                      "px-[12px] py-[10px]",
-                    )}
-                  >
-                    {`${cell}`}
-                  </div>
-                </td>
-              ))}
+          {body.length ? (
+            body.map((row, i) => (
+              <tr key={i} className="[scroll-snap-align]:[start]">
+                {row.map((cell, j) => (
+                  <td key={j} className="border-[1px] border-agpurple">
+                    <div
+                      className={cn(
+                        "uppercase tracking-widest text-[14px] font-general-sans font-medium",
+                        "[&_svg]:text-[24px]",
+                        "flex gap-[8px]",
+                        "px-[12px] py-[10px]",
+                      )}
+                    >
+                      {`${cell}`}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+            ))
+          ) : (
+            <tr className="w-full h-full">
+              <td colSpan={header.length} className="h-full">
+                <div className=" flex justify-center items-center min-h-[200px]">
+                  <p>No fuel cells available</p>
+                </div>
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

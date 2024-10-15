@@ -89,6 +89,7 @@ export default function UnwrapPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
+          "pt-[100px]"
         )}
       >
         <div
@@ -189,9 +190,10 @@ export default function UnwrapPage() {
                   >
                     <motion.div
                       variants={{
-                        initial: { rotate: 0 },
+                        initial: { rotate: 0, scale: 1 },
                         hover: {
-                          rotate: 180,
+                          rotate: isApproved ? 180 : 0,
+                          scale: isApproved ? 1 : 1.25,
                           transition: { duration: 0.25 },
                         },
                       }}
