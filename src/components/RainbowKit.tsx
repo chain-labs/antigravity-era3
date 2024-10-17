@@ -22,18 +22,18 @@ const RainbowKit = ({ children }: React.PropsWithChildren) => {
       [baseSepolia.id]: http(
         `https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       ),
-      [pulsechainV4.id]: http(
-        `https://rpc-testnet-pulsechain.g4mm4.io`,
-      ),
+      [pulsechainV4.id]: http(`https://rpc-testnet-pulsechain.g4mm4.io`),
     },
   });
 
   const queryClient = new QueryClient();
 
   return (
-    <WagmiProvider config={config} reconnectOnMount={true}>
+    <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider modalSize="compact">{children}</RainbowKitProvider>
+        <RainbowKitProvider modalSize="compact" coolMode>
+          {children}
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
