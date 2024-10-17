@@ -75,7 +75,7 @@ export default function UnwrapPage() {
 
   const handleUnwrapSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (account.isConnected) {  
+    if (account.isConnected) {
       setLoading(true);
       await unwrapFn();
       setLoading(false);
@@ -115,7 +115,7 @@ export default function UnwrapPage() {
               "text-[64px] leading-[64px] font-sans font-extrabold",
             )}
           >
-            Unwrap
+            Vaporize
           </h1>
         </div>
 
@@ -186,7 +186,7 @@ export default function UnwrapPage() {
                     </p>
                     <div>
                       <Checkbox
-                        label="Optimize Unwrap?"
+                        label="Sort by Yield"
                         state={optimized}
                         setState={setOptimized}
                       />
@@ -201,7 +201,7 @@ export default function UnwrapPage() {
                       type="submit"
                       disabled={loading || inputValue > totalFuelCells}
                       loading={loading}
-                      loadingText="Unwrapping..."
+                      loadingText="Vaporizing..."
                     >
                       <motion.div
                         variants={{
@@ -223,7 +223,7 @@ export default function UnwrapPage() {
                         text={
                           isApproved
                             ? totalFuelCells >= inputValue
-                              ? "Unwrap"
+                              ? "Vaporize"
                               : "Insufficent Fuel Cells"
                             : "Approve Treasury"
                         }

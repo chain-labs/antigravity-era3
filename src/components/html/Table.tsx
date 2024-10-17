@@ -61,7 +61,7 @@ export default function Table({ header, body }: TableProps) {
             <tr className="w-full h-full">
               <td colSpan={header.length} className="h-full">
                 <div className=" flex justify-center items-center min-h-[200px]">
-                  <p>No fuel cells available</p>
+                  <p>No fuel cells selected</p>
                 </div>
               </td>
             </tr>

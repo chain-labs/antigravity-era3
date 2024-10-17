@@ -211,7 +211,7 @@ export default function Header() {
               </Link>
             )}
             {UNWRAP_AVAILABLE && (
-              <Link href="/unwrap">
+              <Link href="/vaporize">
                 <motion.div
                   initial="initial"
                   whileHover="hover"
@@ -219,7 +219,7 @@ export default function Header() {
                     "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
                   )}
                 >
-                  <HoverTextAnimation.Fading text="Unwrap" />
+                  <HoverTextAnimation.Fading text="Vaporize" />
                 </motion.div>
               </Link>
             )}
@@ -365,9 +365,9 @@ export default function Header() {
                     Gradients.whiteGradientText,
                     "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
                   )}
-                  href="/unwrap"
+                  href="/vaporize"
                 >
-                  Unwrap
+                  Vaporize
                 </Link>
               )}
               <Link
