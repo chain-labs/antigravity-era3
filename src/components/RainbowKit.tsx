@@ -4,17 +4,10 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { http, WagmiProvider } from "wagmi";
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-  pulsechainV4,
-  pulsechain,
-} from "wagmi/chains";
+import { pulsechainV4, pulsechain } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { PROJECT_ID } from "@/constants";
+import { TEST_NETWORK } from "@/constants/global";
 
 export const getRainbowKitChainsFromPage = (page: string, test: boolean) => {
   switch (page) {
@@ -27,10 +20,11 @@ export const getRainbowKitChainsFromPage = (page: string, test: boolean) => {
 const config = getDefaultConfig({
   appName: "AGPROJECT.io TOOLS",
   projectId: PROJECT_ID ?? "",
-  chains: [pulsechainV4],
+  chains: TEST_NETWORK ? [pulsechainV4] : [pulsechain],
   ssr: true, // If your dApp uses server side rendering (SSR)
   transports: {
     [pulsechainV4.id]: http("https://rpc-testnet-pulsechain.g4mm4.io"),
+    [pulsechain.id]: http("https://rpc-pulsechain.g4mm4.io"),
   },
 });
 
