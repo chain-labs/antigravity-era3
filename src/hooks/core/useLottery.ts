@@ -81,20 +81,31 @@ const useLottery = (): {
     },
   });
 
-  const { data: currentLotteryId, error: currentLotteryIdError } =
-    useReadContract({
-      address: JackpotContract.address as `0x${string}`,
-      abi: JackpotContract.abi,
-      functionName: "currentLotteryId",
-      args: [Number(JPMReadData?.[0].result)],
-      query: {
-        enabled: !!JPMReadData?.[0] && refetchInfo,
-      },
-    });
+  const {
+    data: currentLotteryIdData,
+    error: currentLotteryIdError,
+    isFetched: currentLotteryIdFetched,
+  } = useReadContract({
+    address: JackpotContract.address as `0x${string}`,
+    abi: JackpotContract.abi,
+    functionName: "currentLotteryId",
+    args: [Number(JPMReadData?.[0].result ?? "1")],
+    query: {
+      enabled: !!JPMReadData?.[0] && refetchInfo,
+    },
+  });
+
+  useEffect(() => {
+    if (currentLotteryIdFetched) {
+      setRefetchInfo(false);
+    }
+    console.log({ refetchInfo, currentLotteryIdFetched });
+  }, [currentLotteryIdFetched]);
 
   const nextLotteryTimestamp = useMemo(() => {
     if (JPMReadData) {
-      setRefetchInfo(false);
+      const currentLotteryId = currentLotteryIdData ?? 0;
+      const currentJourney = JPMReadData[0].result as bigint;
       const phase2Duration = JPMReadData[5].result as bigint;
       const totalLotteriesInAJourney = JPMReadData[6].result as bigint;
       const nextJourneyTimestamp = Number(JPMReadData[3].result);
@@ -108,6 +119,7 @@ const useLottery = (): {
         PHASE_3_SECONDS,
         currentLotteryId,
         PER_LOTTERY_SECONDS,
+        currentJourney,
       });
       const currentPhase = Number(JPMReadData[1].result);
       const nextTimestamp = Number(JPMReadData[2].result);
@@ -116,6 +128,8 @@ const useLottery = (): {
       const phase2StartTimestamp =
         currentPhase === 1
           ? nextTimestamp
+          : currentPhase === 2
+          ? nextTimestamp - Number(phase2Duration)
           : nextJourneyTimestamp + PHASE_1_SECONDS;
 
       // if (Number(currentPhase) === 1) {
@@ -175,7 +189,7 @@ const useLottery = (): {
 
     // default to 0
     return 0;
-  }, [JPMReadData]); 
+  }, [JPMReadData, currentLotteryIdData]);
 
   const { data: lotteryPayouts, isFetched: lotteryPayoutsFetched } =
     useGQLFetch<{
