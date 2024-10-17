@@ -17,7 +17,7 @@ import {
   PiWrenchDuotone,
 } from "react-icons/pi";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { notFound } from "next/navigation";
 import { BACKGROUNDS, UNWRAP_AVAILABLE } from "@/constants";
@@ -30,9 +30,60 @@ import { table } from "console";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
+const RadioGroup = ({
+  label,
+  options,
+  state,
+  setState,
+}: {
+  label: string;
+  options: { value: string; label: string }[];
+  state: string;
+  setState: (arg0: string) => void;
+}) => {
+  return (
+    <div className="flex flex-col mt-2">
+      <label className="text-xs font-semibold text-agwhite mb-1">{label}</label>
+      <div className="flex space-x-2">
+        {options.map((option) => (
+          <label
+            key={option.value}
+            className={cn(
+              "flex items-center justify-center px-2 py-1 text-xs font-semibold rounded cursor-pointer transition-all duration-200",
+              state === option.value
+                ? "bg-agyellow text-agblack"
+                : "bg-agblack/50 text-agwhite hover:bg-agblack/70",
+            )}
+          >
+            <input
+              type="radio"
+              value={option.value}
+              checked={state === option.value}
+              onChange={() => setState(option.value)}
+              className="sr-only"
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default function UnwrapPage() {
   const [inputValue, setInputValue] = useState<number>(0);
-  const [optimized, setOptimized] = useState(false);
+  const [sortOption, setSortOption] = useState("recentYield");
+
+  const optimized = useMemo(() => {
+    switch (sortOption) {
+      case "recentYield":
+        return false;
+      case "maxYield":
+        return true;
+      default:
+        return false;
+    }
+  }, [sortOption]);
 
   const account = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -185,10 +236,14 @@ export default function UnwrapPage() {
                       </span>
                     </p>
                     <div>
-                      <Checkbox
-                        label="Sort by Yield"
-                        state={optimized}
-                        setState={setOptimized}
+                      <RadioGroup
+                        label="Sort Yield by"
+                        options={[
+                          { value: "recentYield", label: "Recent" },
+                          { value: "maxYield", label: "Max" },
+                        ]}
+                        state={sortOption}
+                        setState={setSortOption}
                       />
                     </div>
                   </div>
@@ -303,33 +358,3 @@ export default function UnwrapPage() {
     </div>
   );
 }
-
-const Checkbox = ({
-  label,
-  state,
-  setState,
-}: {
-  label: string;
-  state: boolean;
-  setState: (arg0: boolean) => void;
-}) => {
-  return (
-    <div className="flex items-end cursor-pointer">
-      <input
-        type="checkbox"
-        checked={state}
-        onChange={(e) => {
-          const val = e.target.checked;
-          setState(val);
-        }}
-        className="w-4 h-4 text-agyellow bg-agyellow border-agyellow rounded focus:ring-1"
-      />
-      <label
-        className="mt-2 ml-2 text-[10px] font-medium text-gray-900"
-        onClick={() => setState(!state)}
-      >
-        {label}
-      </label>
-    </div>
-  );
-};
