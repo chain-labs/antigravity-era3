@@ -45,8 +45,6 @@ export default function LotteryPage() {
   useEffect(() => {
     const lotteryIdAnnounced = lotteriesInfo?.lotteryId;
 
-    console.log({ lotteryIdAnnounced });
-
     switch (lotteryIdAnnounced) {
       case "1": {
         setLotteryState({

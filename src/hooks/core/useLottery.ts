@@ -19,10 +19,8 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
 import { getTransactionCount } from "@wagmi/core";
 import { lotteryBuffer } from "@/constants";
-import { PiNumberCircleFive } from "react-icons/pi";
 
 const PRUNE_BATCH_SIZE = 50;
-const GAS_LIMIT = 1000000;
 
 const useLottery = (): {
   nextLotteryTimestamp: number;
@@ -82,103 +80,9 @@ const useLottery = (): {
     },
   });
 
-  const { data: currentLotteryId, error: currentLotteryIdError } =
-    useReadContract({
-      address: JackpotContract.address as `0x${string}`,
-      abi: JackpotContract.abi,
-      functionName: "currentLotteryId",
-      args: [Number(JPMReadData?.[0].result)],
-      query: {
-        enabled: !!JPMReadData?.[0] && refetchInfo,
-      },
-    });
-
-  const nextLotteryTimestamp = useMemo(() => {
-    if (JPMReadData) {
-      setRefetchInfo(false);
-      const phase2Duration = JPMReadData[5].result as bigint;
-      const totalLotteriesInAJourney = JPMReadData[6].result as bigint;
-      const nextJourneyTimestamp = Number(JPMReadData[3].result);
-      const PHASE_1_SECONDS = Number(JPMReadData[4].result);
-      const PHASE_3_SECONDS = Number(JPMReadData[7].result);
-      const PER_LOTTERY_SECONDS =
-        Number(JPMReadData[5].result) / Number(totalLotteriesInAJourney);
-      console.log({
-        phase2Duration,
-        PHASE_1_SECONDS,
-        PHASE_3_SECONDS,
-        currentLotteryId,
-        PER_LOTTERY_SECONDS,
-      });
-      const currentPhase = Number(JPMReadData[1].result);
-      const nextTimestamp = Number(JPMReadData[2].result);
-      const now = ~~(new Date().getTime() / 1000); // convert current time to seconds
-
-      const phase2StartTimestamp =
-        currentPhase === 1
-          ? nextTimestamp
-          : currentPhase === 2
-          ? nextTimestamp - Number(phase2Duration)
-          : nextJourneyTimestamp + PHASE_1_SECONDS;
-
-      // if (Number(currentPhase) === 1) {
-      //   // start of lottery 1
-      //   const nextLottery = nextTimestamp + PER_LOTTERY_SECONDS - lotteryBuffer;
-      //   console.log("From Phase 1 to lottery 1", { nextLottery });
-      //   return nextLottery;
-      // } else if (Number(currentPhase) === 2) {
-      //   let nextLottery =
-      //     nextTimestamp -
-      //     Number(phase2Duration) -
-      //     lotteryBuffer +
-      //     PER_LOTTERY_SECONDS;
-      //   // start of lottery 1
-      //   if (nextLottery > now) {
-      //     console.log("From phase 2 to lottery 1", { nextLottery });
-      //   }
-
-      //   // start of lottery 2
-      //   nextLottery += PER_LOTTERY_SECONDS;
-      //   if (nextLottery > now) {
-      //     console.log("From lottery 1 to lottery 2", { nextLottery });
-      //     return nextLottery;
-      //   }
-
-      //   // start of lottery 3
-      //   nextLottery += PER_LOTTERY_SECONDS;
-      //   if (nextLottery > now) {
-      //     console.log("From lottery 2 to lottery 3", { nextLottery });
-      //     return nextLottery;
-      //   }
-      // } else {
-      //   const nextLottery =
-      //     nextJourneyTimestamp +
-      //     PHASE_1_SECONDS +
-      //     PER_LOTTERY_SECONDS -
-      //     lotteryBuffer;
-      //   console.log("From phase 3 to lottery 1", { nextLottery });
-
-      //   return (
-      //     nextJourneyTimestamp +
-      //     PHASE_1_SECONDS +
-      //     PER_LOTTERY_SECONDS -
-      //     lotteryBuffer
-      //   );
-      // }
-
-      const nextLottery =
-        phase2StartTimestamp +
-        Number(currentLotteryId ?? "0") * PER_LOTTERY_SECONDS -
-        lotteryBuffer;
-
-      console.log({ currentLotteryId, nextLottery });
-
-      return nextLottery + (!!currentLotteryId ? 0 : lotteryBuffer);
-    }
-
-    // default to 0
-    return 0;
-  }, [JPMReadData]);
+  const timestampToString = (timestamp: number) => {
+    return new Date(timestamp * 1000).toLocaleString();
+  };
 
   const { data: lotteryPayouts, isFetched: lotteryPayoutsFetched } =
     useGQLFetch<{
@@ -311,6 +215,65 @@ const useLottery = (): {
 
     return null;
   }, [lotteryPayouts, lotteryPayoutsFetched]);
+
+  const nextLotteryTimestamp = useMemo(() => {
+    if (JPMReadData) {
+      const currentJourney =
+        Number((JPMReadData[0].result as bigint) ?? BigInt(0)) ?? 1;
+      const phase2Duration = Number(JPMReadData[5].result as bigint);
+      const totalLotteriesInAJourney = Number(JPMReadData[6].result as bigint);
+      const nextJourneyTimestamp = Number(JPMReadData[3].result);
+      const PHASE_1_SECONDS = Number(JPMReadData[4].result);
+      const PHASE_3_SECONDS = Number(JPMReadData[7].result);
+      const PER_LOTTERY_SECONDS =
+        Number(JPMReadData[5].result) / Number(totalLotteriesInAJourney);
+
+      const lotteryJourney = currentJourney;
+      const TOTAL_JOURNEY_TIME =
+        PHASE_1_SECONDS + phase2Duration + PHASE_3_SECONDS; // 15 mins + 30 mins + 15 mins = 1 hour
+      let phase1StartTimestamp = nextJourneyTimestamp - TOTAL_JOURNEY_TIME; // 11:00
+      if (lotteriesInfo?.lotteryId === "3") {
+        if (currentJourney === Number(lotteriesInfo?.journeyId)) {
+          phase1StartTimestamp += TOTAL_JOURNEY_TIME;
+          lotteryJourney + 1;
+        }
+      }
+      let phase2StartTimestamp = phase1StartTimestamp + PHASE_1_SECONDS; // 11:15
+      let phase3StartTimestamp = phase2StartTimestamp + phase2Duration; // 11:45
+      let lottery3Timestamp = phase3StartTimestamp - lotteryBuffer; // 11:38
+      let lottery2Timestamp = lottery3Timestamp - PER_LOTTERY_SECONDS; // 11:28
+      let lottery1Timestamp = lottery2Timestamp - PER_LOTTERY_SECONDS; // 11:18
+      let nextLotteryTimestamp;
+
+      if (lotteriesInfo?.lotteryId === "3") {
+        nextLotteryTimestamp = lottery1Timestamp;
+        console.log(`Next Lottery: J-${lotteryJourney}-L-${1}`);
+      } else if (lotteriesInfo?.lotteryId === "1") {
+        nextLotteryTimestamp = lottery2Timestamp;
+        console.log(`Next Lottery: J-${lotteryJourney}-L-${2}`);
+      } else if (lotteriesInfo?.lotteryId === "2") {
+        nextLotteryTimestamp = lottery3Timestamp;
+        console.log(`Next Lottery: J-${lotteryJourney}-L-${3}`);
+      }
+      console.log(`Phase 1 Starts: ${timestampToString(phase1StartTimestamp)}`);
+      console.log(`Phase 2 Starts: ${timestampToString(phase2StartTimestamp)}`);
+      console.log(`Phase 3 Starts: ${timestampToString(phase3StartTimestamp)}`);
+      console.log(
+        `Lottery 1 Timestamp: ${timestampToString(lottery1Timestamp)}`,
+      );
+      console.log(
+        `Lottery 2 Timestamp: ${timestampToString(lottery2Timestamp)}`,
+      );
+      console.log(
+        `Lottery 3 Timestamp: ${timestampToString(lottery3Timestamp)}`,
+      );
+
+      return nextLotteryTimestamp;
+    }
+
+    // default to 0
+    return 0;
+  }, [JPMReadData, lotteriesInfo]);
 
   const createMerkleTrees = async (): Promise<Record<string, MerkleTree>> => {
     try {
