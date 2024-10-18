@@ -243,7 +243,7 @@ const useLottery = (): {
       let lottery3Timestamp = phase3StartTimestamp - lotteryBuffer; // 11:38
       let lottery2Timestamp = lottery3Timestamp - PER_LOTTERY_SECONDS; // 11:28
       let lottery1Timestamp = lottery2Timestamp - PER_LOTTERY_SECONDS; // 11:18
-      let nextLotteryTimestamp;
+      let nextLotteryTimestamp = 0;
 
       if (lotteriesInfo?.lotteryId === "3") {
         nextLotteryTimestamp = lottery1Timestamp;
