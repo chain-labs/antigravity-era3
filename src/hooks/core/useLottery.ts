@@ -29,6 +29,7 @@ const useLottery = (): {
   lotteriesInfo: { journeyId: string; lotteryId: string } | null;
   lotteryPayout: string;
   currentPhase: number;
+  currentJourney: number;
   fuelCellsWon: number;
   batchPrune: () => void;
   pruneLoading: boolean;
@@ -116,6 +117,8 @@ const useLottery = (): {
       const phase2StartTimestamp =
         currentPhase === 1
           ? nextTimestamp
+          : currentPhase === 2
+          ? nextTimestamp - Number(phase2Duration)
           : nextJourneyTimestamp + PHASE_1_SECONDS;
 
       // if (Number(currentPhase) === 1) {
@@ -175,7 +178,7 @@ const useLottery = (): {
 
     // default to 0
     return 0;
-  }, [JPMReadData]); 
+  }, [JPMReadData]);
 
   const { data: lotteryPayouts, isFetched: lotteryPayoutsFetched } =
     useGQLFetch<{
@@ -437,6 +440,7 @@ const useLottery = (): {
     nextLotteryTimestamp,
     lotteryPayout: totalWinnings,
     currentPhase: Number(JPMReadData?.[1].result) ?? 1,
+    currentJourney: Number(JPMReadData?.[0].result) ?? 1,
     fuelCellsWon: userWinnings?.lotteryResult?.length ?? 0,
     pruneLoading,
     pruneBatch,

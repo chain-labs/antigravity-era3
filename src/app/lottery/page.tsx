@@ -32,6 +32,7 @@ export default function LotteryPage() {
     pruneBatch,
     pruneLoading,
     currentPhase,
+    currentJourney,
     lotteriesInfo,
     batchPrune,
   } = useLottery();
@@ -65,13 +66,13 @@ export default function LotteryPage() {
       }
       case "3": {
         setLotteryState(
-          currentPhase === 2
-            ? { big: "progress", bigger: "pending", biggest: "pending" }
-            : {
+          currentJourney === Number(lotteriesInfo?.journeyId)
+            ? {
                 big: "success",
                 bigger: "success",
                 biggest: "success",
-              },
+              }
+            : { big: "progress", bigger: "pending", biggest: "pending" },
         );
         return;
       }
