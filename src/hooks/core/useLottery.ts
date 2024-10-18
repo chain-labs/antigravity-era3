@@ -228,14 +228,14 @@ const useLottery = (): {
       const PER_LOTTERY_SECONDS =
         Number(JPMReadData[5].result) / Number(totalLotteriesInAJourney);
 
-      const lotteryJourney = currentJourney;
+      let lotteryJourney = currentJourney;
       const TOTAL_JOURNEY_TIME =
         PHASE_1_SECONDS + phase2Duration + PHASE_3_SECONDS; // 15 mins + 30 mins + 15 mins = 1 hour
       let phase1StartTimestamp = nextJourneyTimestamp - TOTAL_JOURNEY_TIME; // 11:00
       if (lotteriesInfo?.lotteryId === "3") {
         if (currentJourney === Number(lotteriesInfo?.journeyId)) {
           phase1StartTimestamp += TOTAL_JOURNEY_TIME;
-          lotteryJourney + 1;
+          lotteryJourney += 1;
         }
       }
       let phase2StartTimestamp = phase1StartTimestamp + PHASE_1_SECONDS; // 11:15
