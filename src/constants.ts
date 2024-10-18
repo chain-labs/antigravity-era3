@@ -21,3 +21,5 @@ export const BACKGROUNDS = {
 export const lotteryBuffer = Number(
   process.env.NEXT_PUBLIC_LOTTERY_BUFFER ?? "0",
 );
+
+export const PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PID;

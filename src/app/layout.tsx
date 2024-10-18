@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import RainbowKit from "@/components/RainbowKit";
+import { Provider } from "@/components/RainbowKit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Toaster } from "react-hot-toast";
@@ -55,10 +55,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <RainbowKit>
+        <Provider>
           <Toaster />
           {children}
-        </RainbowKit>
+        </Provider>
       </body>
     </html>
   );
