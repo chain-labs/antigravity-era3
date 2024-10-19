@@ -72,7 +72,7 @@ export default function Header() {
             </motion.div>
             <p>Treasury $DARK:</p>
             <motion.div initial="initial" whileHover="hover">
-              {treasuryDark ? (
+              {treasuryDark >= 0 ? (
                 <HoverTextAnimation.BounceReveal
                   text={treasuryDark.toLocaleString("en-US")}
                 />
