@@ -31,13 +31,11 @@ export default function LotteryPage() {
     fuelCellsWon,
     pruneBatch,
     pruneLoading,
+    currentPhase,
+    currentJourney,
     lotteriesInfo,
     batchPrune,
   } = useLottery();
-
-  useEffect(() => {
-    console.log({ nextLotteryTimestamp });
-  }, [nextLotteryTimestamp]);
 
   const handlePruneWinnings = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -51,7 +49,7 @@ export default function LotteryPage() {
       case "1": {
         setLotteryState({
           big: "success",
-          bigger: "pending",
+          bigger: "progress",
           biggest: "pending",
         });
         return;
@@ -59,14 +57,26 @@ export default function LotteryPage() {
       case "2": {
         setLotteryState({
           big: "success",
-          bigger: "pending",
-          biggest: "pending",
+          bigger: "success",
+          biggest: "progress",
         });
         return;
       }
       case "3": {
+        setLotteryState(
+          currentJourney === Number(lotteriesInfo?.journeyId)
+            ? {
+                big: "success",
+                bigger: "success",
+                biggest: "success",
+              }
+            : { big: "progress", bigger: "pending", biggest: "pending" },
+        );
+        return;
+      }
+      default: {
         setLotteryState({
-          big: "success",
+          big: "progress",
           bigger: "pending",
           biggest: "pending",
         });
@@ -104,7 +114,7 @@ export default function LotteryPage() {
             )}
           >
             Congratulations!
-            <br /> Prune your winnings!
+            <br /> Prune your winnings
           </h1>
         </div>
 

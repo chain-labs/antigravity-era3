@@ -5,7 +5,7 @@ import { Gradients } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   PiListDuotone,
   PiRocketDuotone,
@@ -19,7 +19,10 @@ import { useAccount } from "wagmi";
 import HeaderUserconnectedSection from "./HeaderUserconnectedSection";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
-import { HoverTextAnimation } from "../animation/SeperateText";
+import {
+  AutomaticTextAnimation,
+  HoverTextAnimation,
+} from "../animation/SeperateText";
 import {
   AGPROJECT_LINK,
   EVIL_ADDRESS_AVAILABLE,
@@ -31,12 +34,6 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const account = useAccount();
   const { openConnectModal } = useConnectModal();
-
-  const data = {
-    treasurydark: 500000,
-    journey: 1,
-    userdark: 23432443,
-  };
 
   const { treasuryDark, journey, userDark } = useHeaderStats();
 
@@ -75,9 +72,13 @@ export default function Header() {
             </motion.div>
             <p>Treasury $DARK:</p>
             <motion.div initial="initial" whileHover="hover">
-              <HoverTextAnimation.BounceReveal
-                text={treasuryDark.toLocaleString("en-US")}
-              />
+              {treasuryDark >= 0 ? (
+                <HoverTextAnimation.BounceReveal
+                  text={treasuryDark.toLocaleString("en-US")}
+                />
+              ) : (
+                <AutomaticTextAnimation.Loading />
+              )}
             </motion.div>
           </div>
           <div className="flex justify-center items-center gap-[8px]">
@@ -98,32 +99,42 @@ export default function Header() {
             </motion.div>
             <p>Journey:</p>
             <motion.div initial="initial" whileHover="hover">
-              <HoverTextAnimation.BounceReveal
-                text={journey.toLocaleString("en-US")}
-              />
+              {journey ? (
+                <HoverTextAnimation.BounceReveal
+                  text={journey.toLocaleString("en-US")}
+                />
+              ) : (
+                <AutomaticTextAnimation.Loading />
+              )}
             </motion.div>
           </div>
-          <div className="flex justify-center items-center gap-[8px]">
-            <motion.div
-              initial="initial"
-              whileHover="hover"
-              variants={{
-                initial: { rotate: 0 },
-                hover: {
-                  rotate: [0, 10, -10, 10, 0],
-                  transition: { duration: 0.25 },
-                },
-              }}
-            >
-              <PiWalletDuotone />
-            </motion.div>
-            <p>User $DARK:</p>
-            <motion.div initial="initial" whileHover="hover">
-              <HoverTextAnimation.BounceReveal
-                text={userDark.toLocaleString("en-US")}
-              />
-            </motion.div>
-          </div>
+          {account.isConnected && (
+            <div className="flex justify-center items-center gap-[8px]">
+              <motion.div
+                initial="initial"
+                whileHover="hover"
+                variants={{
+                  initial: { rotate: 0 },
+                  hover: {
+                    rotate: [0, 10, -10, 10, 0],
+                    transition: { duration: 0.25 },
+                  },
+                }}
+              >
+                <PiWalletDuotone />
+              </motion.div>
+              <p>User $DARK:</p>
+              <motion.div initial="initial" whileHover="hover">
+                {userDark >= 0 ? (
+                  <HoverTextAnimation.BounceReveal
+                    text={userDark.toLocaleString("en-US")}
+                  />
+                ) : (
+                  <AutomaticTextAnimation.Loading />
+                )}
+              </motion.div>
+            </div>
+          )}
         </div>
       </div>
       <div
@@ -199,7 +210,7 @@ export default function Header() {
               </Link>
             )}
             {UNWRAP_AVAILABLE && (
-              <Link href="/unwrap">
+              <Link href="/vaporize">
                 <motion.div
                   initial="initial"
                   whileHover="hover"
@@ -207,7 +218,7 @@ export default function Header() {
                     "font-sans uppercase font-extrabold text-[16px] leading-[16px] tracking-widest p-[8px] cursor-pointer",
                   )}
                 >
-                  <HoverTextAnimation.Fading text="Unwrap" />
+                  <HoverTextAnimation.Fading text="Vaporize" />
                 </motion.div>
               </Link>
             )}
@@ -353,9 +364,9 @@ export default function Header() {
                     Gradients.whiteGradientText,
                     "font-sans uppercase font-extrabold text-[24px] leading-[14px] tracking-widest p-[8px]",
                   )}
-                  href="/unwrap"
+                  href="/vaporize"
                 >
-                  Unwrap
+                  Vaporize
                 </Link>
               )}
               <Link

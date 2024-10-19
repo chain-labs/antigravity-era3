@@ -19,7 +19,11 @@ const useHeaderStats = () => {
       args: [TreasuryContract.address as `0x${string}`],
     });
 
-  const { data: userDarkData, error: userDarkError } = useReadContract({
+  const {
+    data: userDarkData,
+    error: userDarkError,
+    isFetched: userDarkFetched,
+  } = useReadContract({
     address: DarkContract.address as `0x${string}`,
     abi: DarkContract.abi,
     functionName: "balanceOf",
@@ -59,12 +63,11 @@ const useHeaderStats = () => {
   }, [journeyData]);
 
   const userDark = useMemo(() => {
-    if (userDarkData) {
+    if (userDarkFetched) {
       console.log({ userDarkData });
-      return Number(formatUnits(userDarkData as bigint, 18));
+      return Number(formatUnits((userDarkData as bigint) ?? BigInt(0), 18));
     }
-
-    return 0;
+    return -1;
   }, [userDarkData]);
 
   const treasuryDark = useMemo(() => {

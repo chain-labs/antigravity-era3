@@ -1,5 +1,14 @@
+import SeperateText, {
+  AutomaticTextAnimation,
+} from "@/components/animation/SeperateText";
 import { AnimatePresence, motion } from "framer-motion";
-import { CSSProperties, useEffect, useLayoutEffect, useState } from "react";
+import {
+  CSSProperties,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 export type states = "pending" | "progress" | "success" | "failed";
 
@@ -182,6 +191,7 @@ export default function ProgressingStates({
     bigger: "pending",
     biggest: "pending",
   });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (previousStates) {
@@ -191,6 +201,19 @@ export default function ProgressingStates({
 
   useEffect(() => {
     if (window) {
+      const resize_ob = new ResizeObserver(() => {
+        setCircleCenterPositions(
+          Object.keys(states).map((_, idx) => {
+            const circle = document.getElementById(`circle-${idx}`);
+            const left = circle?.offsetLeft || 0;
+            const width = circle?.offsetWidth || 0;
+            return left + width / 2 + "px";
+          }),
+        );
+      });
+
+      resize_ob.observe(containerRef.current as Element);
+
       window.onresize = () => {
         setCircleCenterPositions(
           Object.keys(states).map((_, idx) => {
@@ -212,12 +235,26 @@ export default function ProgressingStates({
     }
   }, [states]);
 
+  useEffect(() => {}, [journeyId]);
+
   return (
-    <div className="flex flex-col place-items-center gap-y-[8px] text-[16px] leading-[19.84px] tracking-widest font-extrabold font-sans uppercase w-full">
-      <p className="text-center">
-        Latest Lottery Announced <br />
-        in <span className="text-agyellow">Journey {journeyId}</span>
-      </p>
+    <div
+      ref={containerRef}
+      className="flex flex-col place-items-center gap-y-[8px] text-[16px] leading-[19.84px] tracking-widest font-extrabold font-sans uppercase w-full"
+    >
+      {journeyId && (
+        <h6 className="text-center">
+          Latest Lottery Announced in
+          <br />
+          {journeyId !== "undefined" ? (
+            <span className="text-agyellow">Journey {journeyId}</span>
+          ) : (
+            <div className="flex justify-center text-agyellow">
+              <AutomaticTextAnimation.Loading />
+            </div>
+          )}
+        </h6>
+      )}
       <div className="flex justify-between items-center w-full p-[8px]">
         <AnimatePresence>
           {typeof states === "object" &&

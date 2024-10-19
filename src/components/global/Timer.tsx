@@ -18,11 +18,13 @@ function NumberAndLabel({ number, label }: { number: number; label: string }) {
 export default function Timer({
   label,
   timestamp,
+  onTimerEnd,
 }: {
   label: string;
   timestamp: number;
+  onTimerEnd?: () => void;
 }) {
-  const time = useCountdownTimer(timestamp);
+  const time = useCountdownTimer(timestamp, onTimerEnd);
   useEffect(() => {
     time[1](timestamp);
   }, [timestamp, time]);

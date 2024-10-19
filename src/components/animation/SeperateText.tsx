@@ -208,4 +208,36 @@ export class AutomaticTextAnimation {
       />
     );
   }
+
+  static Loading(){
+    return (
+      <SeperateText
+        text={"..."}
+        initial="initial"
+        animate="hover"
+        variants={{
+          container: {
+            initial: {},
+            hover: {
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.5,
+                repeat: Infinity,
+              },
+            },
+          },
+          children: {
+            initial: { y: 1 },
+            hover: {
+              y: [0, "-0.25em", 0],
+              transition: {
+                duration: 0.33,
+                repeat: Infinity,
+              },
+            },
+          },
+        }}
+      />
+    );
+  }
 }
