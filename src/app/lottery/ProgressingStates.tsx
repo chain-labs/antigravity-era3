@@ -235,10 +235,6 @@ export default function ProgressingStates({
     }
   }, [states]);
 
-  useEffect(() => {
-    console.log({ journeyId });
-  }, [journeyId]);
-
   return (
     <div
       ref={containerRef}
