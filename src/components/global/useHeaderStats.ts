@@ -65,7 +65,7 @@ const useHeaderStats = () => {
   const userDark = useMemo(() => {
     if (userDarkFetched) {
       console.log({ userDarkData });
-      return Number(formatUnits(userDarkData as bigint, 18));
+      return Number(formatUnits((userDarkData as bigint) ?? BigInt(0), 18));
     }
     return -1;
   }, [userDarkData]);

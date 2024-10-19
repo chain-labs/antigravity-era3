@@ -31,6 +31,8 @@ export default function LotteryPage() {
     fuelCellsWon,
     pruneBatch,
     pruneLoading,
+    currentPhase,
+    currentJourney,
     lotteriesInfo,
     batchPrune,
   } = useLottery();
@@ -43,13 +45,11 @@ export default function LotteryPage() {
   useEffect(() => {
     const lotteryIdAnnounced = lotteriesInfo?.lotteryId;
 
-    console.log({ lotteryIdAnnounced });
-
     switch (lotteryIdAnnounced) {
       case "1": {
         setLotteryState({
           big: "success",
-          bigger: "pending",
+          bigger: "progress",
           biggest: "pending",
         });
         return;
@@ -58,21 +58,25 @@ export default function LotteryPage() {
         setLotteryState({
           big: "success",
           bigger: "success",
-          biggest: "pending",
+          biggest: "progress",
         });
         return;
       }
       case "3": {
-        setLotteryState({
-          big: "success",
-          bigger: "success",
-          biggest: "success",
-        });
+        setLotteryState(
+          currentJourney === Number(lotteriesInfo?.journeyId)
+            ? {
+                big: "success",
+                bigger: "success",
+                biggest: "success",
+              }
+            : { big: "progress", bigger: "pending", biggest: "pending" },
+        );
         return;
       }
       default: {
         setLotteryState({
-          big: "pending",
+          big: "progress",
           bigger: "pending",
           biggest: "pending",
         });

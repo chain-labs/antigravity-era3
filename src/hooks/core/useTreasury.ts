@@ -1,7 +1,7 @@
 import useFuelCellContract from "@/abi/FuelCell";
 import useJPMContract from "@/abi/JourneyPhaseManager";
 import useTreasuryContract from "@/abi/Treasury";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { formatUnits } from "viem";
 import { useAccount, useReadContract } from "wagmi";
 import { useGQLFetch } from "../api/useGraphQLClient";
@@ -9,23 +9,30 @@ import { gql } from "graphql-request";
 import useEAContract from "@/abi/EvilAddress";
 
 const useTreasury = () => {
+  const [refetchInfo, setRefetchInfo] = useState(true);
   const FuelCellsContract = useFuelCellContract();
   const TreasuryContract = useTreasuryContract();
   const JPMContract = useJPMContract();
 
   const account = useAccount();
 
+  const onTimerEnd = () => {
+    setRefetchInfo(true);
+  };
+
   const { data: yieldDistributedData, isFetched: yieldDistributedFetched } =
     useReadContract({
       address: TreasuryContract.address as `0x${string}`,
       abi: TreasuryContract.abi,
       functionName: "totalYieldAllocated",
+      query: { enabled: refetchInfo },
     });
   const { data: fuelCellsSupplyData, isFetched: fuelCellsFetched } =
     useReadContract({
       address: FuelCellsContract.address as `0x${string}`,
       abi: FuelCellsContract.abi,
       functionName: "totalSupply",
+      query: { enabled: refetchInfo },
     });
 
   const { data: currentPhase, isFetched: currentPhaseFetched } =
@@ -33,6 +40,7 @@ const useTreasury = () => {
       address: JPMContract.address as `0x${string}`,
       abi: JPMContract.abi,
       functionName: "currentPhase",
+      query: { enabled: refetchInfo },
     });
 
   const isMintActive: boolean = useMemo(() => {
@@ -54,7 +62,7 @@ const useTreasury = () => {
       abi: JPMContract.abi,
       functionName: "getNextJourneyTimestamp",
       query: {
-        enabled: !isMintActive,
+        enabled: !isMintActive && refetchInfo,
       },
     });
 
@@ -64,7 +72,7 @@ const useTreasury = () => {
       abi: JPMContract.abi,
       functionName: "getNextPhaseTimestamp",
       query: {
-        enabled: isMintActive,
+        enabled: isMintActive && refetchInfo,
       },
     });
 
@@ -85,6 +93,7 @@ const useTreasury = () => {
 
   const nextMintTimestamp = useMemo(() => {
     if (nextMintTimestampFetched) {
+      setRefetchInfo(false);
       return Number(nextMintTimestampData);
     }
 
@@ -112,7 +121,7 @@ const useTreasury = () => {
       }
     `,
     {},
-    { enabled: !!account.address },
+    { enabled: !!account.address && refetchInfo },
   );
 
   const userMinted = useMemo(() => {
@@ -129,6 +138,7 @@ const useTreasury = () => {
     nextMintTimestamp,
     nextPhaseTimestamp,
     userMinted,
+    onTimerEnd,
   };
 };
 

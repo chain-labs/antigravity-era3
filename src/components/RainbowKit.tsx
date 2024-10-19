@@ -1,51 +1,41 @@
 "use client";
 
-import { TEST_NETWORK } from "@/constants/global";
-import { PROJECT_ID } from "@/constants/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { baseSepolia, pulsechain, pulsechainV4, sepolia } from "viem/chains";
-import { cookieStorage, createStorage, http, WagmiProvider } from "wagmi";
-import React from "react";
-import { usePathname } from "next/navigation";
-import { ALCHEMY_KEY } from "@/constants";
+import { http, WagmiProvider } from "wagmi";
+import { pulsechainV4, pulsechain } from "wagmi/chains";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { PROJECT_ID } from "@/constants";
+import { TEST_NETWORK } from "@/constants/global";
 
-const RainbowKit = ({ children }: React.PropsWithChildren) => {
-  const config = getDefaultConfig({
-    appName: "AGProject-ERA3",
-    projectId: `${PROJECT_ID}`,
-    // @ts-ignore
-    chains: TEST_NETWORK ? [pulsechainV4] : [pulsechain],
-    ssr: true,
-    storage: createStorage({ storage: cookieStorage }),
-    transports: {
-      [baseSepolia.id]: http(
-        `https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-      ),
-      [pulsechainV4.id]: http(
-        `https://rpc-testnet-pulsechain.g4mm4.io`,
-      ),
-    },
-  });
-
-  const queryClient = new QueryClient();
-
-  return (
-    <WagmiProvider config={config} reconnectOnMount={true}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider modalSize="compact">{children}</RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-  );
-};
-
-export default RainbowKit;
-
-// use this function to modify list of eligible chains for specific pages.
 export const getRainbowKitChainsFromPage = (page: string, test: boolean) => {
   switch (page) {
     // add cases here for each custom page chains list
     default:
       return test ? [pulsechainV4] : [pulsechain];
   }
+};
+
+const config = getDefaultConfig({
+  appName: "AGPROJECT.io TOOLS",
+  projectId: PROJECT_ID ?? "",
+  chains: TEST_NETWORK ? [pulsechainV4] : [pulsechain],
+  ssr: true, // If your dApp uses server side rendering (SSR)
+  transports: {
+    [pulsechainV4.id]: http("https://rpc-testnet-pulsechain.g4mm4.io"),
+    [pulsechain.id]: http("https://rpc-pulsechain.g4mm4.io"),
+  },
+});
+
+const queryClient = new QueryClient();
+
+export const Provider = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>{children}</RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 };

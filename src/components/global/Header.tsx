@@ -123,7 +123,6 @@ export default function Header() {
               >
                 <PiWalletDuotone />
               </motion.div>
-
               <p>User $DARK:</p>
               <motion.div initial="initial" whileHover="hover">
                 {userDark >= 0 ? (
