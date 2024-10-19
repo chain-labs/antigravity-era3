@@ -14,8 +14,17 @@ import { motion } from "framer-motion";
 import { PiInfoDuotone } from "react-icons/pi";
 import Tooltip from "@/components/global/Tooltip";
 import useEvilAddress from "@/hooks/core/useEvilAddress";
+import { useEffect } from "react";
 
-function PruneAndRollOver({ data }: { data: number }) {
+function PruneAndRollOver({
+  data,
+  evilPrune,
+  evilPruneLoading,
+}: {
+  data: number;
+  evilPrune: () => void;
+  evilPruneLoading: boolean;
+}) {
   return (
     <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
@@ -58,7 +67,17 @@ function PruneAndRollOver({ data }: { data: number }) {
           <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
             {data.toLocaleString("en-US")}
           </p>
-          <Button initial="initial" whileHover="hover" type="submit">
+          <Button
+            initial="initial"
+            whileHover="hover"
+            onClick={(e) => {
+              e.preventDefault();
+              evilPrune();
+            }}
+            loading={evilPruneLoading}
+            loadingText="Pruning...."
+            disabled={evilPruneLoading}
+          >
             <motion.div
               variants={{
                 initial: { rotate: 0 },
@@ -79,7 +98,17 @@ function PruneAndRollOver({ data }: { data: number }) {
   );
 }
 
-function MintFromEvilAddress({ data }: { data: number }) {
+function MintFromEvilAddress({
+  data,
+  evilMint,
+  evilMintLoading,
+  isMintActive,
+}: {
+  data: number;
+  evilMint: () => void;
+  evilMintLoading: boolean;
+  isMintActive: boolean;
+}) {
   return (
     <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full">
       <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
@@ -122,7 +151,17 @@ function MintFromEvilAddress({ data }: { data: number }) {
           <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
             {data.toLocaleString("en-US")}
           </p>
-          <Button initial="initial" whileHover="hover" type="submit">
+          <Button
+            initial="initial"
+            whileHover="hover"
+            onClick={(e) => {
+              e.preventDefault();
+              evilMint();
+            }}
+            disabled={evilMintLoading || !isMintActive}
+            loading={evilMintLoading}
+            loadingText="Minting..."
+          >
             <motion.div
               variants={{
                 initial: { scale: 1 },
@@ -134,7 +173,9 @@ function MintFromEvilAddress({ data }: { data: number }) {
             >
               <PiCubeDuotone />
             </motion.div>
-            <HoverTextAnimation.RollingIn text="Mint" />
+            <HoverTextAnimation.RollingIn
+              text={!isMintActive ? "Mint Inactive" : "Mint"}
+            />
           </Button>
         </div>
       </form>
@@ -143,10 +184,25 @@ function MintFromEvilAddress({ data }: { data: number }) {
 }
 
 export default function EvilAddressPage() {
-  const { perPruneChunk } = useEvilAddress();
+  const {
+    perPruneChunk,
+    evilMint,
+    evilMintLoading,
+    evilPrune,
+    evilPruneLoading,
+    isMintActive,
+    mintTimestamp,
+    mintsAllowed,
+  } = useEvilAddress();
+
+  useEffect(() => {
+    console.log({ isMintActive, mintTimestamp });
+  }, [isMintActive, mintTimestamp]);
+
   if (EVIL_ADDRESS_AVAILABLE === false) {
     return notFound();
   }
+
   return (
     <div
       style={{
@@ -158,6 +214,7 @@ export default function EvilAddressPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
+          "md:pt-[150px]",
         )}
       >
         <div
@@ -178,8 +235,16 @@ export default function EvilAddressPage() {
           </h1>
         </div>
         <div className="flex flex-col justify-center items-center gap-[24px]">
-          <PruneAndRollOver data={perPruneChunk} />
-          <MintFromEvilAddress data={50} />
+          <PruneAndRollOver
+            data={perPruneChunk}
+            {...{ evilPrune, evilPruneLoading }}
+          />
+          <MintFromEvilAddress
+            data={Number(mintsAllowed) ?? 500}
+            evilMint={evilMint}
+            evilMintLoading={evilMintLoading}
+            isMintActive={isMintActive}
+          />
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
@@ -189,8 +254,8 @@ export default function EvilAddressPage() {
             )}
           >
             <Timer
-              label="Time to next mint"
-              timestamp={~~(new Date().getTime() / 1000 + 15000)}
+              label={!isMintActive ? "Time to next mint" : "Mint Active until"}
+              timestamp={mintTimestamp}
             />
           </div>
         </div>

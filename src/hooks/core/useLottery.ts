@@ -139,7 +139,6 @@ const useLottery = (): {
       enabled: account.isConnected && refetchInfo,
     },
   );
-
   const lotteriesWon = useMemo(() => {
     if (userWinningsFetched) {
       console.log({ userWinnings });
