@@ -232,7 +232,7 @@ const useLottery = (): {
       const TOTAL_JOURNEY_TIME =
         PHASE_1_SECONDS + phase2Duration + PHASE_3_SECONDS; // 15 mins + 30 mins + 15 mins = 1 hour
       let phase1StartTimestamp = nextJourneyTimestamp - TOTAL_JOURNEY_TIME; // 11:00
-      if (lotteriesInfo?.lotteryId === "3") {
+      if (lotteriesInfo?.journeyId && lotteriesInfo?.lotteryId === "3") {
         if (currentJourney === Number(lotteriesInfo?.journeyId)) {
           phase1StartTimestamp += TOTAL_JOURNEY_TIME;
           lotteryJourney += 1;
@@ -244,17 +244,22 @@ const useLottery = (): {
       let lottery2Timestamp = lottery3Timestamp - PER_LOTTERY_SECONDS; // 11:28
       let lottery1Timestamp = lottery2Timestamp - PER_LOTTERY_SECONDS; // 11:18
       let nextLotteryTimestamp = 0;
-
-      if (lotteriesInfo?.lotteryId === "3") {
+      if (!lotteriesInfo?.lotteryId) {
         nextLotteryTimestamp = lottery1Timestamp;
         console.log(`Next Lottery: J-${lotteryJourney}-L-${1}`);
-      } else if (lotteriesInfo?.lotteryId === "1") {
-        nextLotteryTimestamp = lottery2Timestamp;
-        console.log(`Next Lottery: J-${lotteryJourney}-L-${2}`);
-      } else if (lotteriesInfo?.lotteryId === "2") {
-        nextLotteryTimestamp = lottery3Timestamp;
-        console.log(`Next Lottery: J-${lotteryJourney}-L-${3}`);
+      } else {
+        if (lotteriesInfo?.lotteryId === "3") {
+          nextLotteryTimestamp = lottery1Timestamp;
+          console.log(`Next Lottery: J-${lotteryJourney}-L-${1}`);
+        } else if (lotteriesInfo?.lotteryId === "1") {
+          nextLotteryTimestamp = lottery2Timestamp;
+          console.log(`Next Lottery: J-${lotteryJourney}-L-${2}`);
+        } else if (lotteriesInfo?.lotteryId === "2") {
+          nextLotteryTimestamp = lottery3Timestamp;
+          console.log(`Next Lottery: J-${lotteryJourney}-L-${3}`);
+        }
       }
+
       console.log(`Phase 1 Starts: ${timestampToString(phase1StartTimestamp)}`);
       console.log(`Phase 2 Starts: ${timestampToString(phase2StartTimestamp)}`);
       console.log(`Phase 3 Starts: ${timestampToString(phase3StartTimestamp)}`);

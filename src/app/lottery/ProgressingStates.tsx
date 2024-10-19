@@ -242,17 +242,19 @@ export default function ProgressingStates({
       ref={containerRef}
       className="flex flex-col place-items-center gap-y-[8px] text-[16px] leading-[19.84px] tracking-widest font-extrabold font-sans uppercase w-full"
     >
-      <h6 className="text-center">
-        Latest Lottery Announced in
-        <br />
-        {journeyId !== "undefined" ? (
-          <span className="text-agyellow">Journey {journeyId}</span>
-        ) : (
-          <div className="flex justify-center text-agyellow">
-            <AutomaticTextAnimation.Loading />
-          </div>
-        )}
-      </h6>
+      {journeyId && (
+        <h6 className="text-center">
+          Latest Lottery Announced in
+          <br />
+          {journeyId !== "undefined" ? (
+            <span className="text-agyellow">Journey {journeyId}</span>
+          ) : (
+            <div className="flex justify-center text-agyellow">
+              <AutomaticTextAnimation.Loading />
+            </div>
+          )}
+        </h6>
+      )}
       <div className="flex justify-between items-center w-full p-[8px]">
         <AnimatePresence>
           {typeof states === "object" &&
