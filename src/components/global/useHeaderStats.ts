@@ -67,7 +67,6 @@ const useHeaderStats = () => {
       console.log({ userDarkData });
       return Number(formatUnits((userDarkData as bigint) ?? BigInt(0), 18));
     }
-
     return -1;
   }, [userDarkData]);
 
