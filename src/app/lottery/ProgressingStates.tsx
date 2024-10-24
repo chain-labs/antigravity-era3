@@ -235,14 +235,12 @@ export default function ProgressingStates({
     }
   }, [states]);
 
-  useEffect(() => {}, [journeyId]);
-
   return (
     <div
       ref={containerRef}
       className="flex flex-col place-items-center gap-y-[8px] text-[16px] leading-[19.84px] tracking-widest font-extrabold font-sans uppercase w-full"
     >
-      {journeyId && (
+      {journeyId !== "undefined" ? (
         <h6 className="text-center">
           Latest Lottery Announced in
           <br />
@@ -254,6 +252,8 @@ export default function ProgressingStates({
             </div>
           )}
         </h6>
+      ) : (
+        <h6 className="text-center">No lottery announced</h6>
       )}
       <div className="flex justify-between items-center w-full p-[8px]">
         <AnimatePresence>
