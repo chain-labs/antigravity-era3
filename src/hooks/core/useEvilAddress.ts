@@ -137,6 +137,7 @@ const useEvilAddress = () => {
       functionName: "TEAM_FEE",
       args: [],
     })) as bigint;
+    console.log({ TEAM_FEE });
 
     let proofs =
       userWinnings?.lotteryResult?.map((win) => {
@@ -210,6 +211,8 @@ const useEvilAddress = () => {
         functionName: "TEAM_FEE",
         args: [],
       })) as bigint;
+
+      console.log({ TEAM_FEE });
       const tx = await evilMintFn({
         address: EAContract.address as `0x${string}`,
         abi: EAContract.abi,
