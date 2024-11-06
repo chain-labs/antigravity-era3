@@ -5,9 +5,7 @@ import {
   pulsechainV4,
   sepolia,
 } from "viem/chains";
-
 type Address = `0x${string}`;
-
 export const CONTRACTS: Record<
   number,
   {
@@ -43,14 +41,14 @@ export const CONTRACTS: Record<
     wishWell: "0x43F4cdC343f39EDD323C66492E9fdf3D72Df0eC0",
     miningRig: "0x020d3Ca9605bb17CC17Ea0DB2bFfed3fA0869fCF",
     darkX: "0xb1BF01E195D511509B12D980769351eF5255eE0f",
-    dark: "0x75B6C6FeF33E38b2534b99431043C96D9C7038F8",
-    darkClaims: "0x42A1d6d0e43D9FC26fDF7572bc1f63e8E2324Ee7",
-    fuelCell: "0x8Ba06bC6f421D188F89D615532D88de00d6Cf46A",
-    launchControlCenter: "0x810F4E5095724dEeC7B42ED2E4148a883df488E9",
-    journeyPhaseManager: "0x5253A8416127499eB7bb9F580A9FEBbB30bD1EA8",
-    evilAddress: "0x8882A10bA0dC787141bDCbF8a76c5c90F0950AA1",
-    treasury: "0xdF25841Dd669c5238848ee276d32b081970dA248",
-    jackpot: "0xbD9Def17646f0aA33e17146bC5A9dF4789C0fc45",
+    dark: "0xdFa301cf092d99b5B10499d53e2A7b2B11dc1b10",
+    darkClaims: "0x0989A0EB14bC6A5D04f799081b07eE4129Df1936",
+    fuelCell: "0xe3eC639acA761FfcEb7aD7cE0B0E43C94735ea83",
+    launchControlCenter: "0x5EdE269762D1CF47e9AE083240404B5839CC55d7",
+    journeyPhaseManager: "0x3d877e5B7D8DbAD1071Ecf36a8B03FF556B68B26",
+    evilAddress: "0xAC147AF076231e17eAe7050A84b99E82Bb6431A2",
+    treasury: "0xd5996bd0585FDed7e3C5971c504Ec8D78AC5ae93",
+    jackpot: "0x1E18151aE65bB5FF6e197C7E8c262f52DB801cC6",
     darkFaucet: "0xb21145202372CC4F92621c5C41A3791755c0919b",
   },
   [baseSepolia.id]: {
