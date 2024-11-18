@@ -242,7 +242,7 @@ export default function ProgressingStates({
       ref={containerRef}
       className="flex flex-col place-items-center gap-y-[8px] text-[16px] leading-[19.84px] tracking-widest font-extrabold font-sans uppercase w-full"
     >
-      {journeyId !== "undefined" || true ? (
+      {journeyId !== "undefined" ? (
         <h6 className="text-center">
           <div className="text-[10px] font-normal">${amountPerFuelCell.toLocaleString("en-US")} per fuelcell</div>
           Latest Lottery Announced in

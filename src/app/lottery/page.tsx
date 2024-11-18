@@ -9,9 +9,13 @@ import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
+import {
+  PiInfoDuotone,
+  PiTrophyDuotone,
+  PiWrenchDuotone,
+} from "react-icons/pi";
 import { formatUnits } from "viem";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import SeperateText, {
   HoverTextAnimation,
 } from "@/components/animation/SeperateText";
@@ -89,7 +93,32 @@ export default function LotteryPage() {
     jackpotContractBalance: 10002903892,
     totalActiveFuelCells: 1232320,
     amountPerFuelCell: 109293,
+    lottriesWinnings: {
+      big: 100,
+      bigger: 100,
+      biggest: 100,
+    },
   };
+
+  const [fuelCellsInfoModal, setFuelCellsInfoModal] = useState(false);
+  const [fuelCellsInfoModalOpening, setFuelCellsInfoModalOpening] =
+    useState(false);
+
+  useEffect(() => {
+    // add 300ms delay for modal opening
+    const timeout = setTimeout(() => {
+      if (fuelCellsInfoModal) {
+        setFuelCellsInfoModalOpening(true);
+      } else {
+        setFuelCellsInfoModalOpening(false);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+      setFuelCellsInfoModalOpening(false);
+    };
+  }, [fuelCellsInfoModal]);
 
   return (
     <div
@@ -177,6 +206,7 @@ export default function LotteryPage() {
                 "grid grid-flow-col gap-[8px]",
                 "font-extrabold",
                 "w-full",
+                "relative",
               )}
             >
               <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
@@ -203,9 +233,55 @@ export default function LotteryPage() {
                   />
                   <HoverTextAnimation.Fading text="Dark Matter" />
                 </motion.div>
-                <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
-                  <PiTrophyDuotone className="text-[16px]" />
+                <div
+                  onMouseEnter={() => setFuelCellsInfoModal(true)}
+                  onMouseLeave={() => setFuelCellsInfoModal(false)}
+                  className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase underline underline-offset-2"
+                >
+                  {/* <PiTrophyDuotone className="text-[16px]" /> */}
                   <span>{fuelCellsWon} Fuel cells won</span>
+                  <PiInfoDuotone className="text-[16px]" />
+                  <AnimatePresence>
+                    {fuelCellsInfoModalOpening && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={cn(
+                          Gradients.redToBlue,
+                          "absolute top-full right-0 p-[1px] rounded-[6px] text-agwhite z-50",
+                        )}
+                      >
+                        <div className="flex flex-col justify-center items-center gap-[8px] text-[16px] leading-[16px] py-[8px] px-[16px] rounded-[inherit] bg-agblack normal-case font-normal">
+                          <p className="text-center text-[14px]">
+                            Your Fuel cells winnings in different lotteries
+                          </p>
+                          <div className="grid grid-flow-col gap-[8px] px-[8px] w-full">
+                            {Object.keys(
+                              LotteryAdditionalInfo.lottriesWinnings,
+                            ).map((key) => (
+                              <div
+                                key={key}
+                                className="flex flex-col justify-between items-center"
+                              >
+                                <span className="uppercase text-[12px] font-normal">
+                                  {key}
+                                </span>
+                                <span className="font-bold">
+                                  {
+                                    LotteryAdditionalInfo.lottriesWinnings[
+                                      key as keyof typeof LotteryAdditionalInfo.lottriesWinnings
+                                    ]
+                                  }
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
