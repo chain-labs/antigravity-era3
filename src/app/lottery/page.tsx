@@ -85,12 +85,17 @@ export default function LotteryPage() {
     }
   }, [lotteriesInfo]);
 
+  const LotteryAdditionalInfo = {
+    jackpotContractBalance: 10002903892,
+    totalActiveFuelCells: 1232320,
+  };
+
   return (
     <div
       style={{
         backgroundImage: `url(${BACKGROUNDS.LOTTERY ?? ""})`,
       }}
-      className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat pt-[100px]"
+      className="relative flex justify-center items-center min-h-screen bg-center bg-no-repeat pt-[100px]"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
@@ -99,23 +104,61 @@ export default function LotteryPage() {
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
         )}
       >
-        <div
-          className={cn(
-            "flex flex-col justify-start items-start gap-[8px]",
-            "p-[8px] rounded-[6px]",
-            "bg-agblack/30 backdrop-blur-lg",
-            "text-agwhite",
-          )}
-        >
-          <h1
+        <div className="flex flex-col gap-[8px] mx-[16px] md:mx-0">
+          <div
             className={cn(
-              Gradients.whiteGradientText,
-              "text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] font-sans font-extrabold",
+              "flex flex-col justify-start items-start gap-[8px]",
+              "p-[8px] rounded-[6px]",
+              "bg-agblack/30 backdrop-blur-lg",
+              "text-agwhite",
             )}
           >
-            Congratulations!
-            <br /> Prune your winnings
-          </h1>
+            <h1
+              className={cn(
+                Gradients.whiteGradientText,
+                "text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] font-sans font-extrabold",
+              )}
+            >
+              Congratulations!
+              <br /> Prune your winnings
+            </h1>
+          </div>
+          <div className="grid grid-flow-row md:grid-flow-col place-items-center gap-2 w-full">
+            <div className="bg-gradient-to-b from-[#B4EBF8] to-[#789DFA] p-[1px] rounded-[3px] w-full">
+              <div
+                className={cn(
+                  Gradients.tableBlue,
+                  "relative border border-1 border-agyellow rounded-[3px] px-[16px] py-[8px]",
+                )}
+              >
+                <h3 className="uppercase font-sans tracking-widest text-[12px]">
+                  Jackpot contract balance
+                </h3>
+                <p className="font-general-sans font-bold text-[18px]">
+                  {Number(
+                    LotteryAdditionalInfo.jackpotContractBalance,
+                  ).toLocaleString("en-US")}
+                </p>
+              </div>
+            </div>
+            <div className="bg-gradient-to-b from-[#B4EBF8] to-[#789DFA] p-[1px] rounded-[3px] w-full">
+              <div
+                className={cn(
+                  Gradients.tableBlue,
+                  "relative border border-1 border-agyellow rounded-[3px] px-[16px] py-[8px]",
+                )}
+              >
+                <h3 className="uppercase font-sans tracking-widest text-[12px]">
+                  Total Active FuelCells
+                </h3>
+                <p className="font-general-sans font-bold text-[18px]">
+                  {Number(
+                    LotteryAdditionalInfo.totalActiveFuelCells,
+                  ).toLocaleString("en-US")}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col justify-center items-center gap-[24px]">
