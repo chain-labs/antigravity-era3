@@ -177,9 +177,11 @@ const statesCircleCSS: { [key in states]: CSSProperties } = {
 export default function ProgressingStates({
   states: previousStates,
   journeyId,
+  amountPerFuelCell,
 }: {
   states: { [key in string]: states };
   journeyId: string;
+  amountPerFuelCell: number;
 }) {
   const [circleCenterPositions, setCircleCenterPositions] = useState<string[]>(
     [],
@@ -240,8 +242,9 @@ export default function ProgressingStates({
       ref={containerRef}
       className="flex flex-col place-items-center gap-y-[8px] text-[16px] leading-[19.84px] tracking-widest font-extrabold font-sans uppercase w-full"
     >
-      {journeyId !== "undefined" ? (
+      {journeyId !== "undefined" || true ? (
         <h6 className="text-center">
+          <div className="text-[10px] font-normal">${amountPerFuelCell.toLocaleString("en-US")} per fuelcell</div>
           Latest Lottery Announced in
           <br />
           {journeyId !== "undefined" ? (

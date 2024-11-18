@@ -88,6 +88,7 @@ export default function LotteryPage() {
   const LotteryAdditionalInfo = {
     jackpotContractBalance: 10002903892,
     totalActiveFuelCells: 1232320,
+    amountPerFuelCell: 109293,
   };
 
   return (
@@ -241,6 +242,7 @@ export default function LotteryPage() {
             <ProgressingStates
               states={lotteryState}
               journeyId={`${lotteriesInfo?.journeyId}`}
+              amountPerFuelCell={LotteryAdditionalInfo.amountPerFuelCell}
             />
           </div>
           <div
