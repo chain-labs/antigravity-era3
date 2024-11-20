@@ -177,11 +177,9 @@ const statesCircleCSS: { [key in states]: CSSProperties } = {
 export default function ProgressingStates({
   states: previousStates,
   journeyId,
-  amountPerFuelCell,
 }: {
   states: { [key in string]: states };
   journeyId: string;
-  amountPerFuelCell: number;
 }) {
   const [circleCenterPositions, setCircleCenterPositions] = useState<string[]>(
     [],
@@ -244,11 +242,6 @@ export default function ProgressingStates({
     >
       {journeyId !== "undefined" ? (
         <h6 className="text-center">
-          <div className="text-[10px] font-normal">
-            ${amountPerFuelCell.toLocaleString("en-US")} per fuelcell
-          </div>
-          Latest Lottery Announced in
-          <br />
           {journeyId !== "undefined" ? (
             <span className="text-agyellow">Journey {journeyId}</span>
           ) : (
@@ -260,25 +253,7 @@ export default function ProgressingStates({
       ) : (
         <h6 className="text-center">No lottery announced</h6>
       )}
-      <div className="w-full h-[1em]">
-        {typeof states === "object" &&
-          Object.keys(states).map((userState: string, idx: number) => (
-            <motion.p
-              key={1 * idx}
-              style={{
-                color: statesColors[states[userState]],
-                gridColumn: `${idx * 2 + 1}`,
-                gridRow: "2",
-                position: "absolute",
-                left: circleCenterPositions[idx],
-                transform: "translate(-50%, 0)",
-              }}
-              className="text-center"
-            >
-              {userState}
-            </motion.p>
-          ))}
-      </div>
+      
       <div className="flex justify-between items-center w-full p-[8px]">
         <AnimatePresence>
           {typeof states === "object" &&
@@ -346,6 +321,26 @@ export default function ProgressingStates({
               </>
             ))}
         </AnimatePresence>
+      </div>
+
+      <div className="w-full h-[1em]">
+        {typeof states === "object" &&
+          Object.keys(states).map((userState: string, idx: number) => (
+            <motion.p
+              key={1 * idx}
+              style={{
+                color: statesColors[states[userState]],
+                gridColumn: `${idx * 2 + 1}`,
+                gridRow: "2",
+                position: "absolute",
+                left: circleCenterPositions[idx],
+                transform: "translate(-50%, 0)",
+              }}
+              className="text-center"
+            >
+              {userState}
+            </motion.p>
+          ))}
       </div>
     </div>
   );
