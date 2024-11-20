@@ -366,7 +366,7 @@ export default function LotteryPage() {
           >
             <ProgressingStates
               states={lotteryState}
-              journeyId={`${lotteriesInfo?.journeyId}`}
+              journeyId={`${currentJourney}`}
             />
           </div>
 
