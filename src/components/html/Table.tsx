@@ -6,12 +6,26 @@ import { cn } from "@/lib/tailwindUtils";
 type TableProps = {
   header: React.ReactNode[];
   body: Array<Array<Number | string>>;
+  className?: string;
+  headerClassName?: string;
+  bodyClassName?: string;
 };
 
-export default function Table({ header, body }: TableProps) {
+export default function Table({
+  header,
+  body,
+  className,
+  headerClassName,
+  bodyClassName,
+}: TableProps) {
   return (
-    <div className="max-h-[300px] max-w-[80vw] w-full lg:w-fit overflow-y-auto [scroll-snap-type]:[y_mandatory] rounded-[6px] mr-[8px]">
-      <table>
+    <div
+      className={cn(
+        "max-h-[300px] max-w-[80vw] w-full lg:w-fit overflow-y-auto [scroll-snap-type]:[y_mandatory] rounded-[6px] md:mr-[8px]",
+        className,
+      )}
+    >
+      <table className="w-full">
         <thead>
           <tr>
             {header.map((head, i) => (
@@ -19,7 +33,7 @@ export default function Table({ header, body }: TableProps) {
                 key={i}
                 className={cn(Gradients.redToBlue, "p-[1px] sticky top-0 z-10")}
               >
-                <div className={cn("bg-agblack", "px-[12px] py-[10px]")}>
+                <div className={cn("bg-agblack", "px-[12px] py-[10px] h-full")}>
                   <div
                     className={cn(
                       Gradients.whiteGradientText,
@@ -27,7 +41,8 @@ export default function Table({ header, body }: TableProps) {
                       "[&_svg]:text-[24px]",
                       "grid grid-flow-col gap-[8px]",
                       "text-nowrap",
-                      "[&_img]:[min-w-[24px] min-h-[24px]]",
+                      "[&_img]:[min-w-[24px] min-h-[24px]] h-full",
+                      headerClassName,
                     )}
                   >
                     {head}
@@ -49,6 +64,7 @@ export default function Table({ header, body }: TableProps) {
                         "[&_svg]:text-[24px]",
                         "flex gap-[8px]",
                         "px-[12px] py-[10px]",
+                        bodyClassName,
                       )}
                     >
                       {`${cell}`}
