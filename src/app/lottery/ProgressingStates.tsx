@@ -344,8 +344,6 @@ export default function ProgressingStates({
               className="text-center"
             >
               {userState}
-              <br />
-              <small className="">wdnnd</small>
             </motion.p>
           ))}
       </div>
