@@ -12,6 +12,7 @@ import {
   PiRocketLaunchDuotone,
   PiTreasureChestDuotone,
   PiWalletDuotone,
+  PiWarningDuotone,
   PiXCircleDuotone,
 } from "react-icons/pi";
 import Button from "../html/Button";
@@ -47,9 +48,23 @@ export default function Header() {
     >
       <div
         className={cn(
+          "grid",
+          "bg-agyellow",
+          "relative rounded-t-[8px] p-[2px] pb-0 mx-[16px] mt-[8px] lg:mt-[8px]",
+          "text-agblack font-sans uppercase font-extrabold text-[12px] md:text-[14px] tracking-widest",
+          "[&_svg]:text-[16px] md:[&_svg]:text-[24px]",
+          "overflow-hidden",
+        )}
+      >
+        <div className="grid grid-flow-col gap-[16px] px-[8px] md:px-[16px] py-[4px] rounded-[inherit] place-items-center">
+          <PiWarningDuotone /> Warning: This is a testnet <PiWarningDuotone />
+        </div>
+      </div>
+      <div
+        className={cn(
           "hidden lg:grid",
           Gradients.redToBlue,
-          "relative rounded-t-[8px] p-[2px] pb-0 mx-[16px] mt-[16px] lg:mt-[32px]",
+          "relative rounded-t-[8px] p-[2px] pb-0 mx-[16px]",
           "text-agwhite/[0.66] font-sans uppercase font-extrabold text-[16px] tracking-widest",
           "[&_svg]:text-[24px]",
           "overflow-hidden",
