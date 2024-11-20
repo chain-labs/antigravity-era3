@@ -30,11 +30,13 @@ import {
   UNWRAP_AVAILABLE,
 } from "@/constants";
 import useHeaderStats from "./useHeaderStats";
+import { IoClose } from "react-icons/io5";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const account = useAccount();
   const { openConnectModal } = useConnectModal();
+  const [isWarningOpen, setIsWarningOpen] = useState(true);
 
   const { treasuryDark, journey, userDark } = useHeaderStats();
 
@@ -54,17 +56,29 @@ export default function Header() {
           "text-agblack font-sans uppercase font-extrabold text-[10px] md:text-[14px] tracking-widest",
           "[&_svg]:text-[16px] md:[&_svg]:text-[24px]",
           "overflow-hidden",
+          isWarningOpen ? "block" : "hidden",
         )}
       >
         <div className="grid grid-flow-col gap-[16px] px-[8px] md:px-[16px] py-[4px] rounded-[inherit] place-items-center text-center">
-          <PiWarningDuotone /> Notice: Some features may be temporarily unavailable. Please refresh the page or check back later for updates. <PiWarningDuotone />
+          <PiWarningDuotone /> Notice: Some features may be temporarily
+          unavailable. Please refresh the page or check back later for updates.{" "}
+          <PiWarningDuotone />
+          <button
+            className="absolute top-0 right-0 m-[4px] text-[16px] md:text-[16px] [&_svg]:text-[16px] md:[&_svg]:text-[16px]"
+            onClick={() => setIsWarningOpen(false)}
+          >
+            <IoClose />
+          </button>
         </div>
       </div>
       <div
+        style={{
+          marginTop: isWarningOpen ? "0px" : "32px",
+        }}
         className={cn(
           "hidden lg:grid",
           Gradients.redToBlue,
-          "relative rounded-t-[8px] p-[2px] pb-0 mx-[16px]",
+          "relative rounded-t-[8px] p-[2px] mx-[16px]",
           "text-agwhite/[0.66] font-sans uppercase font-extrabold text-[16px] tracking-widest",
           "[&_svg]:text-[24px]",
           "overflow-hidden",
@@ -402,4 +416,4 @@ export default function Header() {
   );
 }
 
-// 
+//
