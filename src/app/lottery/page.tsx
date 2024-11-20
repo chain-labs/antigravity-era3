@@ -123,33 +123,23 @@ export default function LotteryPage() {
 
   const tableConfig = {
     header: [
-      <div key="lottery header" className="flex flex-col">
+      <div key="lottery header" className="flex flex-col h-[48px] justify-center items-center">
         Lottery <br />
-        <div
-          style={{
-            opacity: 0,
-          }}
-        >
-          ej3w {/* This is a dummy text to fix the height of the header   */}
-        </div>
+      </div>,
+      <div key="Percentage Payout header" className="flex flex-col h-[48px] justify-center items-center">
+        Percentage Payout <br />
       </div>,
       <>
-        payout / fuelcell <br /> (in $Dark)
+        Total payout Value <br /> (in FuelCells)
       </>,
       <>
-        Winners <br /> (in FuelCells)
-      </>,
-      <>
-        Total won by user <br /> (in $Dark)
-      </>,
-      <>
-        won by user <br /> (in $Dark)
+        Total Fuel Cells to be selected <br /> (in FuelCells)
       </>,
     ],
     data: [
-      ["big", 13123, 10, 100, 1000],
-      ["bigger", 12312, 10, 100, 1000],
-      ["biggest", 3223, 10, 100, 1000],
+      ["big", "10%", 10332, 100],
+      ["bigger", "30%", 102132, 100],
+      ["biggest", "60%", 10213, 100],
     ],
   };
 
@@ -168,7 +158,7 @@ export default function LotteryPage() {
         )}
       >
         {/* Left side */}
-        <div className="flex flex-col gap-[8px] w-full">
+        <div className="flex flex-col gap-[8px] w-full lg:max-w-[40vw]">
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
