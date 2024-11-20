@@ -244,7 +244,9 @@ export default function ProgressingStates({
     >
       {journeyId !== "undefined" ? (
         <h6 className="text-center">
-          <div className="text-[10px] font-normal">${amountPerFuelCell.toLocaleString("en-US")} per fuelcell</div>
+          <div className="text-[10px] font-normal">
+            ${amountPerFuelCell.toLocaleString("en-US")} per fuelcell
+          </div>
           Latest Lottery Announced in
           <br />
           {journeyId !== "undefined" ? (
@@ -307,7 +309,12 @@ export default function ProgressingStates({
                   // if not last state, show lines
                   idx !== Object.keys(states).length - 1 && (
                     <Lines
-                      state={states[userState]}
+                      state={
+                        states[
+                          // get the previous state
+                          Object.keys(states)[idx + 1]
+                        ]
+                      }
                       style={
                         {
                           // gridColumn: `${idx * 2 + 2}`,
@@ -334,8 +341,11 @@ export default function ProgressingStates({
                 left: circleCenterPositions[idx],
                 transform: "translate(-50%, 0)",
               }}
+              className="text-center"
             >
               {userState}
+              <br />
+              <small className="">wdnnd</small>
             </motion.p>
           ))}
       </div>
