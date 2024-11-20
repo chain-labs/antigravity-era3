@@ -380,7 +380,7 @@ const useLottery = (): {
 
         console.log({ status: true, receipt });
         toast.success(
-          `Prune Successful for Batch ${i + 1}-${Math.min(
+          `Scrape Successful for Batch ${i + 1}-${Math.min(
             i + chunkSize,
             proofs.length,
           )} out of ${proofs.length}!`,
@@ -390,10 +390,10 @@ const useLottery = (): {
       } catch (err) {
         console.error({ err });
         toast.error(
-          `Prune Failed for Batch ${i + 1}-${Math.min(
+          `Scrape Failed for Batch ${i + 1}-${Math.min(
             i + chunkSize,
             proofs.length,
-          )} out of ${proofs.length}. Trying to Prune Next Batch`,
+          )} out of ${proofs.length}. Trying to Scrape Next Batch`,
         );
         console.log({ status: "failed" });
         await syncPrune({ walletAddress: userAccount });

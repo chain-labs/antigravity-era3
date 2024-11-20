@@ -60,8 +60,8 @@ export default function Header() {
         )}
       >
         <div className="grid grid-flow-col gap-[16px] px-[8px] md:px-[16px] py-[4px] rounded-[inherit] place-items-center text-center">
-          <PiWarningDuotone /> Notice: Some features may be temporarily
-          unavailable. Please refresh the page or check back later for updates.{" "}
+          <PiWarningDuotone /> Notice: If the site is crashed or the data is not
+          updated, please refresh the page. Currently this site is in Beta{" "}
           <PiWarningDuotone />
           <button
             className="absolute top-0 right-0 m-[4px] text-[16px] md:text-[16px] [&_svg]:text-[16px] md:[&_svg]:text-[16px]"

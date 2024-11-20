@@ -22,6 +22,8 @@ import SeperateText, {
 import { BACKGROUNDS } from "@/constants";
 import ProgressingStates, { STEPPERS } from "./ProgressingStates";
 import Table from "@/components/html/Table";
+import useLotteryData from "@/hooks/core/useLotteryData";
+import { useAccount } from "wagmi";
 
 export default function LotteryPage() {
   const [lotteryState, setLotteryState] = useState<STEPPERS>({
@@ -29,6 +31,7 @@ export default function LotteryPage() {
     bigger: "pending",
     biggest: "pending",
   });
+  const account = useAccount();
 
   const {
     nextLotteryTimestamp,
@@ -41,6 +44,9 @@ export default function LotteryPage() {
     lotteriesInfo,
     batchPrune,
   } = useLottery();
+
+  const { jackpotBalance, totalFuelCellsInJourney, tableData } =
+    useLotteryData();
 
   const handlePruneWinnings = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -123,24 +129,26 @@ export default function LotteryPage() {
 
   const tableConfig = {
     header: [
-      <div key="lottery header" className="flex flex-col h-[48px] justify-center items-center">
+      <div
+        key="lottery header"
+        className="flex flex-col h-[48px] justify-center items-center"
+      >
         Lottery <br />
       </div>,
-      <div key="Percentage Payout header" className="flex flex-col h-[48px] justify-center items-center">
-        Percentage Payout <br />
+      <div
+        key="Percentage Payout header"
+        className="flex flex-col h-[48px] justify-center items-center"
+      >
+        % Payout <br />
       </div>,
       <>
-        Total payout Value <br /> (in FuelCells)
+        Total payout Value <br /> (in $Dark)
       </>,
       <>
         Total Fuel Cells to be selected <br /> (in FuelCells)
       </>,
     ],
-    data: [
-      ["big", "10%", 10332, 100],
-      ["bigger", "30%", 102132, 100],
-      ["biggest", "60%", 10213, 100],
-    ],
+    data: tableData,
   };
 
   return (
@@ -174,7 +182,7 @@ export default function LotteryPage() {
               )}
             >
               Congratulations!
-              <br /> Prune your winnings
+              <br /> Scrape your winnings
             </h1>
           </div>
           <div className="grid grid-flow-row md:grid-flow-col place-items-center gap-2 w-full">
@@ -189,9 +197,7 @@ export default function LotteryPage() {
                   Jackpot contract balance
                 </h3>
                 <p className="font-general-sans font-bold text-[18px]">
-                  {Number(
-                    LotteryAdditionalInfo.jackpotContractBalance,
-                  ).toLocaleString("en-US")}
+                  {Number(jackpotBalance).toLocaleString("en-US")} $Dark
                 </p>
               </div>
             </div>
@@ -206,9 +212,8 @@ export default function LotteryPage() {
                   Total Active FuelCells
                 </h3>
                 <p className="font-general-sans font-bold text-[18px]">
-                  {Number(
-                    LotteryAdditionalInfo.totalActiveFuelCells,
-                  ).toLocaleString("en-US")}
+                  {Number(totalFuelCellsInJourney).toLocaleString("en-US")} Fuel
+                  Cells
                 </p>
               </div>
             </div>
@@ -322,6 +327,7 @@ export default function LotteryPage() {
               initial="initial"
               whileHover="hover"
               loading={pruneLoading}
+              disabled={fuelCellsWon < 1 || !account.isConnected}
               loadingText={`${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`}
             >
               <motion.div
@@ -336,7 +342,7 @@ export default function LotteryPage() {
               >
                 <PiWrenchDuotone />
               </motion.div>
-              <HoverTextAnimation.RollingIn text="Prune" />
+              <HoverTextAnimation.RollingIn text="Scrape" />
             </Button>
           </form>
           <div
