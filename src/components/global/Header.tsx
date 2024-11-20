@@ -50,14 +50,14 @@ export default function Header() {
         className={cn(
           "grid",
           "bg-agyellow",
-          "relative rounded-t-[8px] p-[2px] pb-0 mx-[16px] mt-[8px] lg:mt-[8px]",
-          "text-agblack font-sans uppercase font-extrabold text-[12px] md:text-[14px] tracking-widest",
+          "relative rounded-[8px] p-[2px] mx-[16px] my-[8px] lg:mt-[8px]",
+          "text-agblack font-sans uppercase font-extrabold text-[10px] md:text-[14px] tracking-widest",
           "[&_svg]:text-[16px] md:[&_svg]:text-[24px]",
           "overflow-hidden",
         )}
       >
-        <div className="grid grid-flow-col gap-[16px] px-[8px] md:px-[16px] py-[4px] rounded-[inherit] place-items-center">
-          <PiWarningDuotone /> Warning: This is a testnet <PiWarningDuotone />
+        <div className="grid grid-flow-col gap-[16px] px-[8px] md:px-[16px] py-[4px] rounded-[inherit] place-items-center text-center">
+          <PiWarningDuotone /> Notice: Some features may be temporarily unavailable. Please refresh the page or check back later for updates. <PiWarningDuotone />
         </div>
       </div>
       <div
@@ -401,3 +401,5 @@ export default function Header() {
     </header>
   );
 }
+
+// 
