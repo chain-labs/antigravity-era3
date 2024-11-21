@@ -8,8 +8,8 @@ import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const title = "Antigravity | Join The Revolution!";
-const description = "Join the Revolution.";
+const title = "Antigravity | Join The Space Cult!";
+const description = "Join The Space Cult.";
 const previewImage = IMAGEKIT_BACKGROUNDS.MINING_PAGE_ERA_3;
 const websiteUrl = new URL("https://agproject.io");
 
