@@ -342,7 +342,11 @@ export default function LotteryPage() {
               >
                 <PiWrenchDuotone />
               </motion.div>
-              <HoverTextAnimation.RollingIn text="Scrape" />
+              {fuelCellsWon < 1 || !account.isConnected ? (
+                "Scrape"
+              ) : (
+                <HoverTextAnimation.RollingIn text="Scrape" />
+              )}
             </Button>
           </form>
           <div
