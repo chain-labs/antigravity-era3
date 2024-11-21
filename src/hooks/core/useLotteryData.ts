@@ -97,8 +97,6 @@ const useLotteryData = () => {
     `,
     {},
     { enabled: !!journeyData?.journeyPhaseManager?.currentJourneyId },
-
-    
   );
 
   // memo to calculate total fuel cells amount from active mints
@@ -117,18 +115,23 @@ const useLotteryData = () => {
     if (jackpotBalance && totalFuelCells) {
       const result = tableDataTemplate.map((row) => {
         const [lotteryId, percentage, _1, _2] = row;
-        const payoutValue = Number(
-          (
-            (jackpotBalance * Number(`${percentage}`.split("%")[0])) /
-            100
-          ).toFixed(3),
-        ).toLocaleString() + " " + `(${percentage})`;
+        const payoutValue =
+          Number(
+            (
+              (jackpotBalance * Number(`${percentage}`.split("%")[0])) /
+              100
+            ).toFixed(3),
+          ).toLocaleString() +
+          " " +
+          `(${percentage})`;
         // const totalFuelCellsSelected = ~~((totalFuelCells * 16) / 1000);
         return [lotteryId, payoutValue];
       });
       return result;
     }
-    return tableDataTemplate;
+    return tableDataTemplate.map((row) => {
+      return [row[0], row[2]];
+    });
   }, [jackpotBalance, totalFuelCells]);
 
   return {
