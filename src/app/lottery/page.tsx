@@ -156,7 +156,7 @@ export default function LotteryPage() {
       style={{
         backgroundImage: `url(${BACKGROUNDS.LOTTERY ?? ""})`,
       }}
-      className="relative flex justify-center items-center min-h-screen bg-center bg-cover bg-no-repeat pt-[130px]"
+      className="relative flex justify-center items-center min-h-screen bg-center bg-cover bg-no-repeat pt-[180px]"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
