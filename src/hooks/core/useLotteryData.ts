@@ -31,13 +31,34 @@ const useLotteryData = () => {
   const DarkContract = useDarkContract();
   const JPMContract = useJPMContract();
 
-  const { data: jackpotBalance, isFetched: jackpotBalanceFetched } =
+  const { data: jackpotBalanceData, isFetched: jackpotBalanceFetched } =
     useReadContract({
       address: DarkContract?.address,
       abi: DarkContract?.abi,
       functionName: "balanceOf",
       args: [JackpotContract?.address as `0x${string}`],
     });
+
+  const { data: jackpotPending, isFetched: jackpotPendingFetched } =
+    useReadContract({
+      address: JackpotContract?.address,
+      abi: JackpotContract?.abi,
+      functionName: "totalPendingPayout",
+    });
+
+  // memo to calculate jackpot balance by subtracting jackpotPending from jackpotBalanceData both are BigInt
+  const jackpotBalance: number = useMemo(() => {
+    const jackpotTotal = Number(
+      formatUnits((jackpotBalanceData as bigint) ?? BigInt(0), 18),
+    );
+    const jackpotPendingTotal = Number(
+      formatUnits((jackpotPending as bigint) ?? BigInt(0), 18),
+    );
+    if (jackpotBalanceData && jackpotPending) {
+      return jackpotTotal - jackpotPendingTotal;
+    }
+    return 0;
+  }, [jackpotBalanceData, jackpotPending]);
 
   const { data: journeyData } = useGQLFetch<{
     journeyPhaseManager: {
@@ -98,8 +119,7 @@ const useLotteryData = () => {
         const [lotteryId, percentage, _1, _2] = row;
         const payoutValue = Number(
           (
-            (Number(formatUnits((jackpotBalance as bigint) ?? BigInt(0), 18)) *
-              Number(`${percentage}`.split("%")[0])) /
+            (jackpotBalance * Number(`${percentage}`.split("%")[0])) /
             100
           ).toFixed(3),
         ).toLocaleString();
@@ -112,9 +132,7 @@ const useLotteryData = () => {
   }, [jackpotBalance, totalFuelCells]);
 
   return {
-    jackpotBalance: Number(
-      formatUnits((jackpotBalance as bigint) ?? BigInt(0), 18),
-    ).toFixed(3), // limit to 3 decimal places
+    jackpotBalance: jackpotBalance.toFixed(3), // limit to 3 decimal places
     totalFuelCellsInJourney: totalFuelCells,
     tableData,
   };
