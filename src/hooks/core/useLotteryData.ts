@@ -87,7 +87,7 @@ const useLotteryData = () => {
     ["active fuel cells in journey"],
     gql`
       query MyQuery {
-        mints(where: { journeyId: "31" }) {
+        mints(where: { journeyId: "${journeyData?.journeyPhaseManager?.currentJourneyId}" }) {
           items {
             journeyId
             amount
@@ -98,7 +98,7 @@ const useLotteryData = () => {
     {},
     { enabled: !!journeyData?.journeyPhaseManager?.currentJourneyId },
 
-    // ${journeyData?.journeyPhaseManager?.currentJourneyId}
+    
   );
 
   // memo to calculate total fuel cells amount from active mints
