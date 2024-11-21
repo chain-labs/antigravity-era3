@@ -122,9 +122,9 @@ const useLotteryData = () => {
             (jackpotBalance * Number(`${percentage}`.split("%")[0])) /
             100
           ).toFixed(3),
-        ).toLocaleString();
-        const totalFuelCellsSelected = ~~((totalFuelCells * 16) / 1000);
-        return [lotteryId, percentage, payoutValue, totalFuelCellsSelected];
+        ).toLocaleString() + " " + `(${percentage})`;
+        // const totalFuelCellsSelected = ~~((totalFuelCells * 16) / 1000);
+        return [lotteryId, payoutValue];
       });
       return result;
     }

@@ -131,22 +131,16 @@ export default function LotteryPage() {
     header: [
       <div
         key="lottery header"
-        className="flex flex-col h-[48px] justify-center items-center"
+        className="flex flex-col justify-center items-center"
       >
         Lottery <br />
       </div>,
       <div
-        key="Percentage Payout header"
-        className="flex flex-col h-[48px] justify-center items-center"
+        key="Total payout header"
+        className="flex flex-col justify-center items-center"
       >
-        % Payout <br />
+        Total payout Value (in $Dark)
       </div>,
-      <>
-        Total payout Value <br /> (in $Dark)
-      </>,
-      <>
-        Total Fuel Cells to be selected <br /> (in FuelCells)
-      </>,
     ],
     data: tableData,
   };
@@ -222,7 +216,8 @@ export default function LotteryPage() {
             header={tableConfig.header}
             body={tableConfig.data}
             className="hidden lg:block lg:w-full max-w-full"
-            bodyClassName="text-center flex justify-center items-center"
+            headerClassName="font-sans tracking-widest text-[12px]"
+            bodyClassName="text-center flex justify-center items-center font-general-sans font-bold text-[18px]"
           />
         </div>
 
@@ -378,7 +373,8 @@ export default function LotteryPage() {
             header={tableConfig.header}
             body={tableConfig.data}
             className="block lg:hidden"
-            bodyClassName="text-center flex justify-center items-center"
+            headerClassName="font-sans tracking-widest text-[12px]"
+            bodyClassName="text-center flex justify-center items-center font-general-sans font-bold text-[18px]"
           />
         </div>
       </div>
