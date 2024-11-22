@@ -87,7 +87,7 @@ export default function TreasuryPage() {
             >
               <div className="flex flex-col justify-start items-start">
                 <small className="uppercase font-semibold">
-                  TOTAL YIELD DISTRIBUTED
+                  YIELD PAID OUT SO FAR:
                 </small>
                 <p className="text-[32px]">
                   {Number(totalYieldDistributed.toFixed(2)).toLocaleString(
@@ -127,7 +127,7 @@ export default function TreasuryPage() {
             >
               <div className="flex flex-col justify-start items-start">
                 <small className="uppercase font-semibold">
-                  TOTAL ACTIVE FUEL CELLS
+                  TOTAL ACTIVE FUEL CELLS:
                 </small>
                 <p className="text-[32px]">
                   {fuelCellSupply?.toLocaleString("en-US")}
@@ -163,7 +163,7 @@ export default function TreasuryPage() {
           >
             <Timer
               label={
-                isMintActive ? "Minting Active for" : "Next Mint starts in"
+                isMintActive ? "Minting Active for:" : "NEXT MINT STARTS IN:"
               }
               timestamp={
                 isMintActive

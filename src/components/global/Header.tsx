@@ -61,8 +61,9 @@ export default function Header() {
         )}
       >
         <div className="grid grid-flow-col gap-[16px] px-[8px] md:px-[16px] py-[4px] rounded-[inherit] place-items-center text-center">
-          <PiWarningDuotone /> Notice: If the site is crashed or the data is not
-          updated, please refresh the page. Currently this site is in Beta{" "}
+          <PiWarningDuotone />
+          Notice: This site is currently being beta tested. Please refresh the
+          page if the data is not updating.
           <PiWarningDuotone className="text-[transparent]" />
           <button
             className="absolute top-0 right-0 m-[4px] text-[16px] md:text-[16px] [&_svg]:text-[16px] md:[&_svg]:text-[16px]"
@@ -101,7 +102,7 @@ export default function Header() {
             >
               <PiTreasureChestDuotone />
             </motion.div>
-            <p>Treasury $DARK:</p>
+            <p>$DARK in Treasury:</p>
             <motion.div initial="initial" whileHover="hover">
               {treasuryDark >= 0 ? (
                 <HoverTextAnimation.BounceReveal
