@@ -27,7 +27,7 @@ export default function TreasuryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${BACKGROUNDS.TREASURY ?? ""})`,
+        backgroundImage: `url('${BACKGROUNDS.TREASURY ?? ""}')`,
       }}
       className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
     >
@@ -36,13 +36,15 @@ export default function TreasuryPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px] z-[1]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
+          "pt-[130px] md:pt-[80px]"
         )}
       >
+        {/* Left side */}
         <div
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agblack/30 backdrop-blur-lg",
+            "bg-agblack/70 backdrop-blur-lg",
             "text-agwhite",
           )}
         >
@@ -65,7 +67,7 @@ export default function TreasuryPage() {
           // </h4>
           null}
         </div>
-
+        {/* Right side */}
         <div className="flex flex-col justify-center items-center gap-[24px]">
           <div
             className={cn(
@@ -86,7 +88,7 @@ export default function TreasuryPage() {
             >
               <div className="flex flex-col justify-start items-start">
                 <small className="uppercase font-semibold">
-                  TOTAL YIELD DISTRIBUTED
+                  YIELD PAID OUT SO FAR:
                 </small>
                 <p className="text-[32px]">
                   {Number(totalYieldDistributed.toFixed(2)).toLocaleString(
@@ -126,7 +128,7 @@ export default function TreasuryPage() {
             >
               <div className="flex flex-col justify-start items-start">
                 <small className="uppercase font-semibold">
-                  TOTAL ACTIVE FUEL CELLS
+                  TOTAL ACTIVE FUEL CELLS:
                 </small>
                 <p className="text-[32px]">
                   {fuelCellSupply?.toLocaleString("en-US")}
@@ -156,13 +158,13 @@ export default function TreasuryPage() {
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
               "p-[8px] rounded-[6px]",
-              "bg-agblack/30 backdrop-blur-lg",
+              "bg-agblack/70 backdrop-blur-lg",
               "font-extrabold",
             )}
           >
             <Timer
               label={
-                isMintActive ? "Minting Active for" : "Next Mint starts in"
+                isMintActive ? "Minting Active for:" : "NEXT MINT STARTS IN:"
               }
               timestamp={
                 isMintActive

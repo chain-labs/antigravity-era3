@@ -34,6 +34,7 @@ export default function Timer({
       className={cn(
         "flex flex-col justify-center items-center gap-[8px]",
         "text-agwhite uppercase font-sans tracking-widest text-[12px] lg:text-[16px] font-extrabold",
+        "w-full"
       )}
     >
       <div>{label}</div>

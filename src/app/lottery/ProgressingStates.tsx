@@ -242,8 +242,6 @@ export default function ProgressingStates({
     >
       {journeyId !== "undefined" ? (
         <h6 className="text-center">
-          Latest Lottery Announced in
-          <br />
           {journeyId !== "undefined" ? (
             <span className="text-agyellow">Journey {journeyId}</span>
           ) : (
@@ -255,6 +253,7 @@ export default function ProgressingStates({
       ) : (
         <h6 className="text-center">No lottery announced</h6>
       )}
+      
       <div className="flex justify-between items-center w-full p-[8px]">
         <AnimatePresence>
           {typeof states === "object" &&
@@ -304,7 +303,12 @@ export default function ProgressingStates({
                   // if not last state, show lines
                   idx !== Object.keys(states).length - 1 && (
                     <Lines
-                      state={states[userState]}
+                      state={
+                        states[
+                          // get the previous state
+                          Object.keys(states)[idx + 1]
+                        ]
+                      }
                       style={
                         {
                           // gridColumn: `${idx * 2 + 2}`,
@@ -318,6 +322,7 @@ export default function ProgressingStates({
             ))}
         </AnimatePresence>
       </div>
+
       <div className="w-full h-[1em]">
         {typeof states === "object" &&
           Object.keys(states).map((userState: string, idx: number) => (
@@ -331,6 +336,7 @@ export default function ProgressingStates({
                 left: circleCenterPositions[idx],
                 transform: "translate(-50%, 0)",
               }}
+              className="text-center"
             >
               {userState}
             </motion.p>

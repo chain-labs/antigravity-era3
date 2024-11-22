@@ -38,7 +38,7 @@ function PruneAndRollOver({
             "px-[8px] py-[4px] rounded-[6px]",
           )}
         >
-          <HoverTextAnimation.Fading text="Prune & Roll Over" />{" "}
+          <HoverTextAnimation.Fading text="Scrape & Roll Over" />{" "}
           <Tooltip
             trigger={<PiInfoDuotone />}
             positionClassName="absolute top-[calc(100%_+_8px)] right-0"
@@ -75,7 +75,7 @@ function PruneAndRollOver({
               evilPrune();
             }}
             loading={evilPruneLoading}
-            loadingText="Pruning...."
+            loadingText="Scraping...."
             disabled={evilPruneLoading}
           >
             <motion.div
@@ -90,7 +90,7 @@ function PruneAndRollOver({
             >
               <PiWrenchDuotone />
             </motion.div>
-            <HoverTextAnimation.RollingIn text="Prune" />
+            <HoverTextAnimation.RollingIn text="Scrape" />
           </Button>
         </div>
       </form>
@@ -206,7 +206,7 @@ export default function EvilAddressPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${BACKGROUNDS.EVIL_ADDRESS ?? ""})`,
+        backgroundImage: `url('${BACKGROUNDS.EVIL_ADDRESS ?? ""}')`,
       }}
       className="flex justify-center items-center min-h-screen bg-cover bg-no-repeat"
     >
@@ -214,7 +214,7 @@ export default function EvilAddressPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
-          "md:pt-[150px]",
+          "pt-[170px]",
         )}
       >
         <div

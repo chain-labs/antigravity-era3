@@ -140,7 +140,7 @@ export default function UnwrapPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${BACKGROUNDS.UNWRAP})`,
+        backgroundImage: `url('${BACKGROUNDS.UNWRAP}')`,
       }}
       className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
     >
@@ -232,12 +232,12 @@ export default function UnwrapPage() {
                         ) : (
                           totalFuelCells
                         )}{" "}
-                        FuelCells
+                        Fuel Cells
                       </span>
                     </p>
                     <div>
                       <RadioGroup
-                        label="Sort Yield by"
+                        label="Sort Fuel Cells:"
                         options={[
                           { value: "recentYield", label: "Recent" },
                           { value: "maxYield", label: "Max" },

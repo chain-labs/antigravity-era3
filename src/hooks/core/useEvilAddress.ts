@@ -187,11 +187,11 @@ const useEvilAddress = () => {
       });
 
       console.log({ status: true, receipt });
-      toast.success("Evil Prune Successful!");
+      toast.success("Evil Scrape Successful!");
       await syncPrune({ walletAddress: EAContract.address });
     } catch (err) {
       console.error({ err });
-      toast.error(`Prune Failed! Please Try again.`);
+      toast.error(`Scrape Failed! Please Try again.`);
       console.log({ status: "failed" });
       await syncPrune({ walletAddress: EAContract.address });
     }
