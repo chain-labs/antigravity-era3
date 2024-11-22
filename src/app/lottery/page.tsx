@@ -176,7 +176,7 @@ export default function LotteryPage() {
               )}
             >
               Congratulations!
-              <br /> Scrape your winnings
+              <br /> Scrape your winnings!
             </h1>
           </div>
           <div className="grid grid-flow-row md:grid-flow-col place-items-center gap-2 w-full">
@@ -188,7 +188,7 @@ export default function LotteryPage() {
                 )}
               >
                 <h3 className="uppercase font-sans tracking-widest text-[12px]">
-                  Jackpot contract balance
+                  Jackpot contract balance:
                 </h3>
                 <p className="font-general-sans font-bold text-[18px]">
                   {Number(jackpotBalance).toLocaleString("en-US")} $Dark
@@ -203,7 +203,7 @@ export default function LotteryPage() {
                 )}
               >
                 <h3 className="uppercase font-sans tracking-widest text-[12px]">
-                  Total Active FuelCells
+                  Total Active Fuel Cells:
                 </h3>
                 <p className="font-general-sans font-bold text-[18px]">
                   {Number(totalFuelCellsInJourney).toLocaleString("en-US")} Fuel
@@ -353,7 +353,7 @@ export default function LotteryPage() {
               "w-full",
             )}
           >
-            <Timer label="Next Lottery in" timestamp={nextLotteryTimestamp} />
+            <Timer label="Next Lottery in:" timestamp={nextLotteryTimestamp} />
           </div>
           <div
             className={cn(

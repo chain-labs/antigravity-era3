@@ -232,12 +232,12 @@ export default function UnwrapPage() {
                         ) : (
                           totalFuelCells
                         )}{" "}
-                        FuelCells
+                        Fuel Cells
                       </span>
                     </p>
                     <div>
                       <RadioGroup
-                        label="Sort Yield by"
+                        label="Sort Fuel Cells:"
                         options={[
                           { value: "recentYield", label: "Recent" },
                           { value: "maxYield", label: "Max" },
