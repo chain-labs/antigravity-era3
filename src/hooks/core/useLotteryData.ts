@@ -48,17 +48,24 @@ const useLotteryData = () => {
 
   // memo to calculate jackpot balance by subtracting jackpotPending from jackpotBalanceData both are BigInt
   const jackpotBalance: number = useMemo(() => {
-    const jackpotTotal = Number(
-      formatUnits((jackpotBalanceData as bigint) ?? BigInt(0), 18),
-    );
-    const jackpotPendingTotal = Number(
-      formatUnits((jackpotPending as bigint) ?? BigInt(0), 18),
-    );
-    if (jackpotBalanceData && jackpotPending) {
+    console.log({ jackpotBalanceData, jackpotPending });
+    if (jackpotBalanceFetched && jackpotPendingFetched) {
+      const jackpotTotal = Number(
+        formatUnits((jackpotBalanceData as bigint) ?? BigInt(0), 18),
+      );
+      console.log({ jackpotTotal });
+      const jackpotPendingTotal = Number(
+        formatUnits((jackpotPending as bigint) ?? BigInt(0), 18),
+      );
       return jackpotTotal - jackpotPendingTotal;
     }
     return 0;
-  }, [jackpotBalanceData, jackpotPending]);
+  }, [
+    jackpotBalanceData,
+    jackpotPending,
+    jackpotBalanceFetched,
+    jackpotPendingFetched,
+  ]);
 
   const { data: journeyData } = useGQLFetch<{
     journeyPhaseManager: {
