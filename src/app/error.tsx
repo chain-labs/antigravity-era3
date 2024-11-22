@@ -48,10 +48,10 @@ export default function Error() {
           broken.
         </h1>
         <p className="font-sans">
-        Sorry! The page you were trying to access is down right now because of
-        a server issue. Try again later.
+          Sorry! The page you were trying to access is down right now because of
+          a server issue. Try again later.
         </p>
-        <Link href="/lotter" className="w-full">
+        <Link href="/lottery" className="w-full">
           <Button>
             <PiRocketDuotone /> Refresh
           </Button>

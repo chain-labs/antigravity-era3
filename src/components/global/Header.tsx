@@ -155,7 +155,7 @@ export default function Header() {
               >
                 <PiWalletDuotone />
               </motion.div>
-              <p>User $DARK:</p>
+              <p>$DARK Balance:</p>
               <motion.div initial="initial" whileHover="hover">
                 {userDark >= 0 ? (
                   <HoverTextAnimation.BounceReveal
