@@ -36,6 +36,7 @@ export default function TreasuryPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px] z-[1]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
+          "pt-[130px] md:pt-[80px]"
         )}
       >
         {/* Left side */}
