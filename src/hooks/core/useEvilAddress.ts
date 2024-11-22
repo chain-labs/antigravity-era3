@@ -19,6 +19,7 @@ import { encodePacked, keccak256 } from "viem";
 import toast from "react-hot-toast";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import useEAContract from "@/abi/EvilAddress";
+import { readContract } from "@wagmi/core";
 
 const PRUNE_BATCH_SIZE = 50;
 
@@ -130,6 +131,13 @@ const useEvilAddress = () => {
   const evilPrune = async () => {
     setPruneLoading(true);
     const trees = await createMerkleTrees();
+    const TEAM_FEE = (await readContract(config, {
+      address: EAContract.address as `0x${string}`,
+      abi: EAContract.abi,
+      functionName: "TEAM_FEE",
+      args: [],
+    })) as bigint;
+    console.log({ TEAM_FEE });
 
     let proofs =
       userWinnings?.lotteryResult?.map((win) => {
@@ -170,6 +178,7 @@ const useEvilAddress = () => {
         abi: JackpotContract.abi,
         functionName: "pruneWinnings",
         args: [proofs],
+        value: TEAM_FEE,
       });
 
       const receipt = await waitForTransactionReceipt(config, {
@@ -196,11 +205,20 @@ const useEvilAddress = () => {
   const evilMint = async () => {
     try {
       setEvilMintLoading(true);
+      const TEAM_FEE = (await readContract(config, {
+        address: EAContract.address as `0x${string}`,
+        abi: EAContract.abi,
+        functionName: "TEAM_FEE",
+        args: [],
+      })) as bigint;
+
+      console.log({ TEAM_FEE });
       const tx = await evilMintFn({
         address: EAContract.address as `0x${string}`,
         abi: EAContract.abi,
         functionName: "evilMint",
         args: [],
+        value: TEAM_FEE,
       });
 
       const receipt = await waitForTransactionReceipt(config, {
