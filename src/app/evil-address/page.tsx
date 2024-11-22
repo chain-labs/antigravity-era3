@@ -206,7 +206,7 @@ export default function EvilAddressPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${BACKGROUNDS.EVIL_ADDRESS ?? ""})`,
+        backgroundImage: `url('${BACKGROUNDS.EVIL_ADDRESS ?? ""}')`,
       }}
       className="flex justify-center items-center min-h-screen bg-cover bg-no-repeat"
     >
@@ -214,7 +214,7 @@ export default function EvilAddressPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
-          "md:pt-[150px]",
+          "pt-[170px]",
         )}
       >
         <div

@@ -25,4 +25,5 @@ export const IMAGEKIT_BACKGROUNDS = {
   UNWRAPPING_2: `${IMAGEKIT}/unwrapping-2.png`,
   EVIL_ADDRESS_1: `${IMAGEKIT}/evil-address-1.png`,
   EVIL_ADDRESS_2: `${IMAGEKIT}/evil-address-2.png`,
+  INTERNAL_ERROR: `${IMAGEKIT}/500-error.png`,
 };

@@ -148,7 +148,7 @@ export default function LotteryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${BACKGROUNDS.LOTTERY ?? ""})`,
+        backgroundImage: `url('${BACKGROUNDS.LOTTERY ?? ""}')`,
       }}
       className="relative flex justify-center items-center min-h-screen bg-center bg-cover bg-no-repeat pt-[180px]"
     >

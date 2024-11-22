@@ -27,7 +27,7 @@ export default function TreasuryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${BACKGROUNDS.TREASURY ?? ""})`,
+        backgroundImage: `url('${BACKGROUNDS.TREASURY ?? ""}')`,
       }}
       className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
     >
@@ -36,6 +36,7 @@ export default function TreasuryPage() {
         className={cn(
           "flex flex-col items-center justify-center gap-[50px] z-[1]",
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
+          "pt-[130px] md:pt-[80px]"
         )}
       >
         {/* Left side */}
