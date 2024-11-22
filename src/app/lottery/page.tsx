@@ -9,14 +9,21 @@ import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { PiTrophyDuotone, PiWrenchDuotone } from "react-icons/pi";
+import {
+  PiInfoDuotone,
+  PiTrophyDuotone,
+  PiWrenchDuotone,
+} from "react-icons/pi";
 import { formatUnits } from "viem";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import SeperateText, {
   HoverTextAnimation,
 } from "@/components/animation/SeperateText";
 import { BACKGROUNDS } from "@/constants";
 import ProgressingStates, { STEPPERS } from "./ProgressingStates";
+import Table from "@/components/html/Table";
+import useLotteryData from "@/hooks/core/useLotteryData";
+import { useAccount } from "wagmi";
 
 export default function LotteryPage() {
   const [lotteryState, setLotteryState] = useState<STEPPERS>({
@@ -24,6 +31,7 @@ export default function LotteryPage() {
     bigger: "pending",
     biggest: "pending",
   });
+  const account = useAccount();
 
   const {
     nextLotteryTimestamp,
@@ -36,6 +44,9 @@ export default function LotteryPage() {
     lotteriesInfo,
     batchPrune,
   } = useLottery();
+
+  const { jackpotBalance, totalFuelCellsInJourney, tableData } =
+    useLotteryData();
 
   const handlePruneWinnings = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -85,12 +96,61 @@ export default function LotteryPage() {
     }
   }, [lotteriesInfo]);
 
+  const LotteryAdditionalInfo = {
+    jackpotContractBalance: 10002903892,
+    totalActiveFuelCells: 1232320,
+    amountPerFuelCell: 109293,
+    lottriesWinnings: {
+      big: 100,
+      bigger: 100,
+      biggest: 100,
+    },
+  };
+
+  const [fuelCellsInfoModal, setFuelCellsInfoModal] = useState(false);
+  const [fuelCellsInfoModalOpening, setFuelCellsInfoModalOpening] =
+    useState(false);
+
+  useEffect(() => {
+    // add 300ms delay for modal opening
+    const timeout = setTimeout(() => {
+      if (fuelCellsInfoModal) {
+        setFuelCellsInfoModalOpening(true);
+      } else {
+        setFuelCellsInfoModalOpening(false);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+      setFuelCellsInfoModalOpening(false);
+    };
+  }, [fuelCellsInfoModal]);
+
+  const tableConfig = {
+    header: [
+      <div
+        key="lottery header"
+        className="flex flex-col justify-center items-center"
+      >
+        Lottery <br />
+      </div>,
+      <div
+        key="Total payout header"
+        className="flex flex-col justify-center items-center"
+      >
+        Total payout Value (in $Dark)
+      </div>,
+    ],
+    data: tableData,
+  };
+
   return (
     <div
       style={{
         backgroundImage: `url(${BACKGROUNDS.LOTTERY ?? ""})`,
       }}
-      className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat pt-[100px]"
+      className="relative flex justify-center items-center min-h-screen bg-center bg-cover bg-no-repeat pt-[180px]"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[black] via-[#0000] to-[black]"></div>
       <div
@@ -99,30 +159,74 @@ export default function LotteryPage() {
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
         )}
       >
-        <div
-          className={cn(
-            "flex flex-col justify-start items-start gap-[8px]",
-            "p-[8px] rounded-[6px]",
-            "bg-agblack/30 backdrop-blur-lg",
-            "text-agwhite",
-          )}
-        >
-          <h1
+        {/* Left side */}
+        <div className="flex flex-col gap-[8px] w-full lg:max-w-[40vw]">
+          <div
             className={cn(
-              Gradients.whiteGradientText,
-              "text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] font-sans font-extrabold",
+              "flex flex-col justify-start items-start gap-[8px]",
+              "p-[8px] rounded-[6px]",
+              "bg-agblack/30 backdrop-blur-lg",
+              "text-agwhite",
             )}
           >
-            Congratulations!
-            <br /> Prune your winnings
-          </h1>
+            <h1
+              className={cn(
+                Gradients.whiteGradientText,
+                "text-[32px] leading-[32px] lg:text-[64px] lg:leading-[64px] font-sans font-extrabold",
+              )}
+            >
+              Congratulations!
+              <br /> Scrape your winnings
+            </h1>
+          </div>
+          <div className="grid grid-flow-row md:grid-flow-col place-items-center gap-2 w-full">
+            <div className="bg-gradient-to-b from-[#B4EBF8] to-[#789DFA] p-[1px] rounded-[3px] w-full">
+              <div
+                className={cn(
+                  Gradients.tableBlue,
+                  "relative border border-1 border-agyellow rounded-[3px] px-[16px] py-[8px]",
+                )}
+              >
+                <h3 className="uppercase font-sans tracking-widest text-[12px]">
+                  Jackpot contract balance
+                </h3>
+                <p className="font-general-sans font-bold text-[18px]">
+                  {Number(jackpotBalance).toLocaleString("en-US")} $Dark
+                </p>
+              </div>
+            </div>
+            <div className="bg-gradient-to-b from-[#B4EBF8] to-[#789DFA] p-[1px] rounded-[3px] w-full">
+              <div
+                className={cn(
+                  Gradients.tableBlue,
+                  "relative border border-1 border-agyellow rounded-[3px] px-[16px] py-[8px]",
+                )}
+              >
+                <h3 className="uppercase font-sans tracking-widest text-[12px]">
+                  Total Active FuelCells
+                </h3>
+                <p className="font-general-sans font-bold text-[18px]">
+                  {Number(totalFuelCellsInJourney).toLocaleString("en-US")} Fuel
+                  Cells
+                </p>
+              </div>
+            </div>
+          </div>
+          <Table
+            header={tableConfig.header}
+            body={tableConfig.data}
+            className="hidden lg:block lg:w-full max-w-full"
+            headerClassName="font-sans tracking-widest text-[12px]"
+            bodyClassName="text-center flex justify-center items-center font-general-sans font-bold text-[18px]"
+          />
         </div>
 
-        <div className="flex flex-col justify-center items-center gap-[24px]">
+        {/* Right side */}
+        <div className="lg:w-[400px] flex flex-col justify-center items-center gap-[24px] mb-[16px] lg:mb-0 w-full">
           <form
             className={cn(
               "flex flex-col justify-center items-center gap-[8px] ",
-              "w-full md:w-[400px]",
+              "w-full",
             )}
           >
             <div
@@ -133,6 +237,7 @@ export default function LotteryPage() {
                 "grid grid-flow-col gap-[8px]",
                 "font-extrabold",
                 "w-full",
+                "relative",
               )}
             >
               <p className="text-agwhite text-[32px] leading-[32px] font-sans w-full">
@@ -159,9 +264,56 @@ export default function LotteryPage() {
                   />
                   <HoverTextAnimation.Fading text="Dark Matter" />
                 </motion.div>
-                <div className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase">
+                <div
+                  onMouseEnter={() => setFuelCellsInfoModal(true)}
+                  onMouseLeave={() => setFuelCellsInfoModal(false)}
+                  className="flex justify-center items-center gap-[4px] text-[12px] leading-[12px] font-general-sans font-semibold uppercase"
+                >
                   <PiTrophyDuotone className="text-[16px]" />
                   <span>{fuelCellsWon} Fuel cells won</span>
+                  {/* <PiInfoDuotone className="text-[16px]" /> */}
+                  {/* hidden for a while since implementation is underway  */}
+                  {/* <AnimatePresence>
+                    {fuelCellsInfoModalOpening && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={cn(
+                          Gradients.redToBlue,
+                          "absolute top-full right-0 p-[1px] rounded-[6px] text-agwhite z-50",
+                        )}
+                      >
+                        <div className="flex flex-col justify-center items-center gap-[8px] text-[16px] leading-[16px] py-[8px] px-[16px] rounded-[inherit] bg-agblack normal-case font-normal">
+                          <p className="text-center text-[14px]">
+                            Your Fuel cells winnings in different lotteries
+                          </p>
+                          <div className="grid grid-flow-col gap-[8px] px-[8px] w-full">
+                            {Object.keys(
+                              LotteryAdditionalInfo.lottriesWinnings,
+                            ).map((key) => (
+                              <div
+                                key={key}
+                                className="flex flex-col justify-between items-center"
+                              >
+                                <span className="uppercase text-[12px] font-normal">
+                                  {key}
+                                </span>
+                                <span className="font-bold">
+                                  {
+                                    LotteryAdditionalInfo.lottriesWinnings[
+                                      key as keyof typeof LotteryAdditionalInfo.lottriesWinnings
+                                    ]
+                                  }
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence> */}
                 </div>
               </div>
             </div>
@@ -170,6 +322,7 @@ export default function LotteryPage() {
               initial="initial"
               whileHover="hover"
               loading={pruneLoading}
+              disabled={fuelCellsWon < 1 || !account.isConnected}
               loadingText={`${pruneBatch.from}-${pruneBatch.to}/${pruneBatch.total}`}
             >
               <motion.div
@@ -184,32 +337,45 @@ export default function LotteryPage() {
               >
                 <PiWrenchDuotone />
               </motion.div>
-              <HoverTextAnimation.RollingIn text="Prune" />
+              {fuelCellsWon < 1 || !account.isConnected ? (
+                "Scrape"
+              ) : (
+                <HoverTextAnimation.RollingIn text="Scrape" />
+              )}
             </Button>
           </form>
-          <div
-            className={cn(
-              "flex flex-col justify-start items-start gap-[8px] w-full",
-              "py-[8px] px-[16px] rounded-[6px]",
-              "bg-agblack/30 backdrop-blur-lg",
-              "font-extrabold",
-            )}
-          >
-            <ProgressingStates
-              states={lotteryState}
-              journeyId={`${lotteriesInfo?.journeyId}`}
-            />
-          </div>
           <div
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
               "p-[8px] rounded-[6px]",
               "bg-agblack/30 backdrop-blur-lg",
               "font-extrabold",
+              "w-full",
             )}
           >
             <Timer label="Next Lottery in" timestamp={nextLotteryTimestamp} />
           </div>
+          <div
+            className={cn(
+              "flex flex-col justify-start items-start gap-[8px] w-full",
+              "px-[16px] py-[16px] rounded-[6px]",
+              "bg-agblack/30 backdrop-blur-lg",
+              "font-extrabold",
+            )}
+          >
+            <ProgressingStates
+              states={lotteryState}
+              journeyId={`${currentJourney}`}
+            />
+          </div>
+
+          <Table
+            header={tableConfig.header}
+            body={tableConfig.data}
+            className="block lg:hidden"
+            headerClassName="font-sans tracking-widest text-[12px]"
+            bodyClassName="text-center flex justify-center items-center font-general-sans font-bold text-[18px]"
+          />
         </div>
       </div>
     </div>

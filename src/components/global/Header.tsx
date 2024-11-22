@@ -12,6 +12,7 @@ import {
   PiRocketLaunchDuotone,
   PiTreasureChestDuotone,
   PiWalletDuotone,
+  PiWarningDuotone,
   PiXCircleDuotone,
 } from "react-icons/pi";
 import Button from "../html/Button";
@@ -29,11 +30,13 @@ import {
   UNWRAP_AVAILABLE,
 } from "@/constants";
 import useHeaderStats from "./useHeaderStats";
+import { IoClose } from "react-icons/io5";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const account = useAccount();
   const { openConnectModal } = useConnectModal();
+  const [isWarningOpen, setIsWarningOpen] = useState(true);
 
   const { treasuryDark, journey, userDark } = useHeaderStats();
 
@@ -45,11 +48,39 @@ export default function Header() {
         "w-full max-w-[1000px]",
       )}
     >
+      {/* Warning */}
       <div
+        className={cn(
+          "grid",
+          "bg-agyellow",
+          "relative rounded-[8px] p-[2px] mx-[16px] my-[8px] lg:mt-[8px]",
+          "text-agblack font-sans uppercase font-extrabold text-[10px] md:text-[14px] tracking-widest",
+          "[&_svg]:text-[16px] md:[&_svg]:text-[24px]",
+          "overflow-hidden",
+          isWarningOpen ? "block" : "hidden",
+        )}
+      >
+        <div className="grid grid-flow-col gap-[16px] px-[8px] md:px-[16px] py-[4px] rounded-[inherit] place-items-center text-center">
+          <PiWarningDuotone /> Notice: If the site is crashed or the data is not
+          updated, please refresh the page. Currently this site is in Beta{" "}
+          <PiWarningDuotone className="text-[transparent]" />
+          <button
+            className="absolute top-0 right-0 m-[4px] text-[16px] md:text-[16px] [&_svg]:text-[16px] md:[&_svg]:text-[16px]"
+            onClick={() => setIsWarningOpen(false)}
+          >
+            <IoClose />
+          </button>
+        </div>
+      </div>
+      {/* Stats */}
+      <div
+        style={{
+          marginTop: isWarningOpen ? "0px" : "32px",
+        }}
         className={cn(
           "hidden lg:grid",
           Gradients.redToBlue,
-          "relative rounded-t-[8px] p-[2px] pb-0 mx-[16px] mt-[16px] lg:mt-[32px]",
+          "relative rounded-t-[8px] p-[2px] mx-[16px]",
           "text-agwhite/[0.66] font-sans uppercase font-extrabold text-[16px] tracking-widest",
           "[&_svg]:text-[24px]",
           "overflow-hidden",
@@ -137,6 +168,7 @@ export default function Header() {
           )}
         </div>
       </div>
+      {/* Navigation */}
       <div
         className={cn(
           Gradients.redToBlue,
@@ -386,3 +418,5 @@ export default function Header() {
     </header>
   );
 }
+
+//

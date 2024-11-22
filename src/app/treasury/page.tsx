@@ -38,11 +38,12 @@ export default function TreasuryPage() {
           "lg:flex lg:flex-row lg:justify-start lg:items-start gap-[30px]",
         )}
       >
+        {/* Left side */}
         <div
           className={cn(
             "flex flex-col justify-start items-start gap-[8px]",
             "p-[8px] rounded-[6px]",
-            "bg-agblack/30 backdrop-blur-lg",
+            "bg-agblack/70 backdrop-blur-lg",
             "text-agwhite",
           )}
         >
@@ -65,7 +66,7 @@ export default function TreasuryPage() {
           // </h4>
           null}
         </div>
-
+        {/* Right side */}
         <div className="flex flex-col justify-center items-center gap-[24px]">
           <div
             className={cn(
@@ -156,7 +157,7 @@ export default function TreasuryPage() {
             className={cn(
               "flex flex-col justify-start items-start gap-[8px]",
               "p-[8px] rounded-[6px]",
-              "bg-agblack/30 backdrop-blur-lg",
+              "bg-agblack/70 backdrop-blur-lg",
               "font-extrabold",
             )}
           >
