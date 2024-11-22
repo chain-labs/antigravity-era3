@@ -206,7 +206,7 @@ export default function EvilAddressPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${BACKGROUNDS.EVIL_ADDRESS ?? ""})`,
+        backgroundImage: `url('${BACKGROUNDS.EVIL_ADDRESS ?? ""}')`,
       }}
       className="flex justify-center items-center min-h-screen bg-cover bg-no-repeat"
     >

@@ -27,7 +27,7 @@ export default function TreasuryPage() {
   return (
     <div
       style={{
-        backgroundImage: `url(${BACKGROUNDS.TREASURY ?? ""})`,
+        backgroundImage: `url('${BACKGROUNDS.TREASURY ?? ""}')`,
       }}
       className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
     >
