@@ -67,7 +67,7 @@ const useLotteryData = () => {
     jackpotPendingFetched,
   ]);
 
-  const { data: journeyData } = useGQLFetch<{
+  const { data: journeyData, isFetched: journeyDataFetched } = useGQLFetch<{
     journeyPhaseManager: {
       currentJourneyId: string;
     };
@@ -83,40 +83,23 @@ const useLotteryData = () => {
     { enabled: JPMContract.address !== zeroAddress },
   );
 
-  const { data: activeMintsData } = useGQLFetch<{
-    mints: {
-      items: {
-        journeyId: string;
-        amount: string;
-      }[];
-    };
-  }>(
-    ["active fuel cells in journey"],
-    gql`
-      query MyQuery {
-        mints(where: { journeyId: "${journeyData?.journeyPhaseManager?.currentJourneyId}" }) {
-          items {
-            journeyId
-            amount
-          }
-        }
-      }
-    `,
-    {},
-    { enabled: !!journeyData?.journeyPhaseManager?.currentJourneyId },
-  );
+  const { data: activeNFTs, isFetched: fetchedActiveNFTs } = useReadContract({
+    address: JPMContract?.address,
+    abi: JPMContract.abi,
+    functionName: "getActiveNftsInJourney",
+    args: [BigInt(journeyData?.journeyPhaseManager?.currentJourneyId ?? 1)],
+    query: {
+      enabled: !!journeyData?.journeyPhaseManager?.currentJourneyId,
+    },
+  });
 
   // memo to calculate total fuel cells amount from active mints
   const totalFuelCells = useMemo(() => {
-    if (activeMintsData?.mints?.items) {
-      const totalFuelCells = activeMintsData?.mints?.items.reduce(
-        (acc, curr) => acc + Number(curr.amount),
-        0,
-      );
-      return totalFuelCells;
+    if (fetchedActiveNFTs) {
+      return activeNFTs;
     }
     return 0;
-  }, [activeMintsData]);
+  }, [activeNFTs, fetchedActiveNFTs]);
 
   const tableData = useMemo(() => {
     if (jackpotBalance && totalFuelCells) {
