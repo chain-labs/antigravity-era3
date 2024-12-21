@@ -6,6 +6,9 @@ export const ALCHEMY_KEY = `${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`;
 export const EVIL_ADDRESS_AVAILABLE =
   process.env.NEXT_PUBLIC_EVIL_ADDRESS_AVAILABLE === "true";
 
+export const EVIL_ADDRESS_PRUNE_AVAILABLE =
+  process.env.NEXT_PUBLIC_EVIL_PRUNE_TOGGLE === "true";
+
 export const UNWRAP_AVAILABLE =
   process.env.NEXT_PUBLIC_UNWRAP_AVAILABLE === "true";
 
