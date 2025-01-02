@@ -4,7 +4,11 @@ import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
 import Input from "@/components/html/Input";
-import { BACKGROUNDS, EVIL_ADDRESS_AVAILABLE } from "@/constants";
+import {
+  BACKGROUNDS,
+  EVIL_ADDRESS_AVAILABLE,
+  EVIL_ADDRESS_PRUNE_AVAILABLE,
+} from "@/constants";
 import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
@@ -39,12 +43,12 @@ function PruneAndRollOver({
           )}
         >
           <HoverTextAnimation.Fading text="Scrape & Roll Over" />{" "}
-          <Tooltip
+          {/* <Tooltip
             trigger={<PiInfoDuotone />}
             positionClassName="absolute top-[calc(100%_+_8px)] right-0"
           >
             hello
-          </Tooltip>
+          </Tooltip> */}
         </motion.div>
       </div>
       <form
@@ -76,7 +80,7 @@ function PruneAndRollOver({
             }}
             loading={evilPruneLoading}
             loadingText="Scraping...."
-            disabled={evilPruneLoading}
+            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || evilPruneLoading}
           >
             <motion.div
               variants={{
@@ -90,7 +94,11 @@ function PruneAndRollOver({
             >
               <PiWrenchDuotone />
             </motion.div>
-            <HoverTextAnimation.RollingIn text="Scrape" />
+            <HoverTextAnimation.RollingIn
+              text={
+                !EVIL_ADDRESS_PRUNE_AVAILABLE ? "Scrape Inactive" : "Scrape"
+              }
+            />
           </Button>
         </div>
       </form>
