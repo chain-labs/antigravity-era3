@@ -1,6 +1,6 @@
 // hook to get details about the lottery data
 
-import React from "react";
+import React, { ReactNode } from "react";
 import useJackpotContract from "@/abi/Jackpot";
 import useJPMContract from "@/abi/JourneyPhaseManager";
 import { useEffect, useMemo, useState } from "react";
@@ -45,6 +45,30 @@ const useLotteryData = () => {
       abi: JackpotContract?.abi,
       functionName: "totalPendingPayout",
     });
+
+  const { data: latestPayout } = useGQLFetch<{
+    lotteryResults: {
+      items: {
+        journeyId: string;
+        lotteryId: string;
+        payout: string;
+      }[];
+    };
+  }>(
+    ["latest payout"],
+    gql`
+      query Query {
+        lotteryResults(orderBy: "timestamp", orderDirection: "desc", limit: 1) {
+          items {
+            journeyId
+            lotteryId
+            payout
+          }
+        }
+      }
+    `,
+    {},
+  );
 
   // memo to calculate jackpot balance by subtracting jackpotPending from jackpotBalanceData both are BigInt
   const jackpotBalance: number = useMemo(() => {
@@ -101,28 +125,59 @@ const useLotteryData = () => {
     return 0;
   }, [activeNFTs, fetchedActiveNFTs]);
 
-  const tableData = useMemo(() => {
+  const tableData : (string | number | ReactNode)[] = useMemo(() => {
     if (jackpotBalance && totalFuelCells) {
       const result = tableDataTemplate.map((row) => {
+        let totalJackpotBalance = jackpotBalance;
+        const {
+          journeyId,
+          lotteryId: currentLotteryId,
+          payout: currentPayout,
+        } = latestPayout?.lotteryResults?.items[0] ?? {};
+
+        const payout = Number(
+          formatUnits(BigInt(currentPayout ?? "0") ?? BigInt(0), 18),
+        );
+
         const [lotteryId, percentage, _1, _2] = row;
+        const mappingLotteryToNumber = {
+          big: 1,
+          bigger: 2,
+          biggest: 3,
+        };
+
+        let paid: boolean =
+          Number(currentLotteryId) >= mappingLotteryToNumber[lotteryId as "big"];
+
+        if (journeyId === journeyData?.journeyPhaseManager.currentJourneyId) {
+          if (currentLotteryId === "1") {
+            totalJackpotBalance += payout;
+          } else if (currentLotteryId === "2") {
+            totalJackpotBalance += payout + payout / 3;
+          } else if (currentLotteryId === "3") {
+            // 100 = 60 + 30 + 10
+            totalJackpotBalance += payout + payout / 2 + payout / 6;
+          }
+        }
         const payoutValue =
           Number(
             (
-              (jackpotBalance * Number(`${percentage}`.split("%")[0])) /
+              (totalJackpotBalance * Number(`${percentage}`.split("%")[0])) /
               100
             ).toFixed(3),
           ).toLocaleString() +
           " " +
           `(${percentage})`;
         // const totalFuelCellsSelected = ~~((totalFuelCells * 16) / 1000);
-        return [lotteryId, payoutValue];
+
+        return [lotteryId, paid ? `${payoutValue}` : payoutValue];
       });
       return result;
     }
     return tableDataTemplate.map((row) => {
       return [row[0], row[2]];
     });
-  }, [jackpotBalance, totalFuelCells]);
+  }, [jackpotBalance, totalFuelCells, latestPayout, journeyData]);
 
   return {
     jackpotBalance: jackpotBalance.toFixed(3), // limit to 3 decimal places
