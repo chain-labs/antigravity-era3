@@ -125,7 +125,7 @@ const useLotteryData = () => {
     return 0;
   }, [activeNFTs, fetchedActiveNFTs]);
 
-  const tableData : (string | number | ReactNode)[] = useMemo(() => {
+  const tableData = useMemo(() => {
     if (jackpotBalance && totalFuelCells) {
       const result = tableDataTemplate.map((row) => {
         let totalJackpotBalance = jackpotBalance;
