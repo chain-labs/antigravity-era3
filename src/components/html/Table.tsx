@@ -2,10 +2,11 @@
 
 import { Gradients } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
+import { ReactNode } from "react";
 
 type TableProps = {
   header: React.ReactNode[];
-  body: Array<Array<Number | string>>;
+  body: Array<Array<Number | string | boolean | ReactNode>>;
   className?: string;
   headerClassName?: string;
   bodyClassName?: string;
