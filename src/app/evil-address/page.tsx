@@ -13,7 +13,11 @@ import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import { notFound } from "next/navigation";
-import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
+import {
+  PiCubeDuotone,
+  PiLockKeyDuotone,
+  PiWrenchDuotone,
+} from "react-icons/pi";
 import { motion } from "framer-motion";
 import { PiInfoDuotone } from "react-icons/pi";
 import Tooltip from "@/components/global/Tooltip";
@@ -80,7 +84,7 @@ function PruneAndRollOver({
             }}
             loading={evilPruneLoading}
             loadingText="Scraping...."
-            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || evilPruneLoading}
+            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || !evilPruneLoading}
           >
             <motion.div
               variants={{
@@ -92,7 +96,11 @@ function PruneAndRollOver({
               }}
               className="origin-top-right"
             >
-              <PiWrenchDuotone />
+              {!EVIL_ADDRESS_PRUNE_AVAILABLE || !evilPruneLoading ? (
+                <PiLockKeyDuotone />
+              ) : (
+                <PiWrenchDuotone />
+              )}
             </motion.div>
             <HoverTextAnimation.RollingIn
               text={
@@ -179,7 +187,11 @@ function MintFromEvilAddress({
                 },
               }}
             >
-              <PiCubeDuotone />
+              {evilMintLoading || !isMintActive ? (
+                <PiLockKeyDuotone />
+              ) : (
+                <PiCubeDuotone />
+              )}
             </motion.div>
             <HoverTextAnimation.RollingIn
               text={!isMintActive ? "Mint Inactive" : "Mint"}
