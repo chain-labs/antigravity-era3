@@ -6,7 +6,15 @@ import { ReactNode } from "react";
 
 type TableProps = {
   header: React.ReactNode[];
-  body: Array<Array<Number | string | boolean | ReactNode>>;
+  body: Array<
+    Array<
+      | Number
+      | string
+      | boolean
+      | ReactNode
+      | { value: Number | string | boolean; sticker: ReactNode }
+    >
+  >;
   className?: string;
   headerClassName?: string;
   bodyClassName?: string;
@@ -63,12 +71,22 @@ export default function Table({
                       className={cn(
                         "uppercase tracking-widest text-[14px] font-general-sans font-medium",
                         "[&_svg]:text-[24px]",
-                        "flex gap-[8px]",
+                        "relative flex gap-[8px]",
                         "px-[12px] py-[10px]",
                         bodyClassName,
                       )}
                     >
-                      {`${cell}`}
+                      {cell !== null &&
+                      typeof cell === "object" &&
+                      "sticker" in cell &&
+                      "value" in cell ? (
+                        <>
+                          {`${cell.value}`}
+                          {cell.sticker}
+                        </>
+                      ) : (
+                        `${cell}`
+                      )}
                     </div>
                   </td>
                 ))}

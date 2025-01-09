@@ -147,7 +147,8 @@ const useLotteryData = () => {
         };
 
         let paid: boolean =
-          Number(currentLotteryId) >= mappingLotteryToNumber[lotteryId as "big"];
+          Number(currentLotteryId) >=
+          mappingLotteryToNumber[lotteryId as "big"];
 
         if (journeyId === journeyData?.journeyPhaseManager.currentJourneyId) {
           if (currentLotteryId === "1") {
@@ -170,7 +171,10 @@ const useLotteryData = () => {
           `(${percentage})`;
         // const totalFuelCellsSelected = ~~((totalFuelCells * 16) / 1000);
 
-        return [lotteryId, paid ? `${payoutValue}` : payoutValue];
+        return [
+          lotteryId,
+          paid ? { value: `${payoutValue}`, sticker: "paid" } : payoutValue,
+        ];
       });
       return result;
     }
