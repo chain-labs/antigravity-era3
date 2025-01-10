@@ -142,7 +142,23 @@ export default function LotteryPage() {
         Total payout Value (in $Dark)
       </div>,
     ],
-    data: tableData,
+    data: tableData.map((row) => {
+      return row.map((cell, i) => {
+        if (typeof cell === "object" && "sticker" in cell && "value" in cell) {
+          return {
+            value: `${cell.value}`,
+            sticker: (
+              <div className="absolute text-successgreen font-bold uppercase text-[10px] left-0 top-1/2 -translate-y-1/2 -rotate-45 p-[8px]">
+                <div className="w-full h-[1px] bg-successgreen"></div>
+                {cell.sticker}
+                <div className="w-full h-[1px] bg-successgreen"></div>
+              </div>
+            ),
+          };
+        }
+        return cell;
+      });
+    }),
   };
 
   return (
