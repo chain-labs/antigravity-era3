@@ -13,14 +13,18 @@ import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import { notFound } from "next/navigation";
-import { PiCubeDuotone, PiWrenchDuotone } from "react-icons/pi";
+import {
+  PiCubeDuotone,
+  PiLockKeyDuotone,
+  PiWrenchDuotone,
+} from "react-icons/pi";
 import { motion } from "framer-motion";
 import { PiInfoDuotone } from "react-icons/pi";
 import Tooltip from "@/components/global/Tooltip";
 import useEvilAddress from "@/hooks/core/useEvilAddress";
 import { useEffect } from "react";
 
-function PruneAndRollOver({
+function ScrapeAndRollOver({
   data,
   evilPrune,
   evilPruneLoading,
@@ -29,9 +33,21 @@ function PruneAndRollOver({
   evilPrune: () => void;
   evilPruneLoading: boolean;
 }) {
+  // make this false to remove the blur
+  const sectionBluredAndCommingSoon = true;
   return (
-    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full">
-      <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
+    <div
+      className={cn(
+        "relative border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full",
+        // sectionBluredAndCommingSoon && "blur-lg select-none",
+      )}
+    >
+      <div
+        className={cn(
+          "flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]",
+          sectionBluredAndCommingSoon && "blur-sm select-none",
+        )}
+      >
         <motion.div
           initial="initial"
           whileHover="hover"
@@ -55,6 +71,7 @@ function PruneAndRollOver({
         className={cn(
           "flex flex-col justify-center items-center gap-[8px] ",
           "w-full md:w-[400px]",
+          sectionBluredAndCommingSoon && "blur-lg select-none",
         )}
       >
         <div
@@ -80,7 +97,7 @@ function PruneAndRollOver({
             }}
             loading={evilPruneLoading}
             loadingText="Scraping...."
-            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || evilPruneLoading}
+            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || !evilPruneLoading}
           >
             <motion.div
               variants={{
@@ -92,7 +109,11 @@ function PruneAndRollOver({
               }}
               className="origin-top-right"
             >
-              <PiWrenchDuotone />
+              {!EVIL_ADDRESS_PRUNE_AVAILABLE || !evilPruneLoading ? (
+                <PiLockKeyDuotone />
+              ) : (
+                <PiWrenchDuotone />
+              )}
             </motion.div>
             <HoverTextAnimation.RollingIn
               text={
@@ -102,6 +123,19 @@ function PruneAndRollOver({
           </Button>
         </div>
       </form>
+      {sectionBluredAndCommingSoon && (
+        <div
+          className={cn(
+            "absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2",
+            "flex flex-col justify-start items-start gap-[8px]",
+            "p-[8px] rounded-[6px]",
+            "bg-agblack/30 backdrop-blur-lg",
+            "font-extrabold z-10",
+          )}
+        >
+          <p className="text-agwhite text-[16px] font-sans">Comming Soon</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -131,12 +165,13 @@ function MintFromEvilAddress({
           )}
         >
           <HoverTextAnimation.Fading text="Mint From Evil Address" />{" "}
-          <Tooltip
+          {/* if u want to add tooltip replace hello to that tooltip  */}
+          {/* <Tooltip
             trigger={<PiInfoDuotone />}
             positionClassName="absolute top-[calc(100%_+_8px)] right-0"
           >
             hello
-          </Tooltip>
+          </Tooltip> */}
         </motion.div>
       </div>
       <form
@@ -179,7 +214,11 @@ function MintFromEvilAddress({
                 },
               }}
             >
-              <PiCubeDuotone />
+              {evilMintLoading || !isMintActive ? (
+                <PiLockKeyDuotone />
+              ) : (
+                <PiCubeDuotone />
+              )}
             </motion.div>
             <HoverTextAnimation.RollingIn
               text={!isMintActive ? "Mint Inactive" : "Mint"}
@@ -243,7 +282,7 @@ export default function EvilAddressPage() {
           </h1>
         </div>
         <div className="flex flex-col justify-center items-center gap-[24px]">
-          <PruneAndRollOver
+          <ScrapeAndRollOver
             data={perPruneChunk}
             {...{ evilPrune, evilPruneLoading }}
           />
