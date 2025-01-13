@@ -3,13 +3,11 @@
 import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
-import Input from "@/components/html/Input";
 import {
   BACKGROUNDS,
   EVIL_ADDRESS_AVAILABLE,
   EVIL_ADDRESS_PRUNE_AVAILABLE,
 } from "@/constants";
-import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import { notFound } from "next/navigation";
@@ -34,7 +32,7 @@ function ScrapeAndRollOver({
   evilPruneLoading: boolean;
 }) {
   // make this false to remove the blur
-  const sectionBluredAndCommingSoon = true;
+  const sectionBluredAndCommingSoon = !EVIL_ADDRESS_PRUNE_AVAILABLE;
   return (
     <div
       className={cn(
@@ -97,7 +95,7 @@ function ScrapeAndRollOver({
             }}
             loading={evilPruneLoading}
             loadingText="Scraping...."
-            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || !evilPruneLoading}
+            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || evilPruneLoading}
           >
             <motion.div
               variants={{
@@ -109,7 +107,7 @@ function ScrapeAndRollOver({
               }}
               className="origin-top-right"
             >
-              {!EVIL_ADDRESS_PRUNE_AVAILABLE || !evilPruneLoading ? (
+              {!EVIL_ADDRESS_PRUNE_AVAILABLE || evilPruneLoading ? (
                 <PiLockKeyDuotone />
               ) : (
                 <PiWrenchDuotone />
@@ -133,7 +131,7 @@ function ScrapeAndRollOver({
             "font-extrabold z-10",
           )}
         >
-          <p className="text-agwhite text-[16px] font-sans">Comming Soon</p>
+          <p className="text-agwhite text-[16px] font-sans">Coming Soon</p>
         </div>
       )}
     </div>
