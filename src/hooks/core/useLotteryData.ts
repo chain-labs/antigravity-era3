@@ -147,8 +147,11 @@ const useLotteryData = () => {
         };
 
         let paid: boolean =
+          journeyId === journeyData?.journeyPhaseManager.currentJourneyId &&
           Number(currentLotteryId) >=
-          mappingLotteryToNumber[lotteryId as "big"];
+            mappingLotteryToNumber[lotteryId as "big"];
+
+        console.log({ journeyId, journeyData });
 
         if (journeyId === journeyData?.journeyPhaseManager.currentJourneyId) {
           if (currentLotteryId === "1") {
