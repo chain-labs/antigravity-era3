@@ -3,13 +3,11 @@
 import { HoverTextAnimation } from "@/components/animation/SeperateText";
 import Timer from "@/components/global/Timer";
 import Button from "@/components/html/Button";
-import Input from "@/components/html/Input";
 import {
   BACKGROUNDS,
   EVIL_ADDRESS_AVAILABLE,
   EVIL_ADDRESS_PRUNE_AVAILABLE,
 } from "@/constants";
-import { IMAGEKIT_BACKGROUNDS } from "@/images";
 import { Gradients, Shapes } from "@/lib/tailwindClassCombinators";
 import { cn } from "@/lib/tailwindUtils";
 import { notFound } from "next/navigation";
@@ -23,6 +21,11 @@ import { PiInfoDuotone } from "react-icons/pi";
 import Tooltip from "@/components/global/Tooltip";
 import useEvilAddress from "@/hooks/core/useEvilAddress";
 import { useEffect } from "react";
+import { useReadContract } from "wagmi";
+import useEAContract from "@/abi/EvilAddress";
+import useJPMContract from "@/abi/JourneyPhaseManager";
+import { useGQLFetch } from "@/hooks/api/useGraphQLClient";
+import { gql } from "graphql-request";
 
 function ScrapeAndRollOver({
   data,
@@ -34,7 +37,7 @@ function ScrapeAndRollOver({
   evilPruneLoading: boolean;
 }) {
   // make this false to remove the blur
-  const sectionBluredAndCommingSoon = true;
+  const sectionBluredAndCommingSoon = !EVIL_ADDRESS_PRUNE_AVAILABLE;
   return (
     <div
       className={cn(
@@ -45,7 +48,7 @@ function ScrapeAndRollOver({
       <div
         className={cn(
           "flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]",
-          sectionBluredAndCommingSoon && "blur-sm select-none",
+          // sectionBluredAndCommingSoon && "blur-sm select-none",
         )}
       >
         <motion.div
@@ -97,7 +100,7 @@ function ScrapeAndRollOver({
             }}
             loading={evilPruneLoading}
             loadingText="Scraping...."
-            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || !evilPruneLoading}
+            disabled={!EVIL_ADDRESS_PRUNE_AVAILABLE || evilPruneLoading}
           >
             <motion.div
               variants={{
@@ -109,7 +112,7 @@ function ScrapeAndRollOver({
               }}
               className="origin-top-right"
             >
-              {!EVIL_ADDRESS_PRUNE_AVAILABLE || !evilPruneLoading ? (
+              {!EVIL_ADDRESS_PRUNE_AVAILABLE || evilPruneLoading ? (
                 <PiLockKeyDuotone />
               ) : (
                 <PiWrenchDuotone />
@@ -133,7 +136,7 @@ function ScrapeAndRollOver({
             "font-extrabold z-10",
           )}
         >
-          <p className="text-agwhite text-[16px] font-sans">Comming Soon</p>
+          <p className="text-agwhite text-[16px] font-sans">Coming Soon</p>
         </div>
       )}
     </div>
@@ -145,15 +148,26 @@ function MintFromEvilAddress({
   evilMint,
   evilMintLoading,
   isMintActive,
+  mintedOut,
 }: {
   data: number;
   evilMint: () => void;
   evilMintLoading: boolean;
   isMintActive: boolean;
+  mintedOut: boolean;
 }) {
   return (
-    <div className="border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full">
-      <div className="flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]">
+    <div
+      className={cn(
+        "border-[1px] border-agorange rounded-[6px] p-[8px] pb-[32px] bg-agwhite/30 backdrop-blur-lg w-full",
+      )}
+    >
+      <div
+        className={cn(
+          "flex justify-center items-center w-full gap-[8px] -translate-y-[calc(50%+8px)]",
+          // isFetched && !mintsAllowed && "blur-sm select-none",
+        )}
+      >
         <motion.div
           initial="initial"
           whileHover="hover"
@@ -178,6 +192,7 @@ function MintFromEvilAddress({
         className={cn(
           "flex flex-col justify-center items-center gap-[8px] ",
           "w-full md:w-[400px]",
+          mintedOut && "blur-lg select-none",
         )}
       >
         <div
@@ -226,6 +241,19 @@ function MintFromEvilAddress({
           </Button>
         </div>
       </form>
+      {mintedOut && (
+        <div
+          className={cn(
+            "absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2",
+            "flex flex-col justify-start items-start gap-[8px]",
+            "p-[8px] rounded-[6px]",
+            "bg-agblack/30 backdrop-blur-lg",
+            "font-extrabold z-10",
+          )}
+        >
+          <p className="text-agwhite text-[16px] font-sans">Mint Inactive</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -240,6 +268,7 @@ export default function EvilAddressPage() {
     isMintActive,
     mintTimestamp,
     mintsAllowed,
+    mintedOut,
   } = useEvilAddress();
 
   useEffect(() => {
@@ -291,6 +320,7 @@ export default function EvilAddressPage() {
             evilMint={evilMint}
             evilMintLoading={evilMintLoading}
             isMintActive={isMintActive}
+            mintedOut={mintedOut}
           />
           <div
             className={cn(
