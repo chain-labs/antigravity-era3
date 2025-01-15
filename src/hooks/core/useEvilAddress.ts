@@ -247,6 +247,16 @@ const useEvilAddress = () => {
     rewardMultiplier: string;
   }>(["fetching mint state"], "/api/era-3-timestamps-multipliers");
 
+  const { data: mintedOut, isFetched } = useReadContract({
+    address: EAContract.address,
+    abi: EAContract.abi,
+    functionName: "mintedInJourney",
+    args: [Number(mintState?.currentJourney) ?? 0],
+    query: {
+      enabled: !!mintState?.currentJourney,
+    },
+  });
+
   useEffect(() => {
     const fetch = async () => {
       const mintState = await fetchMintState({
@@ -288,6 +298,7 @@ const useEvilAddress = () => {
     evilPruneLoading: pruneLoading,
     isMintActive,
     mintTimestamp,
+    mintedOut: (isFetched && mintedOut) as boolean,
   };
 };
 
