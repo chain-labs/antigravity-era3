@@ -174,9 +174,9 @@ const useEvilAddress = () => {
       // });
 
       const tx = await batchPruneWinnings({
-        address: JackpotContract.address as `0x${string}`,
-        abi: JackpotContract.abi,
-        functionName: "pruneWinnings",
+        address: EAContract.address as `0x${string}`,
+        abi: EAContract.abi,
+        functionName: "evilPrune",
         args: [proofs],
         value: TEAM_FEE,
       });
